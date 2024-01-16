@@ -1,0 +1,71 @@
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+}
+
+android {
+    namespace 'com.example.olx'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.example.olx"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildFeatures{
+        viewBinding true
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    //firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation 'com.google.android.gms:play-services-auth:20.7.0'
+    implementation 'com.google.firebase:firebase-auth' // đăng nhập google thì chọn thư viện này
+    //firebase auth-realtime database- storage
+    implementation 'com.google.firebase:firebase-analytics:21.5.0'
+    implementation 'com.google.firebase:firebase-database:20.3.0'
+    implementation 'com.google.firebase:firebase-storage:20.3.0'
+    implementation 'com.google.firebase:firebase-messaging:23.4.0'//đừng cập nhật phiên bản mới hơn sẽ bị lỗi
+    //thư viện bên ngoài
+    implementation 'com.github.GrenderG:Toasty:1.5.2' //Thông báo toast đẹp
+    implementation 'com.hbb20:ccp:2.7.0'
+    implementation 'com.github.aabhasr1:OtpView:v1.1.2' // otp đăng nhập số điện thoại
+    implementation 'com.github.bumptech.glide:glide:4.15.1' //load hình ảnh
+    implementation 'com.squareup.picasso:picasso:2.71828'//load hình ảnh
+    //api maps
+    implementation 'com.google.android.gms:play-services-maps:18.2.0'
+    implementation 'com.google.android.libraries.places:places:3.3.0'
+    //doanh thu tháng năm
+    implementation 'com.github.dewinjm:monthyear-picker:1.0.2'
+    //image Circle Image
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    //Database SQLite tạm
+    implementation 'com.github.p32929:AndroidEasySQL-Library:1.4.1'
+    //volley
+    implementation 'com.android.volley:volley:1.2.1'
+    implementation 'androidx.annotation:annotation:1.7.1' //thư viện Animation trong Splash Activity
+}

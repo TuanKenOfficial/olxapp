@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">olx</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="dangnhap">Đăng nhập</string>
+    <string name="moibandangnhaptaikhoan">Mời bạn đăng nhập tài khoản</string>
+    <string name="fullname">Họ và tên</string>
+    <string name="login">Đăng nhập</string>
+    <string name="default_web_client_id">404219765884-h1vu26ghm1am1r7l6d169rr67tamr7s8.apps.googleusercontent.com</string>
+</resources>

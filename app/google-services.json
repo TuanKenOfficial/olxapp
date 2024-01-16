@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "404219765884",
+    "firebase_url": "https://olxs-36d58-default-rtdb.firebaseio.com",
+    "project_id": "olxs-36d58",
+    "storage_bucket": "olxs-36d58.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:404219765884:android:a1ea25c1386283be2415f9",
+        "android_client_info": {
+          "package_name": "com.example.olx"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "404219765884-h1vu26ghm1am1r7l6d169rr67tamr7s8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.olx",
+            "certificate_hash": "58b591a70939efa5576d603a3f6fdb695f0d8772"
+          }
+        },
+        {
+          "client_id": "404219765884-31bi04k54v03p8v0jmcadft5hu87jnva.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCGJJU8Ud298V8VBv1qgL8XjqGIsP7SoQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "404219765884-31bi04k54v03p8v0jmcadft5hu87jnva.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
