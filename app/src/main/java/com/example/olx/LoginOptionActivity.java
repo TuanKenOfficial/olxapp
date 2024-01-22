@@ -52,7 +52,7 @@ public class LoginOptionActivity extends AppCompatActivity {
 
                 Log.d(TAG, "onClick: Bạn đăng nhập sđt");
                 Utils.toast(LoginOptionActivity.this,"Bạn đang vào trang đăng nhập số điện thoại");
-//                startActivity(new Intent(LoginOptionActivity.this, LoginPhoneActivity.class));
+                startActivity(new Intent(LoginOptionActivity.this, LoginPhoneActivity.class));
 
             }
         });

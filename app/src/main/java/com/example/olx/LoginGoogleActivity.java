@@ -1,5 +1,6 @@
 package com.example.olx;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,12 +27,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
-
+/** @noinspection ALL*/
 public class LoginGoogleActivity extends AppCompatActivity {
 
     private ActivityLoginGoogleBinding binding;
     private FirebaseAuth firebaseAuth;
-    private FirebaseDatabase database;
     private GoogleSignInClient googleSignInClient;
     private GoogleSignInOptions signInOptions;
     private static final String TAG ="LOGINGOOGLE";
@@ -47,7 +47,6 @@ public class LoginGoogleActivity extends AppCompatActivity {
 
 
         firebaseAuth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance().getReference().getDatabase();
 
         signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -75,6 +74,7 @@ public class LoginGoogleActivity extends AppCompatActivity {
         Intent intent = googleSignInClient.getSignInIntent();
         startActivityForResult(intent,0);
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -134,13 +134,12 @@ public class LoginGoogleActivity extends AppCompatActivity {
         HashMap<String,Object> hashMap = new HashMap<>();
         hashMap.put("shopName", "shopName");
         hashMap.put("phone", "+84123456789");
-        hashMap.put("address", "");
-        hashMap.put("latitude", "");
-        hashMap.put("longitude", "");
+        hashMap.put("address", "5M26+XRW, Phong Hoà, Lai Vung, Đồng Tháp, Việt Nam");
+        hashMap.put("latitude", "10.15655");
+        hashMap.put("longitude", "105.66237");
         hashMap.put("timestamp", "" + timestamp);
         hashMap.put("online", true);
         hashMap.put("shopOpen", true);
-        hashMap.put("profileImage", "");
         hashMap.put("name","Google");
         hashMap.put("profileImageUrl","");
         hashMap.put("accountType","Google");

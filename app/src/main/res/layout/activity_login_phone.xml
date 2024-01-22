@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginPhoneActivity">
+
+    <RelativeLayout
+        android:id="@+id/toolbarRl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/m_toolbar_height">
+
+        <ImageButton
+            android:id="@+id/backBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/back"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:padding="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/toolbarTitleTv"
+            android:layout_centerInParent="true"
+            android:text="Đăng nhập số điện thoại"
+            android:textColor="@color/red"
+            android:textStyle="bold"
+            style="@style/TextAppearance.MaterialComponents.Body1"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorgray"/>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_below="@id/toolbarRl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/profileIv"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/olx_trangbia"
+            app:shapeAppearanceOverlay="@style/ImageStyle_Circle"/>
+
+        <TextView
+            android:id="@+id/loginLabelTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Mời bạn đăng nhập tài khoản"
+            android:textStyle="bold"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/profileIv"
+            style="@style/TextAppearance.AppCompat.Body1"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/phoneInputRl"
+            android:layout_marginTop="15dp"
+            android:layout_below="@id/loginLabelTv"
+            android:visibility="gone">
+
+            <com.hbb20.CountryCodePicker
+                android:id="@+id/phoneCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="50dp"
+                android:minWidth="55dp"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                app:ccp_autoDetectCountry="true"
+                app:ccp_contentColor="@color/black"
+                app:ccp_rememberLastSelection="true"
+                app:ccp_showFlag="false"
+                app:ccp_showNameCode="false"/>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/phoneTil"
+                android:layout_marginLeft="5dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_marginTop="10dp"
+                android:layout_toEndOf="@id/phoneCode"
+                app:boxCornerRadiusBottomStart="8dp"
+                app:boxCornerRadiusBottomEnd="8dp"
+                app:boxCornerRadiusTopStart="8dp"
+                app:boxCornerRadiusTopEnd="8dp"
+                app:startIconDrawable="@drawable/ic_phone"
+                android:hint="Phone">
+                <EditText
+                    android:textColor="@color/black"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/phoneNumber"
+                    android:textStyle="bold"
+                    android:inputType="phone"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gửi"
+                android:background="@drawable/shape_button"
+                android:minHeight="@dimen/m_button_height"
+                android:layout_below="@id/phoneTil"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:id="@+id/btnSend"/>
+            <TextView
+                android:id="@+id/chuyTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Chứ ý: Mỗi số điện thoại chỉ đăng nhập dùng tối đa 3 lần, và nên chọn đầu số +84 ở phía trên kế bên ô trống nếu ở Việt Nam, và nhập vào phần ô trống số điện thoại của bạn, chú ý bỏ số 0 đầu ra dùm ạ, xin chân thành cảm ơn!!"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="@color/red"
+                android:layout_margin="10dp"
+                android:padding="10dp"
+                android:layout_below="@id/btnSend"
+                style="@style/TextAppearance.AppCompat.Body1"/>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/otpInputRl"
+            android:layout_marginTop="15dp"
+            android:layout_below="@id/loginLabelTv"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/txtOTP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="OTP đang gửi đến SĐT"
+                android:textStyle="italic"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <in.aabhasjindal.otptextview.OtpTextView
+                android:id="@+id/otp_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txtOTP"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                app:bar_enabled="true"
+                app:bar_height="2dp"
+                app:height="40dp"
+                app:length="6"
+                app:otp=""
+                app:otp_box_background="@drawable/ic_check"
+                app:otp_text_size="28sp"
+                app:width="40dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnVeryfied"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/otp_view"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/shape_button"
+                android:minHeight="@dimen/m_button_height"
+                android:text="Xác nhận" />
+
+            <TextView
+                android:id="@+id/resentOTP"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OTP chưa được gửi? Gửi lại"
+                android:textStyle="bold"
+                android:layout_below="@id/btnVeryfied"
+                android:layout_margin="10dp"
+                android:textSize="18sp"
+                android:textColor="@color/black"/>
+            <TextView
+                android:id="@+id/chuy1Tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Chú ý: Nếu chưa nhận được mã OTP gửi về điện thoại, hãy bấm vào dòng OTP chưa được gửi? Gửi lại. Xin cảm ơn"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="@color/red"
+                android:layout_margin="10dp"
+                android:padding="10dp"
+                android:layout_below="@id/resentOTP"
+                style="@style/TextAppearance.AppCompat.Body1"/>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

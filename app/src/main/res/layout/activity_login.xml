@@ -75,7 +75,7 @@
             app:boxCornerRadiusTopStart="8dp"
             app:boxCornerRadiusTopEnd="8dp"
             app:startIconDrawable="@drawable/ic_email"
-            android:hint="Email">
+            android:hint="@string/email">
             <EditText
                 android:textColor="@color/black"
                 android:textStyle="bold"
@@ -99,7 +99,7 @@
             app:boxCornerRadiusTopEnd="8dp"
             app:startIconDrawable="@drawable/ic_password"
             app:passwordToggleEnabled="true"
-            android:hint="Mật khẩu">
+            android:hint="@string/matkhau">
             <EditText
                 android:textColor="@color/black"
                 android:layout_width="match_parent"
@@ -119,7 +119,7 @@
             android:layout_marginTop="5dp"
             android:textStyle="bold"
             android:padding="10dp"
-            android:text="Bạn đã có tài khoản người bán?Đăng nhập"/>
+            android:text="Bạn chưa có tài khoản người bán?Đăng ký"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -130,7 +130,7 @@
             android:layout_below="@id/noLoginSellerTv"
             android:textStyle="bold"
             android:padding="10dp"
-            android:text="Bạn đã có tài khoản người mua?Đăng nhập"/>
+            android:text="Bạn chưa có tài khoản người mua?Đăng ký"/>
 
         <TextView
             android:layout_width="wrap_content"

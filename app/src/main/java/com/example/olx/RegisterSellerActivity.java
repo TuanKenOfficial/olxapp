@@ -184,7 +184,7 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
         //setup data to save
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("uid", "" + registerUserUid);
-        hashMap.put("email", "" + registerUserEmail);
+        hashMap.put("email", "" + email);
         hashMap.put("name", "" + fullName);
         hashMap.put("shopName", "" + shopName);
         hashMap.put("phone", "" + phoneNumber);

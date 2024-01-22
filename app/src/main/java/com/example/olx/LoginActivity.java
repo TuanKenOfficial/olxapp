@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.olx.databinding.ActivityLoginBinding;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -24,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+/** @noinspection ALL*/
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
@@ -122,6 +122,10 @@ public class LoginActivity extends AppCompatActivity {
             binding.passwordEt.setError("Mật khẩu chưa nhập");
             binding.passwordEt.requestFocus();
         }
+        else if (password.length()<6){
+            binding.passwordEt.setError("Mật khẩu bắt buộc 6 số");
+            binding.passwordEt.requestFocus();
+        }
         else{
             Log.d(TAG, "inputData: ");
             loginUser();
@@ -149,13 +153,27 @@ public class LoginActivity extends AppCompatActivity {
                                         Log.d(TAG, "onDataChange: "+accountType);
                                         Utils.toastyInfo(LoginActivity.this,"accountType: "+accountType);
                                         if (accountType.equals("User")){
+                                            Log.d(TAG, "onDataChange: User");
                                             Utils.toastySuccess(LoginActivity.this, "Đăng nhập thành công");
                                             startActivity(new Intent(LoginActivity.this, MainUserActivity.class));
                                             finishAffinity();
                                         }
-                                        else {
+                                        else if (accountType.equals("Seller")){
+                                            Log.d(TAG, "onDataChange: Seller");
                                             Utils.toastySuccess(LoginActivity.this, "Đăng nhập thành công");
                                             startActivity(new Intent(LoginActivity.this, MainSellerActivity.class));
+                                            finishAffinity();
+                                        }
+                                        else if (accountType.equals("Google")){
+                                            Log.d(TAG, "onDataChange: Google");
+                                            Utils.toastySuccess(LoginActivity.this, "Đăng nhập thành công");
+                                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                            finishAffinity();
+                                        }
+                                        else{
+                                            Log.d(TAG, "onDataChange: Phone");
+                                            Utils.toastySuccess(LoginActivity.this, "Đăng nhập thành công");
+                                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                             finishAffinity();
                                         }
                                     }
