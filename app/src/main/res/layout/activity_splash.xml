@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="5dp"
     android:layout_margin="2dp"
-    tools:context=".SplashActivity">
+    tools:context=".activities.SplashActivity">
     <LinearLayout
         android:id="@+id/lv"
         android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package com.example.olx;
+package com.example.olx.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,30 +6,28 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.example.olx.databinding.ActivityMainUserBinding;
+import com.example.olx.Utils;
+import com.example.olx.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainUserActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainUserBinding binding;
+    private ActivityMainBinding binding;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainUserBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         if (firebaseUser == null){
-            Utils.toast(MainUserActivity.this,"Bạn chưa đăng nhập");
-            startActivity(new Intent(MainUserActivity.this,LoginOptionActivity.class));
-        }
-        else {
-            //
+            Utils.toast(MainActivity.this,"Bạn chưa đăng nhập");
+            startActivity(new Intent(MainActivity.this,LoginOptionActivity.class));
+            finish();
         }
 
         binding.btnLogout.setOnClickListener(new View.OnClickListener() {

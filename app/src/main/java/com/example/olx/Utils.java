@@ -9,7 +9,37 @@ import java.util.Locale;
 
 import es.dmoral.toasty.Toasty;
 
-public class Utils {  //thông báo toast chung
+public class Utils {
+
+    public static final String AD_STATUS_AVAILABLE="Sản phẩm chưa bán"; // còn trong cửa hàng
+    public static final String AD_STATUS_SOLD="Sản phẩm đã bán"; // update cơ sở dữ liệu sản phẩm đã bán
+
+
+    //danh sách sản phẩm
+    public static final String[] categories = {
+            "Tất cả",
+            "Quán cafe & Trà sửa",
+            "Điện thoại",
+            "Máy tính/Laptop",
+            "Cửa hàng tạp hoá",
+            "Cửa hàng xe",
+            "Sách",
+            "Thời trang",
+            "Thú cưng",
+            "Bất động sản",
+            "Nông nghiệp",
+            "Thể loại khác",
+    };
+    //điều kiện sử dụng sản phầm
+    public static final String[] conditions ={"Mới", "Đã sử dụng","Đã tân trang"};
+
+    //số lượng sản phẩm từ 1 đến 20 sản phẩm đổ lại
+    public static final String[] quantitys = {"1", "2", "3", "4",
+            "5", "6", "7", "8",
+            "9", "10", "11", "12",
+            "13", "14", "15", "16",
+            "17", "18", "19", "20"};
+    //thông báo toast chung
     public static  void toast(Context context, String message){
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }

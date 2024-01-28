@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.HomeSellerFragment">
+
+    <!--Location-->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/locationCv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardUseCompatPadding="true"
+        app:cardCornerRadius="5dp"
+        app:contentPadding="10dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/locationTv"
+            android:drawableStart="@drawable/location"
+            android:drawableEnd="@drawable/ic_chevron_right"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:text="Chọn địa điểm"/>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!--Tabs: Products, Orders-->
+    <LinearLayout
+        android:id="@+id/lvProduct"
+        android:layout_below="@+id/locationCv"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/shape_rec02"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <!--Products-->
+        <TextView
+            android:id="@+id/tabProductsTv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/shape_rec03"
+            android:gravity="center"
+            android:text="Sản phẩm"
+            android:textColor="@color/colorblack"/>
+        <!--Orders-->
+        <TextView
+            android:id="@+id/tabOrdersTv"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Đơn hàng"
+            android:textColor="@color/colorblack"/>
+    </LinearLayout>
+
+
+    <!--Products-->
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/productsRl"
+        android:layout_below="@+id/lvProduct"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!--SearchView-->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/searchProductCv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardUseCompatPadding="true"
+            android:layout_toLeftOf="@id/filterProductBtn"
+            app:cardCornerRadius="5dp">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/searchProductEt"
+            android:drawableStart="@drawable/search"
+            android:background="@android:color/transparent"
+            android:drawablePadding="10dp"
+            android:padding="10dp"
+            android:hint="Tìm kiếm"/>
+        </com.google.android.material.card.MaterialCardView>
+        <!--filter-->
+        <ImageButton
+            android:id="@+id/filterProductBtn"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@null"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_apps"/>
+
+        <!--show filtered product title-->
+        <TextView
+            android:id="@+id/filteredProductsTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/searchProductCv"
+            android:textColor="@color/colorblack"
+            android:text="Hiển thị tất cả"
+            android:textSize="20sp"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="5dp"/>
+
+        <!--RecyclerView: show products-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/productsRv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/filteredProductsTv"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/row_addproduct_seller"/>
+
+    </RelativeLayout>
+
+    <!--Orders-->
+    <RelativeLayout
+        android:id="@+id/ordersRl"
+        android:layout_below="@+id/lvProduct"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!--SearchView-->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/searchOderCv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardUseCompatPadding="true"
+            android:layout_toLeftOf="@id/filterOrderBtn"
+            app:cardCornerRadius="5dp">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/searchOderEt"
+                android:drawableStart="@drawable/search"
+                android:background="@android:color/transparent"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:hint="Tìm kiếm"/>
+        </com.google.android.material.card.MaterialCardView>
+        <!--Filter orders-->
+        <ImageButton
+            android:id="@+id/filterOrderBtn"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentEnd="true"
+
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@null"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_apps" />
+        <!--show orders-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ordersRv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/searchOderCv"
+            tools:listitem="@layout/row_oder_seller"
+            app:reverseLayout="true"
+            app:stackFromEnd="true"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+    </RelativeLayout>
+
+</RelativeLayout>

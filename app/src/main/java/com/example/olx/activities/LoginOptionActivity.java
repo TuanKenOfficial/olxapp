@@ -1,4 +1,4 @@
-package com.example.olx;
+package com.example.olx.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.example.olx.Utils;
 import com.example.olx.databinding.ActivityLoginOptionBinding;
 
 public class LoginOptionActivity extends AppCompatActivity {
