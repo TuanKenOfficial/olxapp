@@ -80,6 +80,7 @@ public class LoginOptionActivity extends AppCompatActivity {
         binding.img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "onClick: OP");
                 Utils.toastyInfo(LoginOptionActivity.this,"Bạn chưa đăng nhập, nên sẽ không dùng được chức năng");
                 startActivity(new Intent(LoginOptionActivity.this, MainUserActivity.class));
             }

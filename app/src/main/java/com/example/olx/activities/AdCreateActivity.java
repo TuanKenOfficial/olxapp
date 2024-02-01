@@ -50,7 +50,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/** @noinspection deprecation*/
+/**
+ * @noinspection deprecation
+ */
 public class AdCreateActivity extends AppCompatActivity {
 
     private ActivityAdCreateBinding binding;
@@ -63,7 +65,7 @@ public class AdCreateActivity extends AppCompatActivity {
     private AdapterImagePicked adapterImagePicked;
 
     private boolean isEditMode = false; //
-    private String adId="";
+    private String adId = "";
 
 
     @Override
@@ -91,21 +93,18 @@ public class AdCreateActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         isEditMode = intent.getBooleanExtra("isEditMode", false);
-        Log.d(TAG, "onCreate: isEditMode: "+isEditMode);
+        Log.d(TAG, "onCreate: isEditMode: " + isEditMode);
 
-        if (isEditMode){
+        if (isEditMode) {
             adId = intent.getStringExtra("adId");
-            Log.d(TAG, "onCreate: adId: "+adId);
+            Log.d(TAG, "onCreate: adId: " + adId);
 
             binding.toolbarTitleTv.setText("Chỉnh sửa sản phẩm");
 //            binding.postAdBtn.setImageResource(R.drawable.uploading);
             binding.giamgiaSC.setChecked(false);
-//            binding.edtGiamCon.setVisibility(View.GONE);
             binding.raitoEt.setVisibility(View.GONE);
             loadAdDetail();
-        }
-        else {
-//            binding.edtGiamCon.setVisibility(View.GONE);
+        } else {
             binding.raitoEt.setVisibility(View.GONE);
             binding.giamgiaSC.setChecked(false);
             binding.toolbarTitleTv.setText("Thêm sản phẩm");
@@ -115,7 +114,6 @@ public class AdCreateActivity extends AppCompatActivity {
         imagePickedArrayList = new ArrayList<>();
         loadImages();
         Log.d(TAG, "onCreate: loadImages");
-
 
 
         //quay lai
@@ -138,7 +136,7 @@ public class AdCreateActivity extends AppCompatActivity {
         binding.locationEt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AdCreateActivity.this,LocationPickerActivity.class);
+                Intent intent = new Intent(AdCreateActivity.this, LocationPickerActivity.class);
                 locationPickerActivityResultLauncher.launch(intent);
             }
         });
@@ -154,12 +152,11 @@ public class AdCreateActivity extends AppCompatActivity {
 
         //khi tích vào giảm giá
         binding.giamgiaSC.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked){
+            if (isChecked) {
                 //checked, show discountPriceEt, discountNoteEt
 //                binding.edtGiamCon.setVisibility(View.VISIBLE);
                 binding.raitoEt.setVisibility(View.VISIBLE);
-            }
-            else {
+            } else {
                 //unchecked, hide discountPriceEt, discountNoteEt
 //                binding.edtGiamCon.setVisibility(View.GONE);
                 binding.raitoEt.setVisibility(View.GONE);
@@ -167,6 +164,7 @@ public class AdCreateActivity extends AppCompatActivity {
         });
 
     }
+
     private void loadImages() {
         // xử lý chỗ này
         Log.d(TAG, "loadImages: ");
@@ -183,8 +181,8 @@ public class AdCreateActivity extends AppCompatActivity {
     private String price;
     private String title;
     private String description;
-    private double latitude=0;
-    private double longitude=0;
+    private double latitude = 0;
+    private double longitude = 0;
 
     private String reducedprice;
 
@@ -194,6 +192,7 @@ public class AdCreateActivity extends AppCompatActivity {
     private int raitos, prices, reducedprices, quantitys;
 
     private boolean giamgia = false;
+
     private void validate() {
         brand = binding.brandEt.getText().toString().trim();
         category = binding.categoryEt.getText().toString().trim();
@@ -207,29 +206,21 @@ public class AdCreateActivity extends AppCompatActivity {
         raito = binding.raitoEt.getText().toString();
 //        tile = binding.txtTiLe.getText().toString().trim();
         giamgia = binding.giamgiaSC.isChecked();
-        Log.d(TAG, "validate: giảm giá: "+giamgia);
+        Log.d(TAG, "validate: giảm giá: " + giamgia);
 
         quantitys = Integer.parseInt(quantity);
 
 
-        if (giamgia){
+        if (giamgia) {
             //product is with discount
-            reducedprice = String.valueOf((Integer.parseInt(price) * Integer.parseInt(raito)/100));
-            Log.d(TAG, "validate: reducedprice: "+reducedprice);
+            reducedprice = String.valueOf((Integer.parseInt(price) * Integer.parseInt(raito) / 100));
+            Log.d(TAG, "validate: reducedprice: " + reducedprice);
             reducedprices = Integer.parseInt(price) - Integer.parseInt(reducedprice);
 //            binding.edtGiamCon.setText(""+reducedprices);
             raitos = Integer.parseInt(raito);
             prices = Integer.parseInt(price);
-//            if (reducedprice.isEmpty()){
-//
-//            }
-            if (raito.isEmpty()){
-                binding.raitoEt.setError("Bạn chưa nhập % giá giảm");
-                binding.raitoEt.requestFocus();
-            }
 
-        }
-        else {
+        } else {
             //product is without discount
             reducedprice = "0";
             raito = "0";
@@ -238,47 +229,43 @@ public class AdCreateActivity extends AppCompatActivity {
             raitos = Integer.parseInt(raito);
             prices = Integer.parseInt(price);
         }
-        if (quantity.isEmpty()){
-            binding.quantityEt.setError("Nhập số lượng sản phẩm");
-            binding.quantityEt.requestFocus();
-        }
-        if (brand.isEmpty()){
+        if (brand.isEmpty()) {
             binding.brandEt.setError("Nhập thương hiệu của bạn");
             binding.brandEt.requestFocus();
-        }
-        else if (category.isEmpty()){
+        } else if (category.isEmpty()) {
             binding.categoryEt.setError("Bạn chưa chọn loại");
             binding.categoryEt.requestFocus();
-        }
-        else if (condition.isEmpty()){
+        } else if (condition.isEmpty()) {
             binding.conditionEt.setError("Bạn chưa chọn tình trạng");
             binding.conditionEt.requestFocus();
-        }
-        else if (title.isEmpty()){
+        } else if (quantity.isEmpty()) {
+            binding.quantityEt.setError("Nhập số lượng sản phẩm");
+            binding.quantityEt.requestFocus();
+        } else if (address.isEmpty()) {
+            binding.locationEt.setError("Bạn chưa chọn vị trí maps cho sản phẩm");
+            binding.locationEt.requestFocus();
+        } else if (price.isEmpty()) {
+            binding.priceEt.setError("Bạn chưa nhập giá cho sản phẩm");
+            binding.priceEt.requestFocus();
+        } else if (raito.isEmpty()) {
+            binding.raitoEt.setError("Bạn chưa nhập % giá giảm");
+            binding.raitoEt.requestFocus();
+        } else if (title.isEmpty()) {
             binding.titleEt.setError("Bạn chưa nhập tiêu đề");
             binding.titleEt.requestFocus();
-        }
-
-        else if (description.isEmpty()){
+        } else if (description.isEmpty()) {
             binding.descriptionsEt.setError("Bạn chưa mô tả sản phẩm");
             binding.descriptionsEt.requestFocus();
 
-        }
-        else if (price.isEmpty()){
-            binding.priceEt.setError("Bạn chưa nhập giá cho sản phẩm");
-            binding.priceEt.requestFocus();
-        }
-        else if (imagePickedArrayList.isEmpty()){
-            Utils.toastyInfo(this,"Chọn ít nhất trên hình ảnh");
-        }
-        else{
-            if (isEditMode){
+        } else if (imagePickedArrayList.isEmpty()) {
+            Utils.toastyInfo(this, "Chọn ít nhất trên hình ảnh");
+        } else {
+            if (isEditMode) {
                 updateAd();
-                Log.d(TAG, "validate: update: "+isEditMode);
+                Log.d(TAG, "validate: update: " + isEditMode);
                 Log.d(TAG, "validate: updateAd");
-            }
-            else {
-                Log.d(TAG, "validate: create: "+isEditMode);
+            } else {
+                Log.d(TAG, "validate: create: " + isEditMode);
                 Log.d(TAG, "validate: postAd");
                 postAd();
             }
@@ -299,24 +286,24 @@ public class AdCreateActivity extends AppCompatActivity {
         String keyId = reference.push().getKey(); // giữ lại key ID mới tạo để sử dụng cho lần sau
 
 
-        HashMap<String,Object> hashMap = new HashMap<>();
-        hashMap.put("id",""+keyId); //id của Ad mình mới tao ra
-        Log.d(TAG, "postAd: id: "+keyId);
-        hashMap.put("uid",firebaseAuth.getUid()); // id của tài khoản user
-        hashMap.put("brand",brand);
-        hashMap.put("category",category);
-        hashMap.put("condition",condition);
-        hashMap.put("address",address);
-        hashMap.put("price",prices);
-        hashMap.put("reducedprice",reducedprices);
-        hashMap.put("raito",raitos);
-        hashMap.put("quantity",quantitys);
-        hashMap.put("discount",giamgia);
-        hashMap.put("title",title);
-        hashMap.put("description",description);
-        hashMap.put("timestamp",timestamp);
-        hashMap.put("latitude",latitude);
-        hashMap.put("longitude",longitude);
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("id", "" + keyId); //id của Ad mình mới tao ra
+        Log.d(TAG, "postAd: id: " + keyId);
+        hashMap.put("uid", firebaseAuth.getUid()); // id của tài khoản user
+        hashMap.put("brand", brand);
+        hashMap.put("category", category);
+        hashMap.put("condition", condition);
+        hashMap.put("address", address);
+        hashMap.put("price", prices);
+        hashMap.put("reducedprice", reducedprices);
+        hashMap.put("raito", raitos);
+        hashMap.put("quantity", quantitys);
+        hashMap.put("discount", giamgia);
+        hashMap.put("title", title);
+        hashMap.put("description", description);
+        hashMap.put("timestamp", timestamp);
+        hashMap.put("latitude", latitude);
+        hashMap.put("longitude", longitude);
         hashMap.put("status", Utils.AD_STATUS_AVAILABLE);
 
 
@@ -334,7 +321,7 @@ public class AdCreateActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "onFailure: ",e);
+                        Log.d(TAG, "onFailure: ", e);
                         progressDialog.dismiss();
 
                     }
@@ -349,23 +336,23 @@ public class AdCreateActivity extends AppCompatActivity {
         progressDialog.setMessage("Đang chỉnh sửa quảng cáo");
         progressDialog.show();
         long timestamp = Utils.getTimestamp();
-        HashMap<String,Object> hashMap = new HashMap<>();
+        HashMap<String, Object> hashMap = new HashMap<>();
 
-        hashMap.put("uid",firebaseAuth.getUid()); // id của tài khoản user
-        hashMap.put("brand",brand);
-        hashMap.put("category",category);
-        hashMap.put("condition",condition);
-        hashMap.put("address",address);
-        hashMap.put("price",prices);
-        hashMap.put("reducedprice",reducedprices);
-        hashMap.put("raito",raitos);
-        hashMap.put("quantity",quantitys);
-        hashMap.put("discount",giamgia);
-        hashMap.put("title",title);
-        hashMap.put("description",description);
-        hashMap.put("timestamp",timestamp);
-        hashMap.put("latitude",latitude);
-        hashMap.put("longitude",longitude);
+        hashMap.put("uid", firebaseAuth.getUid()); // id của tài khoản user
+        hashMap.put("brand", brand);
+        hashMap.put("category", category);
+        hashMap.put("condition", condition);
+        hashMap.put("address", address);
+        hashMap.put("price", prices);
+        hashMap.put("reducedprice", reducedprices);
+        hashMap.put("raito", raitos);
+        hashMap.put("quantity", quantitys);
+        hashMap.put("discount", giamgia);
+        hashMap.put("title", title);
+        hashMap.put("description", description);
+        hashMap.put("timestamp", timestamp);
+        hashMap.put("latitude", latitude);
+        hashMap.put("longitude", longitude);
         hashMap.put("status", Utils.AD_STATUS_AVAILABLE);
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProductAds");
@@ -384,7 +371,7 @@ public class AdCreateActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "onFailure: Lỗi: "+e);
+                        Log.d(TAG, "onFailure: Lỗi: " + e);
                         progressDialog.dismiss();
                     }
                 });
@@ -392,31 +379,31 @@ public class AdCreateActivity extends AppCompatActivity {
     }
 
     private void uploadImageUrl(String keyId) {
-        for (int i=0; i<imagePickedArrayList.size(); i++){
+        for (int i = 0; i < imagePickedArrayList.size(); i++) {
 
             ModelImagePicked modelImagePicked = imagePickedArrayList.get(i);
 
-            if (!modelImagePicked.getFromInternet()){
+            if (!modelImagePicked.getFromInternet()) {
                 Log.d(TAG, "uploadImageUrl: !modelImagePicked.getFromInternet()");
                 String imageId = modelImagePicked.getId();
 
-                String filePathName = "ProductAds/"+imageId;
+                String filePathName = "ProductAds/" + imageId;
 
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference(filePathName);
-                int imageIndexForProgress = i+1;
+                int imageIndexForProgress = i + 1;
 
-                Log.d(TAG, "uploadImagesStorage: "+imageId);
-                Log.d(TAG, "uploadImagesStorage: "+filePathName);
-                Log.d(TAG, "uploadImagesStorage: "+imageIndexForProgress);
+                Log.d(TAG, "uploadImagesStorage: " + imageId);
+                Log.d(TAG, "uploadImagesStorage: " + filePathName);
+                Log.d(TAG, "uploadImagesStorage: " + imageIndexForProgress);
 
                 storageReference.putFile(modelImagePicked.getImageUri())
                         .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
-                                double progress = (100.0 * snapshot.getBytesTransferred())/ snapshot.getTotalByteCount();
+                                double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
 
-                                String message = "Uploading "+imageIndexForProgress +" of "+ imagePickedArrayList.size() + "hình ảnh...\n tiến trình "
-                                        + (int)progress +"%";
+                                String message = "Uploading " + imageIndexForProgress + " of " + imagePickedArrayList.size() + "hình ảnh...\n tiến trình "
+                                        + (int) progress + "%";
                                 progressDialog.setMessage(message);
                                 progressDialog.show();
                             }
@@ -427,18 +414,16 @@ public class AdCreateActivity extends AppCompatActivity {
                                 Log.d(TAG, "onSuccess: ");
                                 progressDialog.dismiss();
                                 Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                                while (!uriTask.isSuccessful());
+                                while (!uriTask.isSuccessful()) ;
                                 String uploadImageUrl = uriTask.getResult().toString();
 
-                                if(uriTask.isSuccessful()){
-                                    HashMap <String,Object> hashMap = new HashMap<>();
-                                    hashMap.put("imageUrl",""+uploadImageUrl);
-                                    hashMap.put("idImageAd",""+imageId);
-                                    Log.d(TAG, "UploadImageStorageUrl: imageUrl: "+uploadImageUrl);
-                                    Log.d(TAG, "UploadImageStorageUrl: idImageAd: "+modelImagePicked.getId());
-                                    if (uploadImageUrl != null){
-
-
+                                if (uriTask.isSuccessful()) {
+                                    HashMap<String, Object> hashMap = new HashMap<>();
+                                    if (uploadImageUrl != null) {
+                                        hashMap.put("imageUrl", "" + uploadImageUrl);
+                                        hashMap.put("idImageAd", "" + imageId);
+                                        Log.d(TAG, "UploadImageStorageUrl: imageUrl: " + uploadImageUrl);
+                                        Log.d(TAG, "UploadImageStorageUrl: idImageAd: " + modelImagePicked.getId());
                                     }
 
                                     //lấy theo id Ads. Chia cây Ads-IdAd->Images->ImageId->ImageData
@@ -448,10 +433,9 @@ public class AdCreateActivity extends AppCompatActivity {
 
 
                                 }
-                                Utils.toastySuccess(AdCreateActivity.this,"Upload hình ảnh thành công");
+                                Utils.toastySuccess(AdCreateActivity.this, "Upload hình ảnh thành công");
                                 Intent intentImage = new Intent(AdCreateActivity.this, MainSellerActivity.class);
                                 startActivity(intentImage);
-
 
 
                             }
@@ -459,7 +443,7 @@ public class AdCreateActivity extends AppCompatActivity {
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Log.d(TAG, "onFailure: Lỗi",e);
+                                Log.d(TAG, "onFailure: Lỗi", e);
                                 progressDialog.dismiss();
                             }
                         });
@@ -472,9 +456,9 @@ public class AdCreateActivity extends AppCompatActivity {
     private void showImagePickOption() {
         Log.d(TAG, "showImagePickOption: ");
 
-        PopupMenu popupMenu = new androidx.appcompat.widget.PopupMenu(AdCreateActivity.this,binding.toolbarImageBtn);
-        popupMenu.getMenu().add(Menu.NONE,1,1,"Camera");
-        popupMenu.getMenu().add(Menu.NONE,2,2,"Gallery");
+        PopupMenu popupMenu = new androidx.appcompat.widget.PopupMenu(AdCreateActivity.this, binding.toolbarImageBtn);
+        popupMenu.getMenu().add(Menu.NONE, 1, 1, "Camera");
+        popupMenu.getMenu().add(Menu.NONE, 2, 2, "Gallery");
 
         popupMenu.show();
 
@@ -482,19 +466,18 @@ public class AdCreateActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 int itemId = item.getItemId();
-                if (itemId ==1){
+                if (itemId == 1) {
                     Log.d(TAG, "onMenuItemClick: Mở camera, check camera");
-                    if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.TIRAMISU){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         requestCameraPemissions.launch(new String[]{Manifest.permission.CAMERA});
-                    }else {
+                    } else {
                         requestCameraPemissions.launch(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE});
                     }
-                }
-                else if (itemId==2){
+                } else if (itemId == 2) {
                     Log.d(TAG, "onMenuItemClick: Mở storage, check storage");
-                    if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.TIRAMISU){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                         pickFromGallery();
-                    }else {
+                    } else {
                         requestStoragePemissions.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                     }
                 }
@@ -506,20 +489,19 @@ public class AdCreateActivity extends AppCompatActivity {
 
     private ActivityResultLauncher<String[]> requestCameraPemissions = registerForActivityResult(
             new ActivityResultContracts.RequestMultiplePermissions(),
-            new ActivityResultCallback<Map<String,Boolean>>(){
+            new ActivityResultCallback<Map<String, Boolean>>() {
 
                 @Override
                 public void onActivityResult(Map<String, Boolean> result) {
-                    Log.d(TAG, "onActivityResult: "+result.toString());
+                    Log.d(TAG, "onActivityResult: " + result.toString());
                     boolean areAllGranted = true;
-                    for (Boolean isGranted: result.values()){
+                    for (Boolean isGranted : result.values()) {
                         areAllGranted = areAllGranted && isGranted;
                     }
-                    if (areAllGranted){
+                    if (areAllGranted) {
                         Log.d(TAG, "onActivityResult: Tất cả quyền camera & storage");
                         pickFromCamera();
-                    }
-                    else {
+                    } else {
                         Log.d(TAG, "onActivityResult: Tất cả hoặc chỉ có một quyền");
                         Toast.makeText(AdCreateActivity.this, "Quyền camera hoặc storage", Toast.LENGTH_SHORT).show();
                     }
@@ -532,10 +514,9 @@ public class AdCreateActivity extends AppCompatActivity {
             new ActivityResultCallback<Boolean>() {
                 @Override
                 public void onActivityResult(Boolean isGranted) {
-                    if (isGranted){
+                    if (isGranted) {
                         pickFromGallery();
-                    }
-                    else {
+                    } else {
                         Toast.makeText(AdCreateActivity.this, "Quyền Storage chưa cấp quyền", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -548,24 +529,24 @@ public class AdCreateActivity extends AppCompatActivity {
         intent.setType("image/*");
         galleryActivityResultLaucher.launch(intent);
     }
+
     private ActivityResultLauncher<Intent> galleryActivityResultLaucher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK){
-                        Log.d(TAG, "onActivityResult: Hình ảnh thư viện: "+imageUri);
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Log.d(TAG, "onActivityResult: Hình ảnh thư viện: " + imageUri);
                         Intent data = result.getData();
                         imageUri = data.getData();
 
-                        String timestamp = ""+ Utils.getTimestamp();
+                        String timestamp = "" + Utils.getTimestamp();
 
-                        ModelImagePicked modelImagePicked = new ModelImagePicked(timestamp,imageUri,null,false);
+                        ModelImagePicked modelImagePicked = new ModelImagePicked(timestamp, imageUri, null, false);
                         imagePickedArrayList.add(modelImagePicked);
 
                         loadImages();
-                    }
-                    else {
+                    } else {
                         Toast.makeText(AdCreateActivity.this, "Hủy", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -587,27 +568,26 @@ public class AdCreateActivity extends AppCompatActivity {
         cameraActivityResultLaucher.launch(intent);
 
     }
+
     private ActivityResultLauncher<Intent> cameraActivityResultLaucher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK){
-                        Log.d(TAG, "onActivityResult: Camera"+imageUri);
-                        String timestamp = ""+System.currentTimeMillis();
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Log.d(TAG, "onActivityResult: Camera" + imageUri);
+                        String timestamp = "" + System.currentTimeMillis();
 
-                        ModelImagePicked modelImagePicked = new ModelImagePicked(timestamp,imageUri,null,false);
+                        ModelImagePicked modelImagePicked = new ModelImagePicked(timestamp, imageUri, null, false);
                         imagePickedArrayList.add(modelImagePicked);
 
                         loadImages();
-                    }
-                    else {
+                    } else {
                         Toast.makeText(AdCreateActivity.this, "Hủy", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
     );
-
 
 
     //xử lý locationPickerActivityResultLauncher
@@ -616,23 +596,22 @@ public class AdCreateActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    if(result.getResultCode() == Activity.RESULT_OK){
+                    if (result.getResultCode() == Activity.RESULT_OK) {
                         Log.d(TAG, "onActivityResult: ");
                         Intent data = result.getData();
 
-                        if(data != null){
-                            latitude = data.getDoubleExtra("latitude",0.0);
-                            longitude = data.getDoubleExtra("longitude",0.0);
+                        if (data != null) {
+                            latitude = data.getDoubleExtra("latitude", 0.0);
+                            longitude = data.getDoubleExtra("longitude", 0.0);
                             address = data.getStringExtra("address");
-                            Log.d(TAG, "onActivityResult: latitude"+latitude);
-                            Log.d(TAG, "onActivityResult: longitude"+longitude);
-                            Log.d(TAG, "onActivityResult: address"+address);
+                            Log.d(TAG, "onActivityResult: latitude" + latitude);
+                            Log.d(TAG, "onActivityResult: longitude" + longitude);
+                            Log.d(TAG, "onActivityResult: address" + address);
 
                             binding.locationEt.setText(address);
-                        }
-                        else {
+                        } else {
                             Log.d(TAG, "onActivityResult: Lỗi");
-                            Utils.toastyError(AdCreateActivity.this,"Lỗi");
+                            Utils.toastyError(AdCreateActivity.this, "Lỗi");
                         }
                     }
                 }
@@ -649,22 +628,22 @@ public class AdCreateActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                        String title = ""+snapshot.child("title").getValue();
-                        String brand = ""+snapshot.child("brand").getValue();
-                        String description = ""+snapshot.child("description").getValue();
-                        String address = ""+snapshot.child("address").getValue();
-                        String condition = ""+snapshot.child("condition").getValue();
-                        String category = ""+snapshot.child("category").getValue();
-                        boolean discount = Boolean.parseBoolean(""+snapshot.child("discount").getValue());
-                        String quantity = ""+snapshot.child("quantity").getValue();
-                        String reducedprice = ""+snapshot.child("reducedprice").getValue();
-                        String raito = ""+snapshot.child("raito").getValue();
-                        String price = ""+snapshot.child("price").getValue();
+                        String title = "" + snapshot.child("title").getValue();
+                        String brand = "" + snapshot.child("brand").getValue();
+                        String description = "" + snapshot.child("description").getValue();
+                        String address = "" + snapshot.child("address").getValue();
+                        String condition = "" + snapshot.child("condition").getValue();
+                        String category = "" + snapshot.child("category").getValue();
+                        boolean discount = Boolean.parseBoolean("" + snapshot.child("discount").getValue());
+                        String quantity = "" + snapshot.child("quantity").getValue();
+                        String reducedprice = "" + snapshot.child("reducedprice").getValue();
+                        String raito = "" + snapshot.child("raito").getValue();
+                        String price = "" + snapshot.child("price").getValue();
                         latitude = (Double) snapshot.child("latitude").getValue();
                         longitude = (Double) snapshot.child("longitude").getValue();
 
-                        Log.d(TAG, "onDataChange: price: "+price);
-                        Log.d(TAG, "onDataChange: price: "+reducedprice);
+                        Log.d(TAG, "onDataChange: price: " + price);
+                        Log.d(TAG, "onDataChange: price: " + reducedprice);
 
 
                         binding.brandEt.setText(brand);
@@ -678,12 +657,12 @@ public class AdCreateActivity extends AppCompatActivity {
 
                         binding.raitoEt.setText(raito);
 
-                        if (discount){
+                        if (discount) {
                             binding.giamgiaSC.setChecked(true);
 //                            binding.edtGiamCon.setVisibility(View.VISIBLE);
                             binding.raitoEt.setVisibility(View.VISIBLE);
 //                            binding.edtGiamCon.setText(reducedprice);
-                        }else {
+                        } else {
                             binding.giamgiaSC.setChecked(false);
 //                            binding.edtGiamCon.setVisibility(View.VISIBLE);
                             binding.raitoEt.setVisibility(View.GONE);
@@ -695,12 +674,12 @@ public class AdCreateActivity extends AppCompatActivity {
                         ref.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for (DataSnapshot ds: snapshot.getChildren()){
-                                    String id = ""+ds.child("idImageAd").getValue();
-                                    String imageUrl = ""+ds.child("imageUrl").getValue();
+                                for (DataSnapshot ds : snapshot.getChildren()) {
+                                    String id = "" + ds.child("idImageAd").getValue();
+                                    String imageUrl = "" + ds.child("imageUrl").getValue();
 
-                                    Log.d(TAG, "onDataChange: idImage: "+id);
-                                    Log.d(TAG, "onDataChange: imageUrl: "+imageUrl);
+                                    Log.d(TAG, "onDataChange: idImage: " + id);
+                                    Log.d(TAG, "onDataChange: imageUrl: " + imageUrl);
 
                                     ModelImagePicked modelImagePicked = new ModelImagePicked(id, null, imageUrl, true);
                                     imagePickedArrayList.add(modelImagePicked);

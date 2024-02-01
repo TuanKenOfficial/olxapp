@@ -110,7 +110,7 @@ public class LoginGoogleActivity extends AppCompatActivity {
                             Log.d(TAG, "onDataChange: tài khoản google đã đăng nhập");
 //                            firebaseAuth.signOut();
                             Utils.toastySuccess(LoginGoogleActivity.this, "Tài khoản google đã đăng nhập trước đó");
-                            startActivity(new Intent(LoginGoogleActivity.this,MainActivity.class));
+                            startActivity(new Intent(LoginGoogleActivity.this,MainUserActivity.class));
                         }
 
                     }
@@ -156,7 +156,7 @@ public class LoginGoogleActivity extends AppCompatActivity {
                     public void onSuccess(Void unused) {
                         Utils.toastySuccess(LoginGoogleActivity.this, "Tạo tài khoản thành công");
                         Log.d(TAG, "onSuccess: Thành công");
-                        startActivity(new Intent(LoginGoogleActivity.this, MainActivity.class));
+                        startActivity(new Intent(LoginGoogleActivity.this, MainUserActivity.class));
                         finishAffinity();
                     }
                 })

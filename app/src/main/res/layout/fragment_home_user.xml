@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragment.HomeSellerFragment">
+    tools:context=".fragment.HomeUserFragment">
 
     <!--Location-->
     <com.google.android.material.card.MaterialCardView
@@ -73,15 +73,15 @@
             app:cardUseCompatPadding="true"
             android:layout_toLeftOf="@id/filterProductBtn"
             app:cardCornerRadius="5dp">
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/searchProductEt"
-            android:drawableStart="@drawable/search"
-            android:background="@android:color/transparent"
-            android:drawablePadding="10dp"
-            android:padding="10dp"
-            android:hint="Tìm kiếm"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/searchProductEt"
+                android:drawableStart="@drawable/search"
+                android:background="@android:color/transparent"
+                android:drawablePadding="10dp"
+                android:padding="10dp"
+                android:hint="Tìm kiếm"/>
         </com.google.android.material.card.MaterialCardView>
         <!--filter-->
         <ImageButton

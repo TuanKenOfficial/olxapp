@@ -132,7 +132,7 @@ public class LoginPhoneActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                             Log.d(TAG, "onSuccess: Tài khoản đã có");
                             Utils.toastySuccess(LoginPhoneActivity.this, "Tài khoản số điện thoại đã đăng ký");
-                            startActivity(new Intent(LoginPhoneActivity.this, MainActivity.class));
+                            startActivity(new Intent(LoginPhoneActivity.this, MainUserActivity.class));
                         }
 
                     }
@@ -181,7 +181,7 @@ public class LoginPhoneActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         Utils.toastySuccess(LoginPhoneActivity.this, "Tạo tài khoản thành công");
                         Log.d(TAG, "onSuccess: Thành công");
-                        startActivity(new Intent(LoginPhoneActivity.this, MainActivity.class));
+                        startActivity(new Intent(LoginPhoneActivity.this, MainUserActivity.class));
                         finishAffinity();
                     }
                 })

@@ -53,6 +53,7 @@
             android:id="@+id/profileIv"
             android:layout_width="70dp"
             android:layout_height="70dp"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
             android:src="@drawable/shop" />
 
@@ -61,6 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/profileIv"
+            android:layout_marginTop="5dp"
             android:text="Tên"
             android:textColor="@color/colorwhite"
             android:textStyle="bold" />
@@ -68,6 +70,7 @@
         <TextView
             android:id="@+id/shopNameTv"
             android:text="Tên Shop"
+            android:layout_marginTop="5dp"
             android:textColor="@color/colorwhite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -77,6 +80,7 @@
         <TextView
             android:id="@+id/emailTv"
             android:text="Email"
+            android:layout_marginTop="5dp"
             android:textColor="@color/colorwhite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -85,12 +89,22 @@
         <TextView
             android:id="@+id/phoneTv"
             android:text="Phone"
+            android:layout_marginTop="5dp"
             android:textColor="@color/colorwhite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/profileIv"
             android:layout_below="@id/emailTv"/>
 
+        <TextView
+            android:id="@+id/accountTv"
+            android:text="Tài khoản"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/colorwhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/emailTv"/>
 
     </RelativeLayout>
     <View

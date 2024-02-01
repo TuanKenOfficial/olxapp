@@ -31,6 +31,7 @@ import com.example.olx.activities.LocationPickerActivity;
 import com.example.olx.adapter.AdapterAddProduct;
 
 import com.example.olx.databinding.FragmentHomeSellerBinding;
+import com.example.olx.databinding.FragmentHomeUserBinding;
 import com.example.olx.model.ModelAddProduct;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -41,11 +42,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class HomeSellerFragment extends Fragment {
+public class HomeUserFragment extends Fragment {
 
     private FirebaseAuth firebaseAuth;
     private ProgressDialog progressDialog;
-    private FragmentHomeSellerBinding binding;
+    private FragmentHomeUserBinding binding;
 
     private static  final  String TAG="HOME_TAG";
 
@@ -71,7 +72,7 @@ public class HomeSellerFragment extends Fragment {
         super.onAttach(context);
     }
 
-    public HomeSellerFragment() {
+    public HomeUserFragment() {
         // Required empty public constructor
     }
 
@@ -81,7 +82,7 @@ public class HomeSellerFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         // Inflate the layout for this fragment
-        binding = FragmentHomeSellerBinding.inflate(LayoutInflater.from(mContext),container,false);
+        binding = FragmentHomeUserBinding.inflate(LayoutInflater.from(mContext),container,false);
         return binding.getRoot();
 
     }
@@ -222,42 +223,42 @@ public class HomeSellerFragment extends Fragment {
         //get all products
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProductAds");
         reference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        //before getting reset list
-                        productList.clear();
-                        for (DataSnapshot ds: dataSnapshot.getChildren()){
-                            ModelAddProduct modelAddProduct = ds.getValue(ModelAddProduct.class);
-                            double distance = calculateDistanceKm(modelAddProduct.getLatitude(),modelAddProduct.getLongitude());
-                            Log.d(TAG, "onDataChange: distance: "+distance);
-                            //if selected category matches product category then add in list
-                            if (selected.equals("Tất cả")){
-                                if(distance<=MAX_DISTANCE_TO_LOAD_ADS_KM){
-                                    Log.d(TAG, "onDataChange: Tất cả");
-                                    productList.add(modelAddProduct);
-                                }
-                            }else {
-                                if (selected.equals(modelAddProduct.getCategory())){
-                                    if (distance<=MAX_DISTANCE_TO_LOAD_ADS_KM){
-                                        Log.d(TAG, "onDataChange: category: "+modelAddProduct.getCategory());
-                                        productList.add(modelAddProduct);
-                                    }
-                                }
-                            }
-
-
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //before getting reset list
+                productList.clear();
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+                    ModelAddProduct modelAddProduct = ds.getValue(ModelAddProduct.class);
+                    double distance = calculateDistanceKm(modelAddProduct.getLatitude(),modelAddProduct.getLongitude());
+                    Log.d(TAG, "onDataChange: distance: "+distance);
+                    //if selected category matches product category then add in list
+                    if (selected.equals("Tất cả")){
+                        if(distance<=MAX_DISTANCE_TO_LOAD_ADS_KM){
+                            Log.d(TAG, "onDataChange: Tất cả");
+                            productList.add(modelAddProduct);
                         }
-                        //setup adapter
-                        adapterAddProduct = new AdapterAddProduct(mContext, productList);
-                        //set adapter
-                        binding.productsRv.setAdapter(adapterAddProduct);
+                    }else {
+                        if (selected.equals(modelAddProduct.getCategory())){
+                            if (distance<=MAX_DISTANCE_TO_LOAD_ADS_KM){
+                                Log.d(TAG, "onDataChange: category: "+modelAddProduct.getCategory());
+                                productList.add(modelAddProduct);
+                            }
+                        }
                     }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-                });
+                }
+                //setup adapter
+                adapterAddProduct = new AdapterAddProduct(mContext, productList);
+                //set adapter
+                binding.productsRv.setAdapter(adapterAddProduct);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private ActivityResultLauncher<Intent> locationPickerActivityResult =registerForActivityResult(
@@ -295,27 +296,27 @@ public class HomeSellerFragment extends Fragment {
         //get all products
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProductAds");
         reference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        //before getting reset list
-                        productList.clear();
-                        for (DataSnapshot ds: dataSnapshot.getChildren()){
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //before getting reset list
+                productList.clear();
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
 
-                            ModelAddProduct modelProduct = ds.getValue(ModelAddProduct.class);
-                            productList.add(modelProduct);
+                    ModelAddProduct modelProduct = ds.getValue(ModelAddProduct.class);
+                    productList.add(modelProduct);
 
-                        }
-                        //setup adapter
-                        adapterAddProduct = new AdapterAddProduct(mContext, productList);
-                        //set adapter
-                        binding.productsRv.setAdapter(adapterAddProduct);
-                    }
+                }
+                //setup adapter
+                adapterAddProduct = new AdapterAddProduct(mContext, productList);
+                //set adapter
+                binding.productsRv.setAdapter(adapterAddProduct);
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    }
-                });
+            }
+        });
 
     }
 

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
 
+import com.bumptech.glide.Glide;
 import com.example.olx.fragment.HomeSellerFragment;
 import com.example.olx.R;
 import com.example.olx.Utils;
@@ -24,12 +26,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+
+/** @noinspection deprecation*/
 public class MainSellerActivity extends AppCompatActivity {
 
     private ActivityMainSellerBinding binding;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private static final String TAG ="MainSeller";
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,23 +44,17 @@ public class MainSellerActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Vui lòng đợi trong giây lát");
+        progressDialog.setCanceledOnTouchOutside(false);
         showHomeFragment(); //Home Fragment
-        loadSellerProfile();
-        if (firebaseUser == null){
-            Utils.toast(MainSellerActivity.this,"Bạn chưa đăng nhập");
-            startActivity(new Intent(MainSellerActivity.this,LoginOptionActivity.class));
-            finish();
-        }
-        else {
-            //code sau
-        }
+        checkUser();
 
 
         binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                firebaseAuth.signOut();
-                finish();
+                makeMeOffline();
             }
         });
         binding.bottomNv.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -159,6 +159,39 @@ public class MainSellerActivity extends AppCompatActivity {
         });
     }
 
+    private void makeMeOffline() {
+        //after logging in, make user online
+        progressDialog.setMessage("Logging Out...");
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("online","false");
+
+        //update value to db
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.child(firebaseAuth.getUid()).updateChildren(hashMap)
+                .addOnSuccessListener(aVoid -> {
+                    //update successfully
+                    firebaseAuth.signOut();
+                    checkUser();
+                })
+                .addOnFailureListener(e -> {
+                    //failed updating
+                    progressDialog.dismiss();
+                    Utils.toastyError(MainSellerActivity.this,""+e.getMessage());
+
+                });
+    }
+
+    private void checkUser() {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user == null){
+            Utils.toastyInfo(MainSellerActivity.this,"Bạn chưa đăng nhập");
+        }
+        else {
+            loadSellerProfile();
+        }
+    }
+
     private void loadSellerProfile() {
         Log.d(TAG, "loadSellerProfile: ");
         String registerUserUid = firebaseAuth.getUid();
@@ -178,12 +211,25 @@ public class MainSellerActivity extends AppCompatActivity {
                         Log.d(TAG, "onDataChange: phone"+phone);
                         String profileImage =""+snapshot.child("profileImage").getValue();
                         Log.d(TAG, "onDataChange: profileImage"+profileImage);
+                        String accountType =""+snapshot.child("accountType").getValue();
+                        Log.d(TAG, "onDataChange: accountType"+accountType);
+                        binding.nameTv.setText("Tên:"+name);
+                        binding.shopNameTv.setText("Tên Shop:"+shopName);
+                        binding.emailTv.setText("Email:"+email);
+                        binding.phoneTv.setText("SĐT:"+phone);
+                        binding.accountTv.setText("Tài khoản:"+accountType);
 
-                        binding.nameTv.setText(name);
-                        binding.shopNameTv.setText(shopName);
-                        binding.emailTv.setText(email);
-                        binding.phoneTv.setText(phone);
-
+                        //profileImage
+                        //profileImage
+                        try {
+                            Glide.with(MainSellerActivity.this)
+                                    .load(profileImage)
+                                    .placeholder(R.drawable.image)
+                                    .into(binding.profileIv);
+                        }catch (Exception e){
+                            Log.d(TAG, "onBindViewHolder: "+e);
+                            Utils.toastyError(MainSellerActivity.this,""+e);
+                        }
                     }
 
                     @Override
@@ -208,7 +254,7 @@ public class MainSellerActivity extends AppCompatActivity {
     private void showHomeFragment() {
         HomeSellerFragment fragment = new HomeSellerFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(binding.fragmentsFl.getId(), fragment, "HomeFragment");
+        fragmentTransaction.replace(binding.fragmentsFl.getId(), fragment, "HomeSellerFragment");
         fragmentTransaction.commit();
     }
 }

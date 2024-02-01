@@ -2,7 +2,7 @@ package com.example.olx;
 
 import android.widget.Filter;
 
-import com.example.olx.adapter.AdapterAddProductSeller;
+import com.example.olx.adapter.AdapterAddProduct;
 import com.example.olx.model.ModelAddProduct;
 
 import java.util.ArrayList;
@@ -10,12 +10,12 @@ import java.util.ArrayList;
 public class FilterAddProducts extends Filter {
 
     //arraylist in which we want to search
-    AdapterAddProductSeller adapterAd;
+    AdapterAddProduct adapterAd;
     ArrayList<ModelAddProduct> filterList;
     //adapter
 
 
-    public FilterAddProducts(AdapterAddProductSeller adapterAd, ArrayList<ModelAddProduct> filterList) {
+    public FilterAddProducts(AdapterAddProduct adapterAd, ArrayList<ModelAddProduct> filterList) {
         this.adapterAd = adapterAd;
         this.filterList = filterList;
     }

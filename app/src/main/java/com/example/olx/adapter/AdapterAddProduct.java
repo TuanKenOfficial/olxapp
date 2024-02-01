@@ -2,7 +2,6 @@ package com.example.olx.adapter;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +19,7 @@ import com.example.olx.CurrencyFormatter;
 import com.example.olx.FilterAddProducts;
 import com.example.olx.R;
 import com.example.olx.Utils;
-import com.example.olx.databinding.RowAddproductSellerBinding;
+import com.example.olx.databinding.RowAddproductBinding;
 import com.example.olx.model.ModelAddProduct;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,8 +31,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class AdapterAddProductSeller extends RecyclerView.Adapter<AdapterAddProductSeller.HolderAddProductSeller> implements Filterable {
-    private RowAddproductSellerBinding binding;
+public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.HolderAddProduct> implements Filterable {
+    private RowAddproductBinding binding;
     private Context context;
     private FirebaseAuth firebaseAuth;
     public ArrayList<ModelAddProduct> adArrayList;
@@ -45,7 +44,7 @@ public class AdapterAddProductSeller extends RecyclerView.Adapter<AdapterAddProd
 
     private static final String TAG = "Aproduct";
 
-    public AdapterAddProductSeller(Context context, ArrayList<ModelAddProduct> adArrayList) {
+    public AdapterAddProduct(Context context, ArrayList<ModelAddProduct> adArrayList) {
         this.context = context;
         this.adArrayList = adArrayList;
         this.filterList = adArrayList;
@@ -56,13 +55,13 @@ public class AdapterAddProductSeller extends RecyclerView.Adapter<AdapterAddProd
 
     @NonNull
     @Override
-    public AdapterAddProductSeller.HolderAddProductSeller onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        binding = RowAddproductSellerBinding.inflate(LayoutInflater.from(context), parent, false);
-        return new HolderAddProductSeller(binding.getRoot());
+    public AdapterAddProduct.HolderAddProduct onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        binding = com.example.olx.databinding.RowAddproductBinding.inflate(LayoutInflater.from(context), parent, false);
+        return new HolderAddProduct(binding.getRoot());
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AdapterAddProductSeller.HolderAddProductSeller holder, int position) {
+    public void onBindViewHolder(@NonNull AdapterAddProduct.HolderAddProduct holder, int position) {
         Log.d(TAG, "onBindViewHolder: ");
         ModelAddProduct modelAd = adArrayList.get(position);
 
@@ -121,10 +120,10 @@ public class AdapterAddProductSeller extends RecyclerView.Adapter<AdapterAddProd
 
     }
 
-    private void checkIsFavorites(ModelAddProduct modelAd, HolderAddProductSeller holder) {
+    private void checkIsFavorites(ModelAddProduct modelAd, HolderAddProduct holder) {
     }
 
-    private void loadAdFirstImage(ModelAddProduct modelAd, HolderAddProductSeller holder) {
+    private void loadAdFirstImage(ModelAddProduct modelAd, HolderAddProduct holder) {
         Log.d(TAG, "loadAdFirstImage: ");
         String id = modelAd.getId();
         Log.d(TAG, "loadAdFirstImage: "+id);
@@ -168,13 +167,13 @@ public class AdapterAddProductSeller extends RecyclerView.Adapter<AdapterAddProd
         return filterAddProducts;
     }
 
-    public class HolderAddProductSeller extends RecyclerView.ViewHolder{
+    public class HolderAddProduct extends RecyclerView.ViewHolder{
         ShapeableImageView imageIv;
         TextView titleTv, descriptionTv, addressTv, conditionTv, raitoTv, pricesTv, priceTv, dateTv;
 
         ImageButton favBtn, otherBtn;
 
-        public HolderAddProductSeller(@NonNull View itemView) {
+        public HolderAddProduct(@NonNull View itemView) {
             super(itemView);
             imageIv = binding.imageIv;
             titleTv = binding.titleTv;
