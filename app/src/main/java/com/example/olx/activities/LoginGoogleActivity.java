@@ -128,21 +128,22 @@ public class LoginGoogleActivity extends AppCompatActivity {
 
     private void updateDatabase() {
 
-        long timestamp = Utils.getTimestamp();
+        String timestamp = String.valueOf(Utils.getTimestamp());
         String registerUserEmail = firebaseAuth.getCurrentUser().getEmail();
         String registerUserUid = firebaseAuth.getUid();
 
         HashMap<String,Object> hashMap = new HashMap<>();
         hashMap.put("shopName", "shopName");
         hashMap.put("phone", "+84123456789");
-        hashMap.put("address", "5M26+XRW, Phong Hoà, Lai Vung, Đồng Tháp, Việt Nam");
-        hashMap.put("latitude", "10.15655");
-        hashMap.put("longitude", "105.66237");
+        hashMap.put("address", "");
+        hashMap.put("latitude", 0.0);
+        hashMap.put("longitude", 0.0);
         hashMap.put("timestamp", "" + timestamp);
-        hashMap.put("online", true);
-        hashMap.put("shopOpen", true);
+        hashMap.put("online", "true");
+        hashMap.put("shopOpen", "true");
         hashMap.put("name","Google");
         hashMap.put("profileImageUrl","");
+        hashMap.put("dob","Google");
         hashMap.put("accountType","Google");
         hashMap.put("timestamp",timestamp);
         hashMap.put("email", registerUserEmail);

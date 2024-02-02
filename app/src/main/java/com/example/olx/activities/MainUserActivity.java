@@ -18,6 +18,7 @@ import com.example.olx.Utils;
 import com.example.olx.databinding.ActivityMainUserBinding;
 import com.example.olx.fragment.HomeSellerFragment;
 import com.example.olx.fragment.HomeUserFragment;
+import com.example.olx.fragment.ProfileFragment;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -49,13 +50,7 @@ public class MainUserActivity extends AppCompatActivity {
         progressDialog.setCanceledOnTouchOutside(false);
         showHomeFragment();
         checkUser();
-        binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                makeMeOffline();
-               
-            }
-        });
+
 
         binding.bottomNv.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -180,28 +175,6 @@ public class MainUserActivity extends AppCompatActivity {
 //        loadUserProfile();
     }
 
-    private void makeMeOffline() {
-        //after logging in, make user online
-        progressDialog.setMessage("Logging Out...");
-
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("online","false");
-
-        //update value to db
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.child(firebaseAuth.getUid()).updateChildren(hashMap)
-                .addOnSuccessListener(aVoid -> {
-                    //update successfully
-                    firebaseAuth.signOut();
-                    checkUser();
-                })
-                .addOnFailureListener(e -> {
-                    //failed updating
-                    progressDialog.dismiss();
-                    Utils.toastyError(MainUserActivity.this,""+e.getMessage());
-
-                });
-    }
 
     private void checkUser() {
         FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -243,7 +216,7 @@ public class MainUserActivity extends AppCompatActivity {
                         try {
                             Glide.with(MainUserActivity.this)
                                     .load(profileImage)
-                                    .placeholder(R.drawable.image)
+                                    .placeholder(R.drawable.olx_trangbia)
                                     .into(binding.profileIv);
                         }catch (Exception e){
                             Log.d(TAG, "onBindViewHolder: "+e);
@@ -260,18 +233,26 @@ public class MainUserActivity extends AppCompatActivity {
     }
 
     private void showProfileFragment() {
-        Utils.toast(MainUserActivity.this,"Chức năng đang code, đợi clip sau");
+        binding.toolbarRl.setVisibility(View.GONE);
+        Utils.toast(MainUserActivity.this,"Profile User");
+        ProfileFragment fragment = new ProfileFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(binding.fragmentsFl.getId(), fragment, "ProfileFragment");
+        fragmentTransaction.commit();
     }
 
     private void showFavFragment() {
+        binding.toolbarRl.setVisibility(View.GONE);
         Utils.toast(MainUserActivity.this,"Chức năng đang code, đợi clip sau");
     }
 
     private void showChatsFragment() {
+        binding.toolbarRl.setVisibility(View.GONE);
         Utils.toast(MainUserActivity.this,"Chức năng đang code, đợi clip sau");
     }
 
     private void showHomeFragment() {
+        binding.toolbarRl.setVisibility(View.VISIBLE);
         HomeUserFragment fragment = new HomeUserFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(binding.fragmentsFl.getId(), fragment, "HomeUserFragment");

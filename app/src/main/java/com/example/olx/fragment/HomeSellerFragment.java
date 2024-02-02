@@ -147,14 +147,7 @@ public class HomeSellerFragment extends Fragment {
                         //get selected item
                         String selected = Utils.categories[which];
                         binding.filteredProductsTv.setText(selected);
-                        if (selected.equals("Tất cả")){
-                            //load all
-                            loadAllAdProducts();
-                        }
-                        else {
-                            //load filtered
-                            loadFilteredProducts(selected);
-                        }
+                        loadFilteredProducts(selected);
                     })
                     .show();
         });
@@ -231,20 +224,12 @@ public class HomeSellerFragment extends Fragment {
                             double distance = calculateDistanceKm(modelAddProduct.getLatitude(),modelAddProduct.getLongitude());
                             Log.d(TAG, "onDataChange: distance: "+distance);
                             //if selected category matches product category then add in list
-                            if (selected.equals("Tất cả")){
-                                if(distance<=MAX_DISTANCE_TO_LOAD_ADS_KM){
-                                    Log.d(TAG, "onDataChange: Tất cả");
+                            if (selected.equals(modelAddProduct.getCategory())){
+                                if (distance<=MAX_DISTANCE_TO_LOAD_ADS_KM){
+                                    Log.d(TAG, "onDataChange: category: "+modelAddProduct.getCategory());
                                     productList.add(modelAddProduct);
                                 }
-                            }else {
-                                if (selected.equals(modelAddProduct.getCategory())){
-                                    if (distance<=MAX_DISTANCE_TO_LOAD_ADS_KM){
-                                        Log.d(TAG, "onDataChange: category: "+modelAddProduct.getCategory());
-                                        productList.add(modelAddProduct);
-                                    }
-                                }
                             }
-
 
                         }
                         //setup adapter

@@ -150,7 +150,7 @@ public class LoginPhoneActivity extends AppCompatActivity {
     private void updateDatabase() {
         progressDialog.setMessage("Update lên cơ sở dữ liệu");
 
-        long timestamp = Utils.getTimestamp();
+        String timestamp = String.valueOf(Utils.getTimestamp());
         String registerUserUid = firebaseAuth.getUid();
 
 
@@ -164,11 +164,12 @@ public class LoginPhoneActivity extends AppCompatActivity {
         hashMap.put("timestamp",timestamp);
         hashMap.put("email", "olx@gmail.com");
         hashMap.put("uid", registerUserUid);
-        hashMap.put("address", "5M26+XRW, Phong Hoà, Lai Vung, Đồng Tháp, Việt Nam");
-        hashMap.put("latitude", "10.15655");
-        hashMap.put("longitude", "105.66237");
-        hashMap.put("online", true);
-        hashMap.put("shopOpen", true);
+        hashMap.put("address", "");
+        hashMap.put("latitude", 0.0);
+        hashMap.put("longitude", 0.0);
+        hashMap.put("online", "true");
+        hashMap.put("dob","Phone");
+        hashMap.put("shopOpen", "true");
         hashMap.put("accountType","Phone");
 
 

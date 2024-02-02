@@ -48,7 +48,7 @@ public class HomeUserFragment extends Fragment {
     private ProgressDialog progressDialog;
     private FragmentHomeUserBinding binding;
 
-    private static  final  String TAG="HOME_TAG";
+    private static final String TAG = "HOME_TAG";
 
     private Context mContext;
 
@@ -58,14 +58,15 @@ public class HomeUserFragment extends Fragment {
 //    private ArrayList<ModelOrderShop> orderShopArrayList;
 //    private AdapterOrderShop adapterOrderShop;
 
-    private static final int MAX_DISTANCE_TO_LOAD_ADS_KM=10;
-    private double currentLatitude=0.0;
-    private double currentLongitude=0.0;
-    private String currentAddress ="";
+    private static final int MAX_DISTANCE_TO_LOAD_ADS_KM = 10;
+    private double currentLatitude = 0.0;
+    private double currentLongitude = 0.0;
+    private String currentAddress = "";
 
     private String category;
 
     private SharedPreferences locationSp;
+
     @Override
     public void onAttach(@NonNull Context context) {
         mContext = context;
@@ -82,7 +83,7 @@ public class HomeUserFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         // Inflate the layout for this fragment
-        binding = FragmentHomeUserBinding.inflate(LayoutInflater.from(mContext),container,false);
+        binding = FragmentHomeUserBinding.inflate(LayoutInflater.from(mContext), container, false);
         return binding.getRoot();
 
     }
@@ -94,13 +95,13 @@ public class HomeUserFragment extends Fragment {
         Log.d(TAG, "onViewCreated: ");
         firebaseAuth = FirebaseAuth.getInstance();
         //hiển thị vị trí & địa chỉ
-        locationSp = mContext.getSharedPreferences("LOCATION_SP",Context.MODE_PRIVATE);
-        currentLatitude = locationSp.getFloat("CURRENT_LATITUDE",0.0f);
-        currentLongitude = locationSp.getFloat("CURRENT_LONGITUDE",0.0f);
-        currentAddress = locationSp.getString("CURRENT_ADDRESS","");
+        locationSp = mContext.getSharedPreferences("LOCATION_SP", Context.MODE_PRIVATE);
+        currentLatitude = locationSp.getFloat("CURRENT_LATITUDE", 0.0f);
+        currentLongitude = locationSp.getFloat("CURRENT_LONGITUDE", 0.0f);
+        currentAddress = locationSp.getString("CURRENT_ADDRESS", "");
 
-        if (currentLatitude != 0.0 && currentLongitude != 0.0){
-            Log.d(TAG, "onViewCreated: "+currentAddress);
+        if (currentLatitude != 0.0 && currentLongitude != 0.0) {
+            Log.d(TAG, "onViewCreated: " + currentAddress);
             binding.locationTv.setText(currentAddress);
         }
 
@@ -125,12 +126,12 @@ public class HomeUserFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 try {
-                    Log.d(TAG, "onTextChanged: CharSequence: "+s);
+                    Log.d(TAG, "onTextChanged: CharSequence: " + s);
                     String query = s.toString();
-                    Log.d(TAG, "onTextChanged: query:"+query);
+                    Log.d(TAG, "onTextChanged: query:" + query);
                     adapterAddProduct.getFilter().filter(query);
-                }catch (Exception e){
-                    Log.d(TAG, "onTextChanged: Lỗi: "+e);
+                } catch (Exception e) {
+                    Log.d(TAG, "onTextChanged: Lỗi: " + e);
                 }
             }
 
@@ -141,21 +142,14 @@ public class HomeUserFragment extends Fragment {
         });
 
         binding.filterProductBtn.setOnClickListener(v -> {
-            Log.d(TAG, "onViewCreated: "+binding.filteredProductsTv);
+            Log.d(TAG, "onViewCreated: " + binding.filteredProductsTv);
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setTitle("Sản phẩm:")
                     .setItems(Utils.categories, (dialog, which) -> {
                         //get selected item
                         String selected = Utils.categories[which];
                         binding.filteredProductsTv.setText(selected);
-                        if (selected.equals("Tất cả")){
-                            //load all
-                            loadAllAdProducts();
-                        }
-                        else {
-                            //load filtered
-                            loadFilteredProducts(selected);
-                        }
+                        loadFilteredProducts(selected);
                     })
                     .show();
         });
@@ -168,12 +162,11 @@ public class HomeUserFragment extends Fragment {
             builder.setTitle("Đơn hàng:")
                     .setItems(options, (dialog, which) -> {
                         //handle item clicks
-                        if (which==0){
+                        if (which == 0) {
                             //All clicked
 //                            filteredOrdersTv.setText("Hiển thị tất cả các đơn đặt hàng");
 //                            adapterOrderShop.getFilter().filter(""); //show all orders
-                        }
-                        else {
+                        } else {
                             String optionClicked = options[which];
 //                            filteredOrdersTv.setText("Hiển thị "+optionClicked+" Đơn hàng"); //e.g. Showing Completed Orders
 //                            adapterOrderShop.getFilter().filter(optionClicked);
@@ -196,7 +189,6 @@ public class HomeUserFragment extends Fragment {
     }
 
 
-
     private void showProductsUI() {
 //show products ui and hide orders ui
         binding.productsRl.setVisibility(View.VISIBLE);
@@ -207,6 +199,7 @@ public class HomeUserFragment extends Fragment {
         binding.tabOrdersTv.setBackgroundResource(R.drawable.shape_rec04);
 
     }
+
     private void showOrdersUI() {
         binding.productsRl.setVisibility(View.GONE);
         binding.ordersRl.setVisibility(View.VISIBLE);
@@ -227,22 +220,16 @@ public class HomeUserFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //before getting reset list
                 productList.clear();
-                for (DataSnapshot ds: dataSnapshot.getChildren()){
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     ModelAddProduct modelAddProduct = ds.getValue(ModelAddProduct.class);
-                    double distance = calculateDistanceKm(modelAddProduct.getLatitude(),modelAddProduct.getLongitude());
-                    Log.d(TAG, "onDataChange: distance: "+distance);
+                    double distance = calculateDistanceKm(modelAddProduct.getLatitude(), modelAddProduct.getLongitude());
+                    Log.d(TAG, "onDataChange: distance: " + distance);
                     //if selected category matches product category then add in list
-                    if (selected.equals("Tất cả")){
-                        if(distance<=MAX_DISTANCE_TO_LOAD_ADS_KM){
-                            Log.d(TAG, "onDataChange: Tất cả");
+
+                    if (selected.equals(modelAddProduct.getCategory())) {
+                        if (distance <= MAX_DISTANCE_TO_LOAD_ADS_KM) {
+                            Log.d(TAG, "onDataChange: category: " + modelAddProduct.getCategory());
                             productList.add(modelAddProduct);
-                        }
-                    }else {
-                        if (selected.equals(modelAddProduct.getCategory())){
-                            if (distance<=MAX_DISTANCE_TO_LOAD_ADS_KM){
-                                Log.d(TAG, "onDataChange: category: "+modelAddProduct.getCategory());
-                                productList.add(modelAddProduct);
-                            }
                         }
                     }
 
@@ -261,25 +248,25 @@ public class HomeUserFragment extends Fragment {
         });
     }
 
-    private ActivityResultLauncher<Intent> locationPickerActivityResult =registerForActivityResult(
+    private ActivityResultLauncher<Intent> locationPickerActivityResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    if(result.getResultCode() == Activity.RESULT_OK){
+                    if (result.getResultCode() == Activity.RESULT_OK) {
                         Log.d(TAG, "onActivityResult: RESULT_OK");
                         Intent data = result.getData();
-                        if(data!=null){
+                        if (data != null) {
                             Log.d(TAG, "onActivityResult: LocationPicker");
-                            currentLatitude = data.getDoubleExtra("latitude",0.0);
-                            currentLongitude = data.getDoubleExtra("longitude",0.0);
+                            currentLatitude = data.getDoubleExtra("latitude", 0.0);
+                            currentLongitude = data.getDoubleExtra("longitude", 0.0);
                             currentAddress = data.getStringExtra("address");
 
-                            locationSp.edit().putFloat("CURRENT_LATITUDE",Float.parseFloat(""+currentLatitude))
-                                    .putFloat("CURRENT_LONGITUDE",Float.parseFloat(""+currentLongitude))
-                                    .putString("CURRENT_ADDRESS",currentAddress).apply();
+                            locationSp.edit().putFloat("CURRENT_LATITUDE", Float.parseFloat("" + currentLatitude))
+                                    .putFloat("CURRENT_LONGITUDE", Float.parseFloat("" + currentLongitude))
+                                    .putString("CURRENT_ADDRESS", currentAddress).apply();
 
-                            Log.d(TAG, "onActivityResult: "+locationSp);
+                            Log.d(TAG, "onActivityResult: " + locationSp);
 
                             binding.locationTv.setText(currentAddress);
                             loadAllAdProducts();
@@ -300,7 +287,7 @@ public class HomeUserFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //before getting reset list
                 productList.clear();
-                for (DataSnapshot ds: dataSnapshot.getChildren()){
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
                     ModelAddProduct modelProduct = ds.getValue(ModelAddProduct.class);
                     productList.add(modelProduct);
@@ -321,10 +308,10 @@ public class HomeUserFragment extends Fragment {
     }
 
     private double calculateDistanceKm(double adlatitude, double adlongitude) {
-        Log.d(TAG, "calculateDistanceKm: currentLatitude: "+currentLatitude);
-        Log.d(TAG, "calculateDistanceKm: currentLongitude: "+currentLongitude);
-        Log.d(TAG, "calculateDistanceKm: adlatitude: "+adlatitude);
-        Log.d(TAG, "calculateDistanceKm: adlongitude: "+adlongitude);
+        Log.d(TAG, "calculateDistanceKm: currentLatitude: " + currentLatitude);
+        Log.d(TAG, "calculateDistanceKm: currentLongitude: " + currentLongitude);
+        Log.d(TAG, "calculateDistanceKm: adlatitude: " + adlatitude);
+        Log.d(TAG, "calculateDistanceKm: adlongitude: " + adlongitude);
 
         //vị trí nguồn vị trí của người dùng
         Location startPoint = new Location(LocationManager.NETWORK_PROVIDER);
@@ -338,9 +325,9 @@ public class HomeUserFragment extends Fragment {
 
         //tính khoảng cách
         double distanceInMeters = startPoint.distanceTo(endPoint);
-        double distanceInKm = distanceInMeters/1000; //1km = 1000m
-        Log.d(TAG, "calculateDistanceKm: distanceInMeters: "+distanceInMeters);
-        Log.d(TAG, "calculateDistanceKm: distanceInKm: "+distanceInKm);
+        double distanceInKm = distanceInMeters / 1000; //1km = 1000m
+        Log.d(TAG, "calculateDistanceKm: distanceInMeters: " + distanceInMeters);
+        Log.d(TAG, "calculateDistanceKm: distanceInKm: " + distanceInKm);
 
         return distanceInKm;
     }

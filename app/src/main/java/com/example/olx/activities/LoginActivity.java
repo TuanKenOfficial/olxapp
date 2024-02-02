@@ -169,13 +169,13 @@ public class LoginActivity extends AppCompatActivity {
                                         else if (accountType.equals("Google")){
                                             Log.d(TAG, "onDataChange: Google");
                                             Utils.toastySuccess(LoginActivity.this, "Đăng nhập thành công");
-                                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                            startActivity(new Intent(LoginActivity.this, MainUserActivity.class));
                                             finishAffinity();
                                         }
                                         else{
                                             Log.d(TAG, "onDataChange: Phone");
                                             Utils.toastySuccess(LoginActivity.this, "Đăng nhập thành công");
-                                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                            startActivity(new Intent(LoginActivity.this, MainUserActivity.class));
                                             finishAffinity();
                                         }
                                     }

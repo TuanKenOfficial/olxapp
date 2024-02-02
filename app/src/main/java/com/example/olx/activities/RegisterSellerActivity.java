@@ -190,13 +190,14 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
         hashMap.put("shopName", "" + shopName);
         hashMap.put("phone", "" + phoneNumber);
         hashMap.put("address", "" + address);
-        hashMap.put("latitude", "" + latitude);
-        hashMap.put("longitude", "" + longitude);
+        hashMap.put("latitude", latitude);
+        hashMap.put("longitude", longitude);
         hashMap.put("timestamp", "" + timestamp);
         hashMap.put("accountType", "Seller");
-        hashMap.put("online", true);
-        hashMap.put("shopOpen", true);
-        hashMap.put("profileImage", "");
+        hashMap.put("online", "true");
+        hashMap.put("shopOpen", "true");
+        hashMap.put("profileImage", "https://firebasestorage.googleapis.com/v0/b/olxs-36d58.appspot.com/o/olx_trangbia.png?alt=media&token=84013b87-58da-401a-aa0d-cfced0202739");
+        hashMap.put("dob", "Email");
 
         //save to db
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");

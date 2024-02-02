@@ -17,6 +17,8 @@ import com.example.olx.fragment.HomeSellerFragment;
 import com.example.olx.R;
 import com.example.olx.Utils;
 import com.example.olx.databinding.ActivityMainSellerBinding;
+import com.example.olx.fragment.ProfileFragment;
+import com.example.olx.fragment.ProfileSellerFragment;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -51,12 +53,6 @@ public class MainSellerActivity extends AppCompatActivity {
         checkUser();
 
 
-        binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                makeMeOffline();
-            }
-        });
         binding.bottomNv.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -159,28 +155,7 @@ public class MainSellerActivity extends AppCompatActivity {
         });
     }
 
-    private void makeMeOffline() {
-        //after logging in, make user online
-        progressDialog.setMessage("Logging Out...");
 
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("online","false");
-
-        //update value to db
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.child(firebaseAuth.getUid()).updateChildren(hashMap)
-                .addOnSuccessListener(aVoid -> {
-                    //update successfully
-                    firebaseAuth.signOut();
-                    checkUser();
-                })
-                .addOnFailureListener(e -> {
-                    //failed updating
-                    progressDialog.dismiss();
-                    Utils.toastyError(MainSellerActivity.this,""+e.getMessage());
-
-                });
-    }
 
     private void checkUser() {
         FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -220,11 +195,10 @@ public class MainSellerActivity extends AppCompatActivity {
                         binding.accountTv.setText("Tài khoản:"+accountType);
 
                         //profileImage
-                        //profileImage
                         try {
                             Glide.with(MainSellerActivity.this)
                                     .load(profileImage)
-                                    .placeholder(R.drawable.image)
+                                    .placeholder(R.drawable.olx_trangbia)
                                     .into(binding.profileIv);
                         }catch (Exception e){
                             Log.d(TAG, "onBindViewHolder: "+e);
@@ -240,18 +214,26 @@ public class MainSellerActivity extends AppCompatActivity {
     }
 
     private void showProfileFragment() {
-        Utils.toast(MainSellerActivity.this,"Chức năng đang code, đợi clip sau");
+        binding.toolbarRl.setVisibility(View.GONE);
+        Utils.toast(MainSellerActivity.this,"Profile Seller");
+        ProfileSellerFragment fragment = new ProfileSellerFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(binding.fragmentsFl.getId(), fragment, "ProfileSellerFragment");
+        fragmentTransaction.commit();
     }
 
     private void showFavFragment() {
+        binding.toolbarRl.setVisibility(View.GONE);
         Utils.toast(MainSellerActivity.this,"Chức năng đang code, đợi clip sau");
     }
 
     private void showChatsFragment() {
+        binding.toolbarRl.setVisibility(View.GONE);
         Utils.toast(MainSellerActivity.this,"Chức năng đang code, đợi clip sau");
     }
 
     private void showHomeFragment() {
+        binding.toolbarRl.setVisibility(View.VISIBLE);
         HomeSellerFragment fragment = new HomeSellerFragment();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(binding.fragmentsFl.getId(), fragment, "HomeSellerFragment");

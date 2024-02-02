@@ -17,7 +17,6 @@ public class Utils {
 
     //danh sách sản phẩm
     public static final String[] categories = {
-            "Tất cả",
             "Quán cafe & Trà sửa",
             "Điện thoại",
             "Máy tính/Laptop",

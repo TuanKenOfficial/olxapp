@@ -168,7 +168,49 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
                     Utils.toastyError(RegisterUserActivity.this, "Lỗi: " + e.getMessage());
                 });
     }
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+        //location detected
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
 
+        findAddress();
+        saverFirebaseData();
+    }
+
+    @Override
+    public void onProviderEnabled(@NonNull String provider) {
+        LocationListener.super.onProviderEnabled(provider);
+    }
+
+    @Override
+    public void onProviderDisabled(@NonNull String provider) {
+        LocationListener.super.onProviderDisabled(provider);
+        Utils.toastyInfo(RegisterUserActivity.this, "Vui lòng bật vị trí trên điện thoại...");
+    }
+
+    //xử lý quyền location
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case LOCATION_REQUEST_CODE: {
+                if (grantResults.length > 0) {
+                    boolean locationAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    if (locationAccepted) {
+                        //permission allowed
+                        detectLocation();
+                    } else {
+                        //permission denied
+                        Utils.toastyInfo(RegisterUserActivity.this, "Quyền vị trí là cần thiết...");
+                    }
+                }
+            }
+            break;
+        }
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+    }
     private void saverFirebaseData() {
         Log.d(TAG, "saverFirebaseData: ");
         progressDialog.setMessage("Lưu thông tin tài khoản...");
@@ -183,13 +225,14 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
         hashMap.put("name", "" + fullName);
         hashMap.put("phone", "" + phoneNumber);
         hashMap.put("address", "" + address);
-        hashMap.put("latitude", "" + latitude);
-        hashMap.put("longitude", "" + longitude);
+        hashMap.put("latitude", latitude);
+        hashMap.put("longitude", longitude);
         hashMap.put("timestamp", "" + timestamp);
         hashMap.put("accountType", "User");
-        hashMap.put("online", true);
-        hashMap.put("shopOpen", true);
-        hashMap.put("profileImage", "");
+        hashMap.put("online", "true");
+        hashMap.put("shopOpen", "true");
+        hashMap.put("dob", "Email");
+        hashMap.put("profileImage", "https://firebasestorage.googleapis.com/v0/b/olxs-36d58.appspot.com/o/olx_trangbia.png?alt=media&token=84013b87-58da-401a-aa0d-cfced0202739");
 
         //save to db
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
@@ -238,6 +281,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
         geocoder = new Geocoder(this, Locale.getDefault());
 
         try {
+
             addresses = geocoder.getFromLocation(latitude, longitude, 1);
 
             String address = addresses.get(0).getAddressLine(0); //complete address
@@ -262,48 +306,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
     }
 
     //điểm đầu - cuối vị trí
-    @Override
-    public void onLocationChanged(@NonNull Location location) {
-        //location detected
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
 
-        findAddress();
-    }
-
-    @Override
-    public void onProviderEnabled(@NonNull String provider) {
-        LocationListener.super.onProviderEnabled(provider);
-    }
-
-    @Override
-    public void onProviderDisabled(@NonNull String provider) {
-        LocationListener.super.onProviderDisabled(provider);
-        Utils.toastyInfo(RegisterUserActivity.this, "Vui lòng bật vị trí trên điện thoại...");
-    }
-
-    //xử lý quyền location
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case LOCATION_REQUEST_CODE: {
-                if (grantResults.length > 0) {
-                    boolean locationAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                    if (locationAccepted) {
-                        //permission allowed
-                        detectLocation();
-                    } else {
-                        //permission denied
-                        Utils.toastyInfo(RegisterUserActivity.this, "Quyền vị trí là cần thiết...");
-                    }
-                }
-            }
-            break;
-        }
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-    }
 
 
 }
