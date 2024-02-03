@@ -2,6 +2,7 @@ package com.example.olx.adapter;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.example.olx.CurrencyFormatter;
 import com.example.olx.FilterAddProducts;
 import com.example.olx.R;
 import com.example.olx.Utils;
+import com.example.olx.activities.ShopAdDetailsActivity;
 import com.example.olx.databinding.RowAddproductBinding;
 import com.example.olx.model.ModelAddProduct;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -96,14 +98,14 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
         holder.dateTv.setText(formattedDate);
         ;
 
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intentAd = new Intent(context, AdDetailActivity.class);
-//                intentAd.putExtra("adId", modelAd.getId());
-//                context.startActivity(intentAd);
-//            }
-//        });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentShopAd = new Intent(context, ShopAdDetailsActivity.class);
+                intentShopAd.putExtra("adId", modelAd.getId());
+                context.startActivity(intentShopAd);
+            }
+        });
 
 //        holder.favBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override

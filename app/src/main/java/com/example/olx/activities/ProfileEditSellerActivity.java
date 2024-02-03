@@ -73,8 +73,8 @@ public class ProfileEditSellerActivity extends AppCompatActivity {
     private String shopName = "";
 
     private String mUserType = "";
-    private double latitude = 0;
-    private double longitude = 0;
+    private double latitude;
+    private double longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

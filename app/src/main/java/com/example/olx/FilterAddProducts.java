@@ -12,8 +12,6 @@ public class FilterAddProducts extends Filter {
     //arraylist in which we want to search
     AdapterAddProduct adapterAd;
     ArrayList<ModelAddProduct> filterList;
-    //adapter
-
 
     public FilterAddProducts(AdapterAddProduct adapterAd, ArrayList<ModelAddProduct> filterList) {
         this.adapterAd = adapterAd;

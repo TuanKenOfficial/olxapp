@@ -17,7 +17,6 @@ import com.example.olx.fragment.HomeSellerFragment;
 import com.example.olx.R;
 import com.example.olx.Utils;
 import com.example.olx.databinding.ActivityMainSellerBinding;
-import com.example.olx.fragment.ProfileFragment;
 import com.example.olx.fragment.ProfileSellerFragment;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,8 +26,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.HashMap;
 
 /** @noinspection deprecation*/
 public class MainSellerActivity extends AppCompatActivity {
@@ -114,7 +111,7 @@ public class MainSellerActivity extends AppCompatActivity {
         binding.sellFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainSellerActivity.this, AdCreateActivity.class);
+                Intent intent = new Intent(MainSellerActivity.this, ShopAdCreateActivity.class);
                 intent.putExtra("isEditMode", false);
                 startActivity(intent);
             }

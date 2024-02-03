@@ -1,7 +1,5 @@
 package com.example.olx.activities;
 
-import static androidx.constraintlayout.motion.widget.TransitionBuilder.validate;
-
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -53,7 +51,7 @@ import java.util.Map;
 /**
  * @noinspection deprecation
  */
-public class AdCreateActivity extends AppCompatActivity {
+public class ShopAdCreateActivity extends AppCompatActivity {
 
     private ActivityAdCreateBinding binding;
     private static final String TAG = "AdCreate";
@@ -136,7 +134,7 @@ public class AdCreateActivity extends AppCompatActivity {
         binding.locationEt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AdCreateActivity.this, LocationPickerActivity.class);
+                Intent intent = new Intent(ShopAdCreateActivity.this, LocationPickerActivity.class);
                 locationPickerActivityResultLauncher.launch(intent);
             }
         });
@@ -313,7 +311,7 @@ public class AdCreateActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void unused) {
                         Log.d(TAG, "onSuccess: quảng cáo được phát hành");
-                        Utils.toastySuccess(AdCreateActivity.this, "Tạo sản phẩm thành công");
+                        Utils.toastySuccess(ShopAdCreateActivity.this, "Tạo sản phẩm thành công");
                         uploadImageUrl(keyId); //lấy theo Id Ads
 
                     }
@@ -363,7 +361,7 @@ public class AdCreateActivity extends AppCompatActivity {
                     public void onSuccess(Void unused) {
                         progressDialog.dismiss();
                         Log.d(TAG, "onSuccess: Chỉnh sửa sản phẩm thành công");
-                        Utils.toastySuccess(AdCreateActivity.this, "Chỉnh sửa sản phẩm thành công");
+                        Utils.toastySuccess(ShopAdCreateActivity.this, "Chỉnh sửa sản phẩm thành công");
                         uploadImageUrl(adId); // chú ý cái này
 
                     }
@@ -431,10 +429,9 @@ public class AdCreateActivity extends AppCompatActivity {
                                     databaseReference.child(keyId).child("Images").child(imageId)
                                             .updateChildren(hashMap);
 
-
                                 }
-                                Utils.toastySuccess(AdCreateActivity.this, "Upload hình ảnh thành công");
-                                Intent intentImage = new Intent(AdCreateActivity.this, MainSellerActivity.class);
+                                Utils.toastySuccess(ShopAdCreateActivity.this, "Upload hình ảnh thành công");
+                                Intent intentImage = new Intent(ShopAdCreateActivity.this, MainSellerActivity.class);
                                 startActivity(intentImage);
 
 
@@ -456,7 +453,7 @@ public class AdCreateActivity extends AppCompatActivity {
     private void showImagePickOption() {
         Log.d(TAG, "showImagePickOption: ");
 
-        PopupMenu popupMenu = new androidx.appcompat.widget.PopupMenu(AdCreateActivity.this, binding.toolbarImageBtn);
+        PopupMenu popupMenu = new androidx.appcompat.widget.PopupMenu(ShopAdCreateActivity.this, binding.toolbarImageBtn);
         popupMenu.getMenu().add(Menu.NONE, 1, 1, "Camera");
         popupMenu.getMenu().add(Menu.NONE, 2, 2, "Gallery");
 
@@ -503,7 +500,7 @@ public class AdCreateActivity extends AppCompatActivity {
                         pickFromCamera();
                     } else {
                         Log.d(TAG, "onActivityResult: Tất cả hoặc chỉ có một quyền");
-                        Toast.makeText(AdCreateActivity.this, "Quyền camera hoặc storage", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ShopAdCreateActivity.this, "Quyền camera hoặc storage", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -517,7 +514,7 @@ public class AdCreateActivity extends AppCompatActivity {
                     if (isGranted) {
                         pickFromGallery();
                     } else {
-                        Toast.makeText(AdCreateActivity.this, "Quyền Storage chưa cấp quyền", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ShopAdCreateActivity.this, "Quyền Storage chưa cấp quyền", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -547,7 +544,7 @@ public class AdCreateActivity extends AppCompatActivity {
 
                         loadImages();
                     } else {
-                        Toast.makeText(AdCreateActivity.this, "Hủy", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ShopAdCreateActivity.this, "Hủy", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -583,7 +580,7 @@ public class AdCreateActivity extends AppCompatActivity {
 
                         loadImages();
                     } else {
-                        Toast.makeText(AdCreateActivity.this, "Hủy", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ShopAdCreateActivity.this, "Hủy", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -611,7 +608,7 @@ public class AdCreateActivity extends AppCompatActivity {
                             binding.locationEt.setText(address);
                         } else {
                             Log.d(TAG, "onActivityResult: Lỗi");
-                            Utils.toastyError(AdCreateActivity.this, "Lỗi");
+                            Utils.toastyError(ShopAdCreateActivity.this, "Lỗi");
                         }
                     }
                 }
@@ -622,7 +619,7 @@ public class AdCreateActivity extends AppCompatActivity {
     private void loadAdDetail() {
         Log.d(TAG, "loadDetails: ");
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Ads");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProductAds");
         reference.child(adId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

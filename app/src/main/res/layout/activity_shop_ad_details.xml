@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.ShopAdDetailsActivity">
+
+    <RelativeLayout
+        android:id="@+id/toolbarRl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/m_toolbar_height">
+
+        <ImageButton
+            android:id="@+id/backBtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/back"
+            android:background="@android:color/transparent"
+            android:layout_centerVertical="true"
+            android:padding="10dp"/>
+
+        <TextView
+            android:id="@+id/toolbarTitleTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Sản phẩm quảng cáo"
+            android:textColor="@color/red" />
+        <ImageButton
+            android:id="@+id/moreBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:src="@drawable/ic_more" />
+        <ImageButton
+            android:id="@+id/cartBtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/backBtn"
+            android:background="@null"
+            android:layout_centerVertical="true"
+            android:src="@drawable/cart"
+            android:padding="10dp"/>
+
+        <!--cart item count badge-->
+        <TextView
+            android:id="@+id/cartCountTv"
+            android:textColor="@color/colorwhite"
+            android:text="10"
+            android:textSize="8sp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:layout_toRightOf="@id/cartBtn"
+            android:background="@drawable/shape_rec01"
+            android:layout_width="20dp"
+            android:layout_height="20dp"/>
+        <ImageButton
+            android:id="@+id/deleteBtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_delete"
+            android:layout_marginLeft="5dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/moreBtn"
+            android:background="@android:color/transparent"
+            android:padding="10dp"/>
+
+        <ImageButton
+            android:id="@+id/editBtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/edit"
+            android:layout_marginLeft="5dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/deleteBtn"
+            android:background="@android:color/transparent"
+            android:padding="10dp" />
+
+        <ImageButton
+            android:id="@+id/favBtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_favorite"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/editBtn"
+            android:background="@android:color/transparent"
+            android:padding="10dp"
+            android:layout_marginLeft="5dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorgray"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbarRl">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/imageSliderVp"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"/>
+
+            <TextView
+                android:id="@+id/priceSymbolTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:layout_below="@id/imageSliderVp"
+                android:text="0đ"
+                android:textSize="12sp"
+                android:textColor="@color/red"
+                android:layout_margin="10dp"/>
+
+            <TextView
+                android:id="@+id/priceTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:layout_below="@id/imageSliderVp"
+                android:layout_toEndOf="@id/priceSymbolTv"
+                android:textStyle="bold"
+                android:layout_margin="10dp"
+                android:textSize="12sp"
+                android:text="0đ"/>
+
+            <TextView
+                android:id="@+id/conditionTv"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/imageSliderVp"
+                android:layout_centerInParent="true"
+                android:layout_margin="10dp"
+                android:layout_toRightOf="@id/dateTv"
+                android:text="Mới"
+                android:textColor="@color/red"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/dateTv"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/imageSliderVp"
+                android:layout_centerInParent="true"
+                android:text="dd/MM/yyyy"
+                android:layout_margin="10dp"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/categoryLabelTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_below="@id/dateTv"
+                android:textColor="@color/red"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:text="Danh mục"/>
+
+            <TextView
+                android:id="@+id/categoryTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearance.MaterialComponents.Body2"
+                android:layout_below="@id/categoryLabelTv"
+                android:layout_marginTop="5dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="Danh mục quảng cáo"/>
+
+            <TextView
+                android:id="@+id/titleLabelTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_below="@id/categoryTv"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/red"
+                android:textStyle="bold"
+                android:text="Tiêu đề"/>
+
+            <TextView
+                android:id="@+id/titleTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearance.MaterialComponents.Body2"
+                android:layout_below="@id/titleLabelTv"
+                android:layout_marginTop="5dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="@tools:sample/lorem[5]"/>
+
+            <TextView
+                android:id="@+id/descriptionLabelTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_below="@id/titleTv"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/red"
+                android:textStyle="bold"
+                android:text="Mô tả"/>
+
+            <TextView
+                android:id="@+id/descriptionTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearance.MaterialComponents.Body2"
+                android:layout_below="@id/descriptionLabelTv"
+                android:layout_marginTop="5dp"
+                tools:text="@tools:sample/lorem[20]"
+                android:textSize="16sp"
+                android:textStyle="italic"
+                android:text="Mô tả quảng cáo"/>
+
+            <TextView
+                android:id="@+id/addressLabelTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_below="@id/descriptionTv"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/red"
+                android:textStyle="bold"
+                android:text="Địa chỉ"/>
+
+            <TextView
+                android:id="@+id/addressTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearance.MaterialComponents.Body2"
+                android:layout_below="@id/addressLabelTv"
+                android:layout_marginTop="5dp"
+                android:textSize="16sp"
+                tools:text="@tools:sample/lorem[5]"/>
+
+            <TextView
+                android:id="@+id/receiptProfileLabelTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_marginTop="5dp"
+                android:layout_below="@id/addressTv"
+                android:text="Người bán mô tả"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/receiptProfileLabelTv"
+                android:id="@+id/sellerProfileCv"
+                app:cardUseCompatPadding="true"
+                app:cardCornerRadius="10dp"
+                app:contentPadding="10dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/sellerProfileIv"
+                        app:shapeAppearanceOverlay="@style/ImageStyle_Circle"
+                        android:background="@color/colorgray"
+                        android:src="@drawable/ic_users"/>
+
+                    <TextView
+                        android:id="@+id/sellerNameTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Họ tên"
+                        android:layout_toEndOf="@id/sellerProfileIv"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginStart="2dp"
+                        style="@style/TextAppearance.MaterialComponents.Body1"/>
+
+                    <TextView
+                        android:id="@+id/memberSingleLabelTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Thành viên kể từ: "
+                        android:layout_toEndOf="@id/sellerProfileIv"
+                        android:layout_below="@id/sellerNameTv"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginStart="2dp"
+                        style="@style/TextAppearance.MaterialComponents.Body1"/>
+                    <TextView
+                        android:id="@+id/memberSingleTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="dd/MM/yyyy"
+                        android:layout_toEndOf="@id/memberSingleLabelTv"
+                        android:layout_below="@id/sellerNameTv"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginStart="5dp"
+                        style="@style/TextAppearance.MaterialComponents.Body1"/>
+
+                    <TextView
+                        android:id="@+id/nextTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/ic_chevron_right"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_below="@id/sellerNameTv"
+                        style="@style/TextAppearance.MaterialComponents.Body1"/>
+
+
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </RelativeLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/optionLl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:padding="2dp"
+        android:layout_marginHorizontal="2dp"
+        android:layout_marginVertical="2dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/smsBtn"
+            android:layout_weight="1"
+            android:minHeight="@dimen/m_button_height"
+            android:text="SMS"
+            android:textSize="16sp"
+            app:cornerRadius="8dp"
+            android:layout_margin="2dp"
+            android:layout_marginRight="5dp"
+            app:icon="@drawable/sms" />
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/mapBtn"
+            android:layout_weight="1"
+            android:minHeight="@dimen/m_button_height"
+            android:text="MAP"
+            android:textSize="16sp"
+            android:layout_margin="2dp"
+            app:cornerRadius="8dp"
+            app:icon="@drawable/map" />
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/themProductBtn"
+            android:layout_weight="1"
+            android:minHeight="@dimen/m_button_height"
+            android:text="Thêm"
+            android:textSize="16sp"
+            android:layout_margin="2dp"
+            app:cornerRadius="8dp"
+            app:icon="@drawable/cart" />
+    </LinearLayout>
+
+</RelativeLayout>

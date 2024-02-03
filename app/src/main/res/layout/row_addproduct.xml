@@ -7,7 +7,7 @@
     app:cardUseCompatPadding="true">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="200dp">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imageIv"
@@ -159,6 +159,7 @@
             android:textColor="@color/red"
             android:textStyle="bold"
             android:textSize="12sp" />
+
 
         <TextView
             android:id="@+id/dateTv"

@@ -1,6 +1,8 @@
 package com.example.olx;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.text.format.DateFormat;
 import android.widget.Toast;
 
@@ -77,6 +79,33 @@ public class Utils {
 
         String date = DateFormat.format("dd/MM/yyyy HH:mm",calendar).toString();
         return date;
+    }
+
+    //điện thọại
+    public  static void callIntent(Context context, String phone){
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:"+Uri.encode(phone)));
+        context.startActivity(intent);
+    }
+    //gửi sms dùng cách này
+    public static void startSMSIntent(Context context, String phone) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:"+Uri.encode(phone)));
+        context.startActivity(intent);
+    }
+
+    // google maps
+    public static  void mapIntent(Context context, double latitude, double longitude){
+        Uri gmsIntentUri = Uri.parse("http://maps.google.com/maps?daddr=" + latitude +","+longitude);
+
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmsIntentUri);
+
+        mapIntent.setPackage("com.google.android.apps.maps");
+
+        if (mapIntent.resolveActivity(context.getPackageManager()) != null){
+            context.startActivity(mapIntent);
+        }
+        else {
+            Utils.toastyInfo(context, "Google MAP chưa cài đặt");
+        }
     }
 
 }

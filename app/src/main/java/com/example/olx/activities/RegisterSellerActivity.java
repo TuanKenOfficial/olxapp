@@ -40,7 +40,7 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
     private static final int LOCATION_REQUEST_CODE = 100;
     //permission arrays
     private String[] locationPermissions;
-    private double latitude = 0.0, longitude = 0.0;
+    private double latitude , longitude;
     private ProgressDialog progressDialog;
 
 

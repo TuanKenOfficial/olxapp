@@ -16,7 +16,6 @@ import com.bumptech.glide.Glide;
 import com.example.olx.R;
 import com.example.olx.Utils;
 import com.example.olx.databinding.ActivityMainUserBinding;
-import com.example.olx.fragment.HomeSellerFragment;
 import com.example.olx.fragment.HomeUserFragment;
 import com.example.olx.fragment.ProfileFragment;
 import com.google.android.material.navigation.NavigationBarView;
@@ -28,7 +27,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
 /** @noinspection deprecation*/
 public class MainUserActivity extends AppCompatActivity {
 
@@ -124,7 +122,7 @@ public class MainUserActivity extends AppCompatActivity {
                             Utils.toastyInfo(MainUserActivity.this, "tài khoản của bạn không dùng được chức năng này");
                         }
                         else {
-                            Intent intent = new Intent(MainUserActivity.this, AdCreateActivity.class);
+                            Intent intent = new Intent(MainUserActivity.this, ShopAdCreateActivity.class);
                             intent.putExtra("isEditMode", false);
                             startActivity(intent);
                         }

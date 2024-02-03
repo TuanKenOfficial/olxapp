@@ -26,6 +26,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activities.ShopReviewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ShopAdDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.DeleteAccountActivity"
             android:exported="false" />
         <activity
@@ -41,7 +47,7 @@
             android:name=".activities.LocationPickerActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.AdCreateActivity"
+            android:name=".activities.ShopAdCreateActivity"
             android:exported="false" />
         <activity
             android:name=".activities.LoginPhoneActivity"

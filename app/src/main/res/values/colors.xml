@@ -5,5 +5,6 @@
     <color name="colorred">#ff0000</color>
     <color name="colorgray">#c0c0c0</color>
     <color name="colorgray01">#b0c4de</color>
+    <color name="colorgray02">#8b008b</color>
     <color name="colorgold">#ffd700</color>
 </resources>

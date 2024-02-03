@@ -72,8 +72,8 @@ public class ProfileEditActivity extends AppCompatActivity {
 
 
     private  String mUserType="";
-    private double latitude = 0;
-    private double longitude = 0;
+    private double latitude;
+    private double longitude;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
