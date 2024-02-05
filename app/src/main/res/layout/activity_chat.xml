@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.ChatActivity">
+
+    <RelativeLayout
+        android:id="@+id/toolbarRl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/m_toolbar_height">
+
+        <ImageButton
+            android:id="@+id/backBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/back"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:padding="10dp"/>
+        
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/profileIv"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="5dp"
+            android:background="@color/colorgray"
+            android:src="@drawable/ic_users"
+            android:layout_toStartOf="@id/toolbarTitleTv"
+            app:shapeAppearanceOverlay="@style/ImageStyle_Circle"/>
+
+
+        <TextView
+            android:id="@+id/toolbarTitleTv"
+            style="@style/TextAppearance.MaterialComponents.Body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="Tuấn Ken" />
+
+
+        <ImageButton
+            android:id="@+id/callOften"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_call"
+            android:layout_centerVertical="true"
+            android:layout_margin="5dp"
+            android:layout_alignParentEnd="true"
+            android:background="@android:color/transparent"
+            android:padding="10dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorgray02"/>
+
+    </RelativeLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbarRl"
+        android:layout_above="@id/view1"
+        android:id="@+id/chatRv"
+        tools:listitem="@layout/row_chats_left"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        />
+    
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@id/chatInputRl"
+        android:background="@color/colorgray02"/>
+
+    <RelativeLayout
+        android:id="@+id/chatInputRl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp">
+
+        <EditText
+            android:id="@+id/edtChats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tin nhắn chat"
+            android:layout_toStartOf="@id/attachFab"
+            android:background="@drawable/shape_edittext"
+            android:layout_marginHorizontal="2dp"
+            android:inputType="textMultiLine|textCapSentences"
+            android:padding="10dp"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/attachFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginHorizontal="2dp"
+            android:src="@drawable/image"
+            android:layout_toLeftOf="@id/sendBtn"
+            app:elevation="1dp"
+            app:fabSize="mini"
+            android:tint="@color/white"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/sendBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/sendmessage"
+            android:layout_alignParentRight="true"
+            app:elevation="1dp"
+            app:fabSize="mini"
+            android:tint="@color/white"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

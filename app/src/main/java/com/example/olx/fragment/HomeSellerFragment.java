@@ -102,7 +102,7 @@ public class HomeSellerFragment extends Fragment {
             Log.d(TAG, "onViewCreated: "+currentAddress);
             binding.locationTv.setText(currentAddress);
         }
-
+        //Nếu muốn không cần chọn vị trí vẫn load được thì mở nó, ko thì đóng nó lại
         loadAllAdProducts();
         showProductsUI();
 

@@ -16,8 +16,12 @@ import com.bumptech.glide.Glide;
 import com.example.olx.R;
 import com.example.olx.Utils;
 import com.example.olx.databinding.ActivityMainUserBinding;
+import com.example.olx.fragment.ChatsFragment;
 import com.example.olx.fragment.HomeUserFragment;
+import com.example.olx.fragment.NotificationFragment;
 import com.example.olx.fragment.ProfileFragment;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,6 +30,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.HashMap;
 
 /** @noinspection deprecation*/
 public class MainUserActivity extends AppCompatActivity {
@@ -49,7 +56,6 @@ public class MainUserActivity extends AppCompatActivity {
         showHomeFragment();
         checkUser();
 
-
         binding.bottomNv.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -70,7 +76,6 @@ public class MainUserActivity extends AppCompatActivity {
                     }
                     else{
                         showChatsFragment();
-
                         return true;
                     }
 
@@ -158,7 +163,7 @@ public class MainUserActivity extends AppCompatActivity {
             }
             else if (menuItem.getTitle() == "Khuyến mãi"){
                 //start promotions list screen
-                Utils.toast(MainUserActivity.this,"Chức năng đang code, đợi clip sau");
+                Utils.toast(MainUserActivity.this,"Chức năng đang hoàn thiện");
 //                startActivity(new Intent(MainSellerActivity.this, PromotionCodesActivity.class));
             }
 
@@ -182,10 +187,53 @@ public class MainUserActivity extends AppCompatActivity {
         }
         else {
             Log.d(TAG, "checkUser: user != null");
+//            showHomeFragment();
             loadUserProfile();
+            updateFCMToken();
         }
     }
+    //update FCM Token thông báo chat
+    private void updateFCMToken(){
+        String myUid = ""+firebaseAuth.getUid();
 
+        Log.d(TAG, "updateFCMToken: myUid: "+myUid);
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnSuccessListener(new OnSuccessListener<String>() {
+                    @Override
+                    public void onSuccess(String token) {
+                        Log.d(TAG, "onSuccess: token: "+token);
+                        HashMap<String,Object> hashMap = new HashMap<>();
+                        hashMap.put("fcmToken",token);
+
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+
+                        ref.child(myUid)
+                                .updateChildren(hashMap)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Log.d(TAG, "onSuccess: Update thành công");
+                                        Utils.toast(MainUserActivity.this,"Tạo token chat thành công");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d(TAG, "onFailure: Lỗi update token lên csdl: "+e);
+                                        Utils.toastyError(MainUserActivity.this, "Lỗi update toke lên csdl");
+                                    }
+                                });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Utils.toastyError(MainUserActivity.this,"Lỗi Token chat");
+                        Log.d(TAG, "onFailure: Lỗi: "+e);
+                    }
+                });
+    }
     private void loadUserProfile() {
         Log.d(TAG, "loadSellerProfile: ");
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
@@ -241,12 +289,20 @@ public class MainUserActivity extends AppCompatActivity {
 
     private void showFavFragment() {
         binding.toolbarRl.setVisibility(View.GONE);
-        Utils.toast(MainUserActivity.this,"Chức năng đang code, đợi clip sau");
+        Utils.toast(MainUserActivity.this,"Thông báo");
+        NotificationFragment fragment = new NotificationFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(binding.fragmentsFl.getId(), fragment, "NotificationFragment");
+        fragmentTransaction.commit();
     }
 
     private void showChatsFragment() {
         binding.toolbarRl.setVisibility(View.GONE);
-        Utils.toast(MainUserActivity.this,"Chức năng đang code, đợi clip sau");
+        Utils.toast(MainUserActivity.this,"Chats");
+        ChatsFragment fragment = new ChatsFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(binding.fragmentsFl.getId(), fragment, "ChatsFragment");
+        fragmentTransaction.commit();
     }
 
     private void showHomeFragment() {

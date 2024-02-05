@@ -97,18 +97,17 @@
             android:background="@android:color/transparent"
             android:src="@drawable/ic_favorite" />
 
-        <ImageButton
+        <Button
             android:id="@+id/ortherBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/favBtn"
-            android:layout_alignParentEnd="true"
+            android:layout_below="@id/priceTv"
             android:layout_marginStart="2dp"
+            android:text="Thêm"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="2dp"
             android:layout_marginBottom="2dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/cart" />
+            android:drawableLeft="@drawable/cart" />
 
 
         <TextView
@@ -150,12 +149,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/imageIv"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="35dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
             android:padding="2dp"
             android:text="20000đ"
+            android:background="@drawable/shape_rec01"
             android:textColor="@color/red"
             android:textStyle="bold"
             android:textSize="12sp" />

@@ -122,7 +122,7 @@
                 android:text="0đ"
                 android:textSize="12sp"
                 android:textColor="@color/red"
-                android:layout_margin="10dp"/>
+                android:layout_margin="2dp"/>
 
             <TextView
                 android:id="@+id/priceTv"
@@ -132,22 +132,9 @@
                 android:layout_below="@id/imageSliderVp"
                 android:layout_toEndOf="@id/priceSymbolTv"
                 android:textStyle="bold"
-                android:layout_margin="10dp"
+                android:layout_margin="2dp"
                 android:textSize="12sp"
                 android:text="0đ"/>
-
-            <TextView
-                android:id="@+id/conditionTv"
-                style="@style/TextAppearance.MaterialComponents.Body1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/imageSliderVp"
-                android:layout_centerInParent="true"
-                android:layout_margin="10dp"
-                android:layout_toRightOf="@id/dateTv"
-                android:text="Mới"
-                android:textColor="@color/red"
-                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/dateTv"
@@ -157,19 +144,41 @@
                 android:layout_below="@id/imageSliderVp"
                 android:layout_centerInParent="true"
                 android:text="dd/MM/yyyy"
-                android:layout_margin="10dp"
+                android:layout_margin="2dp"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/categoryLabelTv"
+                android:id="@+id/brandLabelTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/TextAppearance.MaterialComponents.Headline6"
                 android:layout_below="@id/dateTv"
                 android:textColor="@color/red"
                 android:textStyle="bold"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="2dp"
+                android:text="Thương hiệu"/>
+
+            <TextView
+                android:id="@+id/brandTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearance.MaterialComponents.Body2"
+                android:layout_below="@id/brandLabelTv"
+                android:layout_marginTop="2dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="Thương hiệu sản phẩm"/>
+
+            <TextView
+                android:id="@+id/categoryLabelTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_below="@id/brandTv"
+                android:textColor="@color/red"
+                android:textStyle="bold"
+                android:layout_marginTop="2dp"
                 android:text="Danh mục"/>
 
             <TextView
@@ -178,7 +187,7 @@
                 android:layout_height="wrap_content"
                 style="@style/TextAppearance.MaterialComponents.Body2"
                 android:layout_below="@id/categoryLabelTv"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="2dp"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:text="Danh mục quảng cáo"/>
@@ -189,7 +198,7 @@
                 android:layout_height="wrap_content"
                 style="@style/TextAppearance.MaterialComponents.Headline6"
                 android:layout_below="@id/categoryTv"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="2dp"
                 android:textColor="@color/red"
                 android:textStyle="bold"
                 android:text="Tiêu đề"/>
@@ -200,7 +209,7 @@
                 android:layout_height="wrap_content"
                 style="@style/TextAppearance.MaterialComponents.Body2"
                 android:layout_below="@id/titleLabelTv"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="2dp"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 tools:text="@tools:sample/lorem[5]"/>
@@ -211,7 +220,7 @@
                 android:layout_height="wrap_content"
                 style="@style/TextAppearance.MaterialComponents.Headline6"
                 android:layout_below="@id/titleTv"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="2dp"
                 android:textColor="@color/red"
                 android:textStyle="bold"
                 android:text="Mô tả"/>
@@ -227,14 +236,35 @@
                 android:textSize="16sp"
                 android:textStyle="italic"
                 android:text="Mô tả quảng cáo"/>
+            <TextView
+                android:id="@+id/conditionLabelTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_below="@id/descriptionTv"
+                android:layout_marginTop="2dp"
+                android:textColor="@color/red"
+                android:textStyle="bold"
+                android:text="Tình trạng"/>
 
+            <TextView
+                android:id="@+id/conditionTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearance.MaterialComponents.Body2"
+                android:layout_below="@id/conditionLabelTv"
+                android:layout_marginTop="2dp"
+                tools:text="@tools:sample/lorem[5]"
+                android:textSize="16sp"
+                android:textStyle="italic"
+                android:text="Tình trạng sản phẩm"/>
             <TextView
                 android:id="@+id/addressLabelTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/TextAppearance.MaterialComponents.Headline6"
-                android:layout_below="@id/descriptionTv"
-                android:layout_marginTop="5dp"
+                android:layout_below="@id/conditionTv"
+                android:layout_marginTop="2dp"
                 android:textColor="@color/red"
                 android:textStyle="bold"
                 android:text="Địa chỉ"/>
@@ -245,7 +275,7 @@
                 android:layout_height="wrap_content"
                 style="@style/TextAppearance.MaterialComponents.Body2"
                 android:layout_below="@id/addressLabelTv"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="2dp"
                 android:textSize="16sp"
                 tools:text="@tools:sample/lorem[5]"/>
 
@@ -256,7 +286,7 @@
                 style="@style/TextAppearance.MaterialComponents.Headline6"
                 android:layout_marginTop="5dp"
                 android:layout_below="@id/addressTv"
-                android:text="Người bán mô tả"/>
+                android:text="Người bán"/>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -361,17 +391,7 @@
             android:layout_margin="2dp"
             app:cornerRadius="8dp"
             app:icon="@drawable/map" />
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/themProductBtn"
-            android:layout_weight="1"
-            android:minHeight="@dimen/m_button_height"
-            android:text="Thêm"
-            android:textSize="16sp"
-            android:layout_margin="2dp"
-            app:cornerRadius="8dp"
-            app:icon="@drawable/cart" />
+
     </LinearLayout>
 
 </RelativeLayout>

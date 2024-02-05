@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.MainSellerProfileActivity">
+
+    <RelativeLayout
+        android:id="@+id/toolbarRl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/m_toolbar_height">
+
+        <ImageButton
+            android:id="@+id/backBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/back"
+            android:background="@android:color/transparent"
+            android:layout_centerVertical="true"
+            android:padding="10dp"/>
+
+        <TextView
+            android:id="@+id/toolbarTitleTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thông tin cá nhân người bán"
+            android:textSize="18sp"
+            android:textColor="@color/red"
+            android:layout_centerInParent="true"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorgray02"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbarRl"
+        android:id="@+id/profileCv"
+        app:contentPadding="10dp"
+        app:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/sellerProfileIv"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@color/colorgray"
+                android:src="@drawable/ic_users"
+                android:layout_marginEnd="10dp"
+                app:shapeAppearanceOverlay="@style/ImageStyle_Circle"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/sellerNameTv"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                tools:text="@tools:sample/full_names"
+                android:layout_toRightOf="@id/sellerProfileIv"
+                android:layout_margin="5dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/sellerMeberSinceLabelTv"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:text="Thành viên kể từ: "
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:layout_below="@id/sellerNameTv"
+                android:layout_toRightOf="@id/sellerProfileIv"
+                android:layout_margin="5dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/sellerMeberSinceTv"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:text="dd/MM/yyyy"
+                android:layout_below="@id/sellerNameTv"
+                android:layout_toRightOf="@id/sellerMeberSinceLabelTv"
+                android:layout_margin="5dp"/>
+
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/black"
+        android:layout_below="@id/profileCv"/>
+
+    <TextView
+        android:id="@+id/publishedAdsCountLabelTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/view1"
+        android:text="Sản phẩm được xuất bản: "
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/black"
+        android:textStyle="italic"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/publishedAdsCountTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/view1"
+        android:layout_toEndOf="@id/publishedAdsCountLabelTv"
+        android:text="1"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/colorred"
+        android:textSize="16sp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/adsRv"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_height="match_parent"
+        android:layout_below="@id/publishedAdsCountTv"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/row_addproduct"/>
+
+</RelativeLayout>

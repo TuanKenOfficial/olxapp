@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:cardCornerRadius="5dp"
+    app:cardUseCompatPadding="true"
+    app:contentPadding="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/profileIv"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@color/colorgray"
+            android:src="@drawable/ic_users"
+            android:layout_margin="10dp"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/ImageStyle_Circle"/>
+
+        <TextView
+            android:id="@+id/nameTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="@tools:sample/full_names"
+            android:layout_toEndOf="@+id/profileIv"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            style="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_marginTop="8dp"/>
+        
+        <TextView
+            android:id="@+id/lastMessageTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/profileIv"
+            android:layout_below="@id/nameTv"
+            tools:text="@tools:sample/lorem[10]"
+            android:textColor="@color/black"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+
+        <TextView
+            android:id="@+id/dateTimeTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentEnd="true"
+            tools:text="@tools:sample/date/ddmmyy"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:maxLines="1"
+            android:textColor="@color/black"
+            android:ellipsize="end"/>
+
+    </RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>
