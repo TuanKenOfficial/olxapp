@@ -1,6 +1,7 @@
 package com.example.olx.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +16,16 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 
+import com.example.olx.activities.MainSellerActivity;
+import com.example.olx.activities.MainUserActivity;
 import com.example.olx.databinding.FragmentNotificationBinding;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class NotificationFragment extends Fragment {
@@ -24,6 +33,7 @@ public class NotificationFragment extends Fragment {
     public FragmentNotificationBinding binding;
 
     private Context mContext;
+    private FirebaseAuth firebaseAuth;
 
     private MyTabsViewPagerAdapter myTabsViewPagerAdapter;
     public NotificationFragment (){
@@ -41,16 +51,42 @@ public class NotificationFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentNotificationBinding.inflate(inflater,container,false);
-
-
-
         return binding.getRoot();
+
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        binding.backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+                reference.child(firebaseAuth.getUid()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String accountType = ""+snapshot.child("accountType").getValue();
+                        if (accountType.equals("Seller")){
+                            startActivity(new Intent(mContext, MainSellerActivity.class));
+                        }
+                        else if (accountType.equals("Users")){
+                            startActivity(new Intent(mContext, MainUserActivity.class));
+                        }
+                        else {
+                            startActivity(new Intent(mContext, MainUserActivity.class));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Sản phẩm"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Yêu thích"));
 

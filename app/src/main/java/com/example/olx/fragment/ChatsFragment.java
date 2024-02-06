@@ -1,6 +1,7 @@
 package com.example.olx.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.example.olx.activities.MainSellerActivity;
+import com.example.olx.activities.MainUserActivity;
 import com.example.olx.adapter.AdapterChats;
 import com.example.olx.databinding.FragmentChatsBinding;
 import com.example.olx.model.ModelChats;
@@ -68,6 +71,33 @@ public class ChatsFragment extends Fragment {
 
         firebaseAuth = FirebaseAuth.getInstance();
         myUid = firebaseAuth.getUid();
+
+        binding.backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+                reference.child(myUid).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String accountType = ""+snapshot.child("accountType").getValue();
+                        if (accountType.equals("Seller")){
+                            startActivity(new Intent(mContext, MainSellerActivity.class));
+                        }
+                        else if (accountType.equals("Users")){
+                            startActivity(new Intent(mContext, MainUserActivity.class));
+                        }
+                        else {
+                            startActivity(new Intent(mContext, MainUserActivity.class));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
 
         Log.d(TAG, "onViewCreated: myUid: "+myUid);
 

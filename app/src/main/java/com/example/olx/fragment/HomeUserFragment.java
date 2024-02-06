@@ -105,7 +105,7 @@ public class HomeUserFragment extends Fragment {
             binding.locationTv.setText(currentAddress);
         }
         //Nếu muốn không cần chọn vị trí vẫn load được thì mở nó, ko thì đóng nó lại
-//        loadAllAdProducts();
+        loadAllAdProducts();
         showProductsUI();
 
         binding.tabProductsTv.setOnClickListener(v -> {

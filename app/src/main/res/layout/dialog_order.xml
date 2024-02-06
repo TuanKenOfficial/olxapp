@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/background"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/productIv"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:padding="5dp"
+            android:background="@color/colorgray02"
+            android:src="@drawable/shop"
+            app:contentPadding="10dp"
+            app:shapeAppearanceOverlay="@style/ImageStyle_Circle"/>/>
+
+        <TextView
+            android:id="@+id/titleTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/productIv"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:text="Tên sản phẩm"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/red" />
+
+        <TextView
+            android:id="@+id/pQuantityTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/titleTv"
+            android:text="Số lượng"
+            android:textSize="16sp"
+            android:textColor="@color/red"/>
+
+
+        <TextView
+            android:id="@+id/raitoTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/shape_button"
+            android:padding="5dp"
+            android:text="10% OFF"
+            android:textColor="@color/red"
+            android:textSize="10sp" />
+        <TextView
+            android:id="@+id/gPriceTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="12đ"
+            android:layout_below="@id/lvTangGiam"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/red"/>
+
+        <TextView
+            android:id="@+id/reducedPriceTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_below="@id/gPriceTv"
+            android:text="10đ"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/red"/>
+        <TextView
+            android:id="@+id/finalPriceTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Tổng tiền"
+            android:layout_below="@id/reducedPriceTv"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="10dp"
+            android:textColor="@color/red"/>
+
+        <LinearLayout
+            android:id="@+id/lvTangGiam"
+            android:layout_below="@id/pQuantityTv"
+            android:layout_marginTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp">
+
+            <ImageButton
+                android:id="@+id/decrementBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:src="@drawable/ic_add_cart_remove"/>
+
+            <TextView
+                android:id="@+id/slQuantityTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:textColor="@color/black"
+                android:textSize="18sp"/>
+
+            <ImageButton
+                android:id="@+id/incrementBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:src="@drawable/ic_add_cart"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/descriptionTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:text="Mô tả sản phẩm"
+            android:textColor="@color/black"/>
+
+        <Button
+            android:id="@+id/continueBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Thêm"
+            android:layout_below="@id/descriptionTv"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/white"
+            android:textAllCaps="false"/>
+    </RelativeLayout>
+
+</LinearLayout>

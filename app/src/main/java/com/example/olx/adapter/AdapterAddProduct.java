@@ -143,7 +143,7 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
     public String giaPrice = ""; // giá gốc
     private void OderAd(ModelAddProduct modelAddProducts) {
         //inflate layout for dialog
-        View view = LayoutInflater.from(context).inflate(R.layout.dialog_cart, null);
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_order, null);
         //init layout views
         final ImageView productIv = view.findViewById(R.id.productIv);
         final TextView titleTv = view.findViewById(R.id.titleTv);
@@ -166,7 +166,8 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
         String description = modelAddProducts.getDescription();
         int reducedprice = modelAddProducts.getReducedprice();
         int raito = modelAddProducts.getRaito();
-        String uidAds = modelAddProducts.getUid();
+        String uidNguoiBan = modelAddProducts.getUid();
+        String uidNguoiMua = firebaseAuth.getUid();
 
 
         // lấy hình ảnh đầu tiên của sản phẩm
@@ -297,34 +298,34 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
 
             Utils.toast(context, "Bạn mới đặt hàng");
             //add to db
-            addToCart(addId, titleOrder, priceOrder, quantitySL, tongGiaTienSP,raitoOrder,uidAds);
+            addToCart(addId, titleOrder, priceOrder, quantitySL, tongGiaTienSP,uidNguoiBan,uidNguoiMua);
             dialog.dismiss();
         });
     }
     private int itemId = 1;
-    private void addToCart(String addId, String titleOrder, int priceOrder, int quantitySL,int tongGiaTienSP, int raitoOrder,String uidAds) {
+    private void addToCart(String addId, String titleOrder, int priceOrder, int quantitySL, int tongGiaTienSP, String uidNguoiBan, String uidNguoiMua) {
         Log.d(TAG, "addToCart: ");
         itemId++;
-        EasyDB easyDB = EasyDB.init(context, "ORDERS_DB")
-                .setTableName("ORDERS_TABLE")
-                .addColumn(new Column("Order_Id", "text", "unique"))
-                .addColumn(new Column("Order_PID", "text", "not null"))
-                .addColumn(new Column("Order_Title", "text", "not null"))
-                .addColumn(new Column("Order_Price", "text", "not null"))
-                .addColumn(new Column("Order_Quantity", "text", "not null"))
-                .addColumn(new Column("Order_FinalPrice", "text", "not null"))
-                .addColumn(new Column("Order_Raito", "text", "not null"))
-                .addColumn(new Column("Order_UidAds", "text", "not null"))
+        EasyDB easyDB = EasyDB.init(context, "GIOHANG_DB")
+                .setTableName("GIOHANG_TABLE")
+                .addColumn(new Column("GH_Id", "text", "unique"))
+                .addColumn(new Column("GH_PID", "text", "not null"))
+                .addColumn(new Column("GH_Title", "text", "not null"))
+                .addColumn(new Column("GH_Price", "text", "not null"))
+                .addColumn(new Column("GH_Quantity", "text", "not null"))
+                .addColumn(new Column("GH_FinalPrice", "text", "not null"))
+                .addColumn(new Column("GH_UidNguoiBan", "text", "not null"))
+                .addColumn(new Column("GH_UidNguoiMua", "text", "not null"))
                 .doneTableColumn();
 
-        Boolean b = easyDB.addData("Order_Id", itemId)
-                .addData("Order_PID", addId)
-                .addData("Order_Title", titleOrder)
-                .addData("Order_Price", priceOrder)
-                .addData("Order_Quantity", quantitySL)
-                .addData("Order_FinalPrice", tongGiaTienSP)
-                .addData("Order_Raito", raitoOrder)
-                .addData("Order_UidAds", uidAds)
+        Boolean b = easyDB.addData("GH_Id", itemId)
+                .addData("GH_PID", addId)
+                .addData("GH_Title", titleOrder)
+                .addData("GH_Price", priceOrder)
+                .addData("GH_Quantity", quantitySL)
+                .addData("GH_FinalPrice", tongGiaTienSP)
+                .addData("GH_UidNguoiBan", uidNguoiBan)
+                .addData("GH_UidNguoiMua", uidNguoiMua)
                 .doneDataAdding();
 
         Utils.toastySuccess(context,"Thêm vào giỏ hàng thành công");

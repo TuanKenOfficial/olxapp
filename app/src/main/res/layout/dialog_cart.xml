@@ -1,156 +1,203 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/background"
-    android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/productIv"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:padding="5dp"
-            android:background="@color/colorgray02"
-            android:src="@drawable/shop"
-            app:contentPadding="10dp"
-            app:shapeAppearanceOverlay="@style/ImageStyle_Circle"/>/>
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/toolbarRl">
 
         <TextView
-            android:id="@+id/titleTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/productIv"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:text="Tên sản phẩm"
-            android:layout_centerHorizontal="true"
-            android:textColor="@color/red" />
-
-        <TextView
-            android:id="@+id/pQuantityTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/titleTv"
-            android:text="Số lượng"
-            android:textSize="16sp"
-            android:textColor="@color/red"/>
-
-
-        <TextView
-            android:id="@+id/raitoTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/shape_button"
-            android:padding="5dp"
-            android:text="10% OFF"
-            android:textColor="@color/red"
-            android:textSize="10sp" />
-        <TextView
-            android:id="@+id/gPriceTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="12đ"
-            android:layout_below="@id/lvTangGiam"
-            android:layout_marginTop="10dp"
-            android:layout_centerHorizontal="true"
-            android:textColor="@color/red"/>
-
-        <TextView
-            android:id="@+id/reducedPriceTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:layout_below="@id/gPriceTv"
-            android:text="10đ"
-            android:layout_centerHorizontal="true"
-            android:textColor="@color/red"/>
-        <TextView
-            android:id="@+id/finalPriceTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="Tổng tiền"
-            android:layout_below="@id/reducedPriceTv"
-            android:layout_centerHorizontal="true"
-            android:layout_marginEnd="10dp"
-            android:textColor="@color/red"/>
-
-        <LinearLayout
-            android:id="@+id/lvTangGiam"
-            android:layout_below="@id/pQuantityTv"
-            android:layout_marginTop="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_horizontal"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp">
+            style="@style/TextAppearance.AppCompat.Headline"
+            android:textColor="@color/colorblack"
+            android:text="Đặt hàng"
+            android:textAllCaps="true"
+            android:textAlignment="center"
+            android:textStyle="bold"/>
 
-            <ImageButton
-                android:id="@+id/decrementBtn"
+        <!--shop name-->
+        <TextView
+            android:id="@+id/shopNameTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorblack"
+            android:text="Người bán"
+            android:textAllCaps="true"
+            android:textAlignment="center"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/sdtTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorblack"
+            android:text="SĐT"
+            android:textAllCaps="true"
+            android:textAlignment="center"
+            android:textStyle="bold"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/colorgray"/>
+
+        <!--show cart items-->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/cartItemsRv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/row_cart" />
+
+        <RelativeLayout
+            android:id="@+id/pricesLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cartItemsRv"
+            android:padding="10dp">
+            <!--Promo input layout-->
+            <RelativeLayout
+                android:id="@+id/promoRl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_rec02"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/promoLabelTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:padding="5dp"
+                    android:text="Mã khuyến mãi"
+                    android:textColor="@color/colorblack"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
+
+                <EditText
+                    android:id="@+id/promoCodeEt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/promoLabelTv"
+                    android:layout_marginEnd="5dp"
+                    android:layout_toStartOf="@id/validateBtn"
+                    android:hint="Mã khuyến mãi"
+                    android:padding="10dp"
+                    android:textColor="@color/colorblack"
+                    android:textColorHint="@color/colorgray"
+                    android:textSize="14sp"/>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/validateBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/promoLabelTv"
+                    android:layout_alignParentEnd="true"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/sendmessage"
+                    android:tint="@color/colorwhite"
+                    app:fabSize="mini"/>
+
+                <TextView
+                    android:id="@+id/promoDescriptionTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/promoCodeEt"
+                    android:hint="Mô tả mã khuyến mãi"
+                    android:padding="10dp"
+                    android:textColor="@color/colorblack"
+                    android:textColorHint="@color/colorgray"
+                    android:textSize="14sp"/>
+
+                <Button
+                    android:id="@+id/applyBtn"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/promoDescriptionTv"
+                    android:text="Apply"
+                    android:textColor="@color/colorwhite"/>
+
+
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/priceLabelTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@null"
-                android:src="@drawable/ic_add_cart_remove"/>
+                android:layout_below="@id/promoRl"
+                android:padding="5dp"
+                android:text="Tổng giá:"
+                android:textStyle="bold"
+                android:textColor="@color/colorblack"/>
 
             <TextView
-                android:id="@+id/slQuantityTv"
+                android:id="@+id/priceTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1"
-                android:textColor="@color/black"
-                android:textSize="18sp"/>
-
-            <ImageButton
-                android:id="@+id/incrementBtn"
+                android:padding="5dp"
+                android:layout_below="@id/promoRl"
+                android:text="20đ"
+                android:textStyle="bold"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/colorblack"/>
+            <TextView
+                android:id="@+id/promotionLabelTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@null"
-                android:src="@drawable/ic_add_cart"/>
-        </LinearLayout>
+                android:padding="5dp"
+                android:layout_below="@id/priceLabelTv"
+                android:text="Giá khuyến mãi:"
+                android:textStyle="bold"
+                android:textColor="@color/colorblack"/>
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/promotionTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_below="@id/priceTv"
+                android:text="20đ"
+                android:textStyle="bold"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/colorblack"/>
+            <TextView
+                android:id="@+id/finalPriceLabelTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_below="@id/promotionLabelTv"
+                android:text="Tổng cộng:"
+                android:textStyle="bold"
+                android:textColor="@color/colorblack"/>
 
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/descriptionTv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:text="Mô tả sản phẩm"
-            android:textColor="@color/black"/>
+            <TextView
+                android:id="@+id/finalPriceTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_below="@id/promotionTv"
+                android:text="20đ"
+                android:textStyle="bold"
+                android:layout_alignParentEnd="true"
+                android:textColor="@color/colorblack"/>
+        </RelativeLayout>
 
         <Button
-            android:id="@+id/continueBtn"
-            android:layout_width="wrap_content"
+            android:id="@+id/checkoutBtn"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="Thêm"
-            android:layout_below="@id/descriptionTv"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/white"
-            android:textAllCaps="false"/>
-    </RelativeLayout>
-
-</LinearLayout>
+            android:background="@color/colorwhite"
+            android:layout_below="@id/pricesLayout"
+            android:padding="15dp"
+            android:text="Xác nhận đơn hàng"
+            android:textColor="@color/colorgold"/>
+    </LinearLayout>
+</ScrollView>
