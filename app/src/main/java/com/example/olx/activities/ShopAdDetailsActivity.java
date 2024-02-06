@@ -283,7 +283,10 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
     public boolean isPromoCodeApplied = false;
     public String uidNguoiBan;
     public String uidNguoiMua;
-    public TextView priceTv,promotionTv,finalPriceTv,promoDescriptionTv;
+    public TextView priceTv;
+    public TextView promotionTv;
+    public TextView finalPriceTv;
+    public TextView promoDescriptionTv;
     public EditText promoCodeEt;
     public Button applyBtn;
     @SuppressLint("MissingInflatedId")
@@ -420,7 +423,7 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
             tongtien = tongtien + tongtienSP;
 
             sluong = sluong + quantity;
-            tenSP = tenSP.concat(" "+"+"+tenSP+"\n");
+            tenSP = tenSP.concat(" "+"+"+tenSP+"\n"); //lỗi tên sản phẩm giỏ hàng
             finalPriceTv.setText(""+CurrencyFormatter.getFormatter().format(Double.valueOf(tongtien)));
             priceTv.setText(""+CurrencyFormatter.getFormatter().format(Double.valueOf(tongtien)));
             ModelCart modelCart = new ModelCart(
@@ -439,6 +442,13 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         AdapterCart adapterCart = new AdapterCart(this, cartItemList);
         //set to recyclerview
         cartItemsRv.setAdapter(adapterCart);
+
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                tongtien = 0;
+            }
+        });
 
         checkoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -605,7 +615,6 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
 //        finalPriceTv.setText("" + (tongtien  - promoPrice));
 //
 //    }
-    public String idHD;
 
     private void submitOrder() {
         //show progress dialog
@@ -614,9 +623,9 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
 
         long timestamp = Utils.getTimestamp();
         //setup oder data
-        int tongtiensanpham = tongtien;
+
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProductAds");
-        idHD = reference.push().getKey();
+        String idHD = reference.push().getKey();
 
         //setup oder data
         HashMap<String, Object> hashMap = new HashMap<>();
@@ -643,17 +652,24 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                         int tongtienSP = cartItemList.get(i).getTongtienSP();
                         String uidNguoiMua1 = cartItemList.get(i).getUidNguoiMua();
                         String uidNguoiBan1 = cartItemList.get(i).getUidNguoiBan();
+                        Log.d(TAG, "submitOrder: id: "+id);
+                        Log.d(TAG, "submitOrder: pId: "+pId);
+                        Log.d(TAG, "submitOrder: tenSP: "+tenSP);
+                        Log.d(TAG, "submitOrder: price: "+price);
+                        Log.d(TAG, "submitOrder: quantity: "+quantity);
+                        Log.d(TAG, "submitOrder: tongtienSP: "+tongtienSP);
+                        Log.d(TAG, "submitOrder: uidNguoiMua1: "+uidNguoiMua1);
+                        Log.d(TAG, "submitOrder: uidNguoiBan1: "+uidNguoiBan1);
                         HashMap<String, Object> hashMap1 = new HashMap<>();
-                        hashMap1.put("id", id);
                         hashMap1.put("productAdsId", pId);
                         hashMap1.put("ten", tenSP);
                         hashMap1.put("tongtien", tongtienSP);
                         hashMap1.put("price",price);
-                        hashMap1.put("soluongdadat", quantity);
+                        hashMap1.put("soluongdadat", sluong);
                         hashMap1.put("uidNguoiMua", ""+uidNguoiMua1);
                         hashMap1.put("uidNguoiBan", ""+uidNguoiBan1);
-
-                        reference.child(idHD).child("GioHang").child(pId).setValue(hashMap1);
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ProductAds");
+                        ref.child(pId).child("Order").child(idHD).child("GioHang").child(pId).setValue(hashMap1);
                     }
                     progressDialog.dismiss();
                     Utils.toastySuccess(ShopAdDetailsActivity.this,"Đặt hàng thành công...");

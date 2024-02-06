@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.olx.CurrencyFormatter;
 import com.example.olx.R;
+import com.example.olx.Utils;
+import com.example.olx.activities.ShopAdDetailsActivity;
 import com.example.olx.databinding.RowCartBinding;
 import com.example.olx.model.ModelAddProduct;
 import com.example.olx.model.ModelCart;
@@ -58,12 +60,14 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
         int idGH = modelCart.getId();
         String title = modelCart.getTenSP();
         int Soluongdadat = modelCart.getQuantity();
+        int price = modelCart.getPrice();
         int tongtiensp = modelCart.getTongtienSP();
 
 
         Log.d(TAG, "onBindViewHolder: idGH: "+idGH);
         Log.d(TAG, "onBindViewHolder: title: "+title);
         Log.d(TAG, "onBindViewHolder: Soluongdadat: "+Soluongdadat);
+        Log.d(TAG, "onBindViewHolder: giá: "+price);
         Log.d(TAG, "onBindViewHolder: tongtiensp: "+tongtiensp);
         // lấy hình ảnh đầu tiên của sản phẩm
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProductAds");
@@ -108,11 +112,13 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
 
         holder.titleTv.setText(title);
         holder.sQuantityTv.setText("Số lượng đã đặt: "+Soluongdadat);
+        holder.priceTv.setText("Giá: "+price);
         holder.finalPriceTv.setText("Tổng tiền: "+ CurrencyFormatter.getFormatter().format(Double.valueOf(tongtiensp)));
 
 
-
+        //xoá sản phẩm ra khỏi giỏ hàng
         holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
                 //suy nghĩ code thêm
@@ -129,12 +135,21 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
                         .doneTableColumn();
 
                 easyDB.deleteRow(1, idGH); //column Number 1 is Item_Id
-                Toast.makeText(context, "Đã xóa khỏi giỏ hàng...", Toast.LENGTH_SHORT).show();
+                Utils.toastySuccess(context,"Đã xóa khỏi giỏ hàng...");
 
                 //refresh list
                 cartArrayList.remove(position);
                 notifyItemChanged(position);
                 notifyDataSetChanged();
+                int quantity = Soluongdadat - Soluongdadat;
+                ((ShopAdDetailsActivity)context).sluong = quantity;
+                //adjust the subtotal after product remove
+                double subTotalWithoutDiscount = Double.parseDouble(CurrencyFormatter.getFormatter().format(Double.parseDouble
+                        (((ShopAdDetailsActivity)context).finalPriceTv.getText().toString().
+                                replace("đ", ""))));
+                double totalPrice = subTotalWithoutDiscount - Double.parseDouble(CurrencyFormatter.getFormatter().format(Double.valueOf(tongtiensp)));
+                ((ShopAdDetailsActivity)context).priceTv.setText(CurrencyFormatter.getFormatter().format(totalPrice));
+                ((ShopAdDetailsActivity)context).finalPriceTv.setText(CurrencyFormatter.getFormatter().format(totalPrice));
             }
         });
     }
@@ -147,16 +162,15 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
     public class HolderCart  extends RecyclerView.ViewHolder{
         ShapeableImageView productIv;
 
-        TextView titleTv,sQuantityTv,raitoTv,finalPriceTv;
-        ImageButton deleteBtn;
+        TextView titleTv,sQuantityTv,priceTv,finalPriceTv;
+
         public HolderCart(@NonNull View itemView) {
             super(itemView);
             productIv = binding.productIv;
             titleTv = binding.titleTv;
             sQuantityTv = binding.sQuantityTv;
+            priceTv = binding.priceTv;
             finalPriceTv = binding.finalPriceTv;
-            deleteBtn = binding.deleteBtn;
-
         }
     }
 }

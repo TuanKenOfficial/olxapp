@@ -144,7 +144,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:layout_below="@id/promoRl"
-                android:text="20đ"
+                android:text="đ"
                 android:textStyle="bold"
                 android:layout_alignParentEnd="true"
                 android:textColor="@color/colorblack"/>
@@ -164,7 +164,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:layout_below="@id/priceTv"
-                android:text="20đ"
+                android:text="đ"
                 android:textStyle="bold"
                 android:layout_alignParentEnd="true"
                 android:textColor="@color/colorblack"/>
@@ -184,7 +184,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:layout_below="@id/promotionTv"
-                android:text="20đ"
+                android:text="đ"
                 android:textStyle="bold"
                 android:layout_alignParentEnd="true"
                 android:textColor="@color/colorblack"/>

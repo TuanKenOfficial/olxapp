@@ -8,7 +8,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp">
+        android:layout_height="120dp">
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/productIv"
             android:layout_width="100dp"
@@ -32,6 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/titleTv"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="2dp"
             android:layout_toRightOf="@id/productIv"
             android:text="Số lượng đã đặt: "
             android:textColor="@color/red"
@@ -39,27 +40,26 @@
 
 
         <TextView
-            android:id="@+id/finalPriceTv"
+            android:id="@+id/priceTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/sQuantityTv"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="2dp"
+            android:layout_toRightOf="@id/productIv"
+            android:padding="5dp"
+            android:text="0đ"
+            android:textColor="@color/red" />
+        <TextView
+            android:id="@+id/finalPriceTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/priceTv"
+            android:layout_marginTop="2dp"
             android:layout_toRightOf="@id/productIv"
             android:padding="5dp"
             android:text="0đ"
             android:textColor="@color/red" />
 
-        <ImageButton
-            android:id="@+id/deleteBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_delete" />
 
         <View
             android:layout_width="match_parent"
