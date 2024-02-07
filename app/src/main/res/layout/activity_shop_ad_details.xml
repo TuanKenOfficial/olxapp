@@ -48,18 +48,6 @@
             android:src="@drawable/cart"
             android:padding="10dp"/>
 
-        <!--cart item count badge-->
-        <TextView
-            android:id="@+id/cartCountTv"
-            android:textColor="@color/colorwhite"
-            android:text="10"
-            android:textSize="8sp"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:layout_toRightOf="@id/cartBtn"
-            android:background="@drawable/shape_rec01"
-            android:layout_width="20dp"
-            android:layout_height="20dp"/>
         <ImageButton
             android:id="@+id/deleteBtn"
             android:layout_width="30dp"
@@ -158,6 +146,7 @@
                 android:textColor="@color/red"
                 android:textStyle="bold"
                 android:layout_marginTop="2dp"
+                android:textSize="16sp"
                 android:text="Thương hiệu"/>
 
             <TextView
@@ -167,7 +156,7 @@
                 style="@style/TextAppearance.MaterialComponents.Body2"
                 android:layout_below="@id/brandLabelTv"
                 android:layout_marginTop="2dp"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 android:text="Thương hiệu sản phẩm"/>
 
@@ -179,6 +168,7 @@
                 android:layout_below="@id/brandTv"
                 android:textColor="@color/red"
                 android:textStyle="bold"
+                android:textSize="16sp"
                 android:layout_marginTop="2dp"
                 android:text="Danh mục"/>
 
@@ -189,7 +179,7 @@
                 style="@style/TextAppearance.MaterialComponents.Body2"
                 android:layout_below="@id/categoryLabelTv"
                 android:layout_marginTop="2dp"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 android:text="Danh mục quảng cáo"/>
 
@@ -201,6 +191,7 @@
                 android:layout_below="@id/categoryTv"
                 android:layout_marginTop="2dp"
                 android:textColor="@color/red"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 android:text="Tiêu đề"/>
 
@@ -211,7 +202,7 @@
                 style="@style/TextAppearance.MaterialComponents.Body2"
                 android:layout_below="@id/titleLabelTv"
                 android:layout_marginTop="2dp"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 tools:text="@tools:sample/lorem[5]"/>
 
@@ -224,6 +215,7 @@
                 android:layout_marginTop="2dp"
                 android:textColor="@color/red"
                 android:textStyle="bold"
+                android:textSize="16sp"
                 android:text="Mô tả"/>
 
             <TextView
@@ -234,7 +226,7 @@
                 android:layout_below="@id/descriptionLabelTv"
                 android:layout_marginTop="5dp"
                 tools:text="@tools:sample/lorem[20]"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="italic"
                 android:text="Mô tả quảng cáo"/>
             <TextView
@@ -246,6 +238,7 @@
                 android:layout_marginTop="2dp"
                 android:textColor="@color/red"
                 android:textStyle="bold"
+                android:textSize="16sp"
                 android:text="Tình trạng"/>
 
             <TextView
@@ -256,7 +249,7 @@
                 android:layout_below="@id/conditionLabelTv"
                 android:layout_marginTop="2dp"
                 tools:text="@tools:sample/lorem[5]"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="italic"
                 android:text="Tình trạng sản phẩm"/>
             <TextView
@@ -268,6 +261,7 @@
                 android:layout_marginTop="2dp"
                 android:textColor="@color/red"
                 android:textStyle="bold"
+                android:textSize="16sp"
                 android:text="Địa chỉ"/>
 
             <TextView
@@ -277,7 +271,7 @@
                 style="@style/TextAppearance.MaterialComponents.Body2"
                 android:layout_below="@id/addressLabelTv"
                 android:layout_marginTop="2dp"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 tools:text="@tools:sample/lorem[5]"/>
 
             <TextView

@@ -330,10 +330,6 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
 
         Utils.toastySuccess(context,"Thêm vào giỏ hàng thành công");
 
-
-        //update cart count
-//        ((ShopAdDetailsActivity)context).cartCount();
-
     }
 
 

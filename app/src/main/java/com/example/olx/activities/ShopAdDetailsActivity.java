@@ -111,23 +111,11 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         progressDialog.setTitle("Vui lòng đợi");
         progressDialog.setCanceledOnTouchOutside(false);
 
-        //declare it to class level and init in onCreate
-        EasyDB easyDB = EasyDB.init(ShopAdDetailsActivity.this, "GIOHANG_DB")
-                .setTableName("GIOHANG_TABLE")
-                .addColumn(new Column("GH_Id", "text", "unique"))
-                .addColumn(new Column("GH_PID", "text", "not null"))
-                .addColumn(new Column("GH_Title", "text", "not null"))
-                .addColumn(new Column("GH_Price", "text", "not null"))
-                .addColumn(new Column("GH_Quantity", "text", "not null"))
-                .addColumn(new Column("GH_FinalPrice", "text", "not null"))
-                .addColumn(new Column("GH_UidNguoiBan", "text", "not null"))
-                .addColumn(new Column("GH_UidNguoiMua", "text", "not null"))
-                .doneTableColumn();
 
-        //each shop have its own products and orders so if user add items to cart and go back and open cart in different shop then cart should be different
-        //so delete cart data whenever user open this activity
+        // mỗi cửa hàng có sản phẩm và đơn hàng riêng nên nếu người dùng thêm mặt hàng vào giỏ hàng và quay lại và mở giỏ hàng ở cửa hàng khác thì giỏ hàng sẽ khác
+        // vì vậy hãy xóa dữ liệu giỏ hàng bất cứ khi nào người dùng mở hoạt động này
+        // xóa tất cả sản phẩm  khỏi giỏ hàng
 //        deleteCartData();
-//        cartCount();
 
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -270,11 +258,16 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         binding.cartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("");
                 showCartDialog();
             }
         });
 
     }
+
+
+
+
     public int tongtien = 0; // tạo một biến tạm để tính tổng các mặt hàng
     public int sluong = 0;//tạo một biến tạm để tính số lượng đã đặt tổng các mặt hàng
     public String tenSP = ""; //tạo một biến tạm để lấy tên các mặt hàng
@@ -400,13 +393,13 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         //show dialog
         AlertDialog dialog = builder.create();
         dialog.show();
-//
-//        if (isPromoCodeApplied){
+        //        if (isPromoCodeApplied){
 //            priceWithDiscount();
 //        }
 //        else {
 //            priceWithoutDiscount();
 //        }
+
         //get all records from db
         Cursor res = easyDB.getAllData();
         while (res.moveToNext()){
@@ -423,7 +416,6 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
             tongtien = tongtien + tongtienSP;
 
             sluong = sluong + quantity;
-            tenSP = tenSP.concat(" "+"+"+tenSP+"\n"); //lỗi tên sản phẩm giỏ hàng
             finalPriceTv.setText(""+CurrencyFormatter.getFormatter().format(Double.valueOf(tongtien)));
             priceTv.setText(""+CurrencyFormatter.getFormatter().format(Double.valueOf(tongtien)));
             ModelCart modelCart = new ModelCart(
@@ -446,7 +438,11 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                tongtien = 0;
+                //còn ko muốn thì đóng dòng xoaGioHang lại thì nó sẽ vẫn load sản phẩm người này đặt
+                //khi đăng nhập tài khoản khác
+                xoaGioHang(); // xóa sạch giỏ hàng sau khi thoát activity
+                priceTv.setText("0đ");
+                finalPriceTv.setText("0đ");
             }
         });
 
@@ -455,7 +451,7 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (cartItemList.size() == 0){
                     Utils.toastyInfo(ShopAdDetailsActivity.this,"Không có mặt hàng nào được đặt trong giỏ hàng");
-
+//                    xoaGioHang();
                 }else {
                     submitOrder();
                 }
@@ -624,7 +620,7 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         long timestamp = Utils.getTimestamp();
         //setup oder data
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProductAds");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
         String idHD = reference.push().getKey();
 
         //setup oder data
@@ -640,13 +636,13 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         hashMap.put("longitude", ""+longitude);
 
         //add to db
-        reference.child(id).child("Order").child(idHD).setValue(hashMap)
+        reference.child(uidNguoiBan).child("Order").child(idHD).setValue(hashMap)
                 .addOnSuccessListener(aVoid -> {
                     //order info added now add order items
                     for ( int i=0; i<cartItemList.size(); i++){
                         String pId = cartItemList.get(i).getpId();
                         int id = cartItemList.get(i).getId();
-                        String tenSP = cartItemList.get(i).getTenSP();
+                        tenSP = cartItemList.get(i).getTenSP();
                         int price = cartItemList.get(i).getPrice();
                         int quantity = cartItemList.get(i).getQuantity();
                         int tongtienSP = cartItemList.get(i).getTongtienSP();
@@ -668,8 +664,8 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                         hashMap1.put("soluongdadat", sluong);
                         hashMap1.put("uidNguoiMua", ""+uidNguoiMua1);
                         hashMap1.put("uidNguoiBan", ""+uidNguoiBan1);
-                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ProductAds");
-                        ref.child(pId).child("Order").child(idHD).child("GioHang").child(pId).setValue(hashMap1);
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+                        ref.child(uidNguoiBan).child("Order").child(idHD).child("GioHang").child(pId).setValue(hashMap1);
                     }
                     progressDialog.dismiss();
                     Utils.toastySuccess(ShopAdDetailsActivity.this,"Đặt hàng thành công...");
@@ -686,24 +682,10 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
 
     }
 
-    public void cartCount() {
-        //keep it public so we can access in adapter
-        //get cart count
-        int count = easyDB.getAllData().getCount();
-        if (count <= 0) {
-            //no item in cart, hide cart count textview
-            binding.cartCountTv.setVisibility(View.GONE);
-        } else {
-            //have items in cart, show cart count textview and set count
-            binding.cartCountTv.setVisibility(View.VISIBLE);
-            binding.cartCountTv.setText("" + count);//concatenate with string, because we cant set integer in textview
-        }
-    }
 
+//    // xóa tất cả sản phẩm  khỏi giỏ hàng
     private void deleteCartData() {
-        easyDB.deleteAllDataFromTable();//delete all records from cart
-        priceTv.setText("0đ");
-        finalPriceTv.setText("0đ");
+        easyDB.deleteAllDataFromTable();
     }
 
     private void editOptions() {
@@ -958,5 +940,24 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                     }
                 });
     }
+    public void xoaGioHang() {
+        // Xóa hết sp khỏi giỏ
+        //declare it to class level and init in onCreate
+        easyDB = EasyDB.init(ShopAdDetailsActivity.this, "GIOHANG_DB")
+                .setTableName("GIOHANG_TABLE")
+                .addColumn(new Column("GH_Id", "text", "unique"))
+                .addColumn(new Column("GH_PID", "text", "not null"))
+                .addColumn(new Column("GH_Title", "text", "not null"))
+                .addColumn(new Column("GH_Price", "text", "not null"))
+                .addColumn(new Column("GH_Quantity", "text", "not null"))
+                .addColumn(new Column("GH_FinalPrice", "text", "not null"))
+                .addColumn(new Column("GH_UidNguoiBan", "text", "not null"))
+                .addColumn(new Column("GH_UidNguoiMua", "text", "not null"))
+                .doneTableColumn();
+        easyDB.deleteAllDataFromTable();
+    }
+
+    // nếu bạn không muốn thì đóng cmt method xóa giỏ hàng
+
 
 }

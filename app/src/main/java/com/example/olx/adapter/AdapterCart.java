@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,10 +59,12 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
     public void onBindViewHolder(@NonNull AdapterCart.HolderCart holder,  int position) {
         ModelCart modelCart = cartArrayList.get(position);
         int idGH = modelCart.getId();
+        String pId = modelCart.getpId();
         String title = modelCart.getTenSP();
         int Soluongdadat = modelCart.getQuantity();
         int price = modelCart.getPrice();
         int tongtiensp = modelCart.getTongtienSP();
+        String uidNguoiMua = modelCart.getUidNguoiMua();
 
 
         Log.d(TAG, "onBindViewHolder: idGH: "+idGH);
@@ -69,55 +72,57 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
         Log.d(TAG, "onBindViewHolder: Soluongdadat: "+Soluongdadat);
         Log.d(TAG, "onBindViewHolder: giá: "+price);
         Log.d(TAG, "onBindViewHolder: tongtiensp: "+tongtiensp);
-        // lấy hình ảnh đầu tiên của sản phẩm
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProductAds");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String idProductAds = ""+snapshot.child("id").getValue();
-                Log.d(TAG, "onDataChange: idProductAds"+idProductAds);
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ProductAds");
-                ref.child(idProductAds).child("Images").limitToFirst(1)
-                        .addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for (DataSnapshot ds : snapshot.getChildren()) {
-                                    String imageUrl = "" + ds.child("imageUrl").getValue();
-                                    Log.d(TAG, "onDataChange: imageUrl:"+imageUrl);
-                                    try {
-                                        Glide.with(context)
-                                                .load(imageUrl)
-                                                .placeholder(R.drawable.image)
-                                                .into(holder.productIv);
-                                    }catch (Exception e){
-                                        Log.e(TAG, "onBindViewHolder: ",e);
+        Log.d(TAG, "onBindViewHolder: id ảnh: "+pId);
+        Log.d(TAG, "onBindViewHolder: uidNguoiMua: "+uidNguoiMua);
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("GioHang");
+        reference.orderByChild("uidNguoiMua").equalTo(uidNguoiMua)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        // lấy hình ảnh đầu tiên của sản phẩm
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ProductAds");
+                        ref.child(pId).child("Images").limitToFirst(1)
+                                .addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for (DataSnapshot ds : snapshot.getChildren()) {
+                                            String imageUrl = "" + ds.child("imageUrl").getValue();
+                                            Log.d(TAG, "onDataChange: imageUrl:"+imageUrl);
+                                            try {
+                                                Glide.with(context)
+                                                        .load(imageUrl)
+                                                        .placeholder(R.drawable.image)
+                                                        .into(holder.productIv);
+                                            }catch (Exception e){
+                                                Log.e(TAG, "onBindViewHolder: ",e);
+                                            }
+
+                                        }
                                     }
 
-                                }
-                            }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+                                    }
+                                });
 
 
-        holder.titleTv.setText(title);
-        holder.sQuantityTv.setText("Số lượng đã đặt: "+Soluongdadat);
-        holder.priceTv.setText("Giá: "+price);
-        holder.finalPriceTv.setText("Tổng tiền: "+ CurrencyFormatter.getFormatter().format(Double.valueOf(tongtiensp)));
+                        holder.titleTv.setText(title);
+                        holder.sQuantityTv.setText("Số lượng đã đặt: "+Soluongdadat);
+                        holder.priceTv.setText("Giá: "+CurrencyFormatter.getFormatter().format(Double.valueOf(price)));
+                        holder.finalPriceTv.setText("Tổng tiền: "+ CurrencyFormatter.getFormatter().format(Double.valueOf(tongtiensp)));
 
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
 
         //xoá sản phẩm ra khỏi giỏ hàng
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.btnXoacart.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
@@ -134,7 +139,8 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
                         .addColumn(new Column("GH_UidNguoiMua", "text", "not null"))
                         .doneTableColumn();
 
-                easyDB.deleteRow(1, idGH); //column Number 1 is Item_Id
+                easyDB.deleteRow(1, idGH); //xoá từng dòng
+//                easyDB.deleteAllDataFromTable();//xoá tất cả sản phẩm
                 Utils.toastySuccess(context,"Đã xóa khỏi giỏ hàng...");
 
                 //refresh list
@@ -143,15 +149,46 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
                 notifyDataSetChanged();
                 int quantity = Soluongdadat - Soluongdadat;
                 ((ShopAdDetailsActivity)context).sluong = quantity;
-                //adjust the subtotal after product remove
+                //điều chỉnh tính tổng  sau khi loại bỏ sản phẩm
                 double subTotalWithoutDiscount = Double.parseDouble(CurrencyFormatter.getFormatter().format(Double.parseDouble
                         (((ShopAdDetailsActivity)context).finalPriceTv.getText().toString().
                                 replace("đ", ""))));
                 double totalPrice = subTotalWithoutDiscount - Double.parseDouble(CurrencyFormatter.getFormatter().format(Double.valueOf(tongtiensp)));
-                ((ShopAdDetailsActivity)context).priceTv.setText(CurrencyFormatter.getFormatter().format(totalPrice));
+                double stotalPrice = Double.parseDouble(CurrencyFormatter.getFormatter().format(Double.valueOf(tongtiensp)));
+                ((ShopAdDetailsActivity)context).priceTv.setText(CurrencyFormatter.getFormatter().format(stotalPrice));
                 ((ShopAdDetailsActivity)context).finalPriceTv.setText(CurrencyFormatter.getFormatter().format(totalPrice));
+
+//                if (((ShopAdDetailsActivity)context).isPromoCodeApplied){
+//                    //applied
+//                    if (totalPrice < Double.parseDouble(((ShopAdDetailsActivity)context).promoMinimumOrderPrice)){
+//                        //current order price is less then minimum required price
+//                        Utils.toastyInfo(context, "Mã này hợp lệ cho đơn hàng với số tiền tối thiểu: VNĐ"+((ShopAdDetailsActivity)context).promoMinimumOrderPrice);
+//                        ((ShopAdDetailsActivity)context).applyBtn.setVisibility(View.GONE);
+//                        ((ShopAdDetailsActivity)context).promoDescriptionTv.setVisibility(View.GONE);
+//                        ((ShopAdDetailsActivity)context).promoDescriptionTv.setText("");
+//                        ((ShopAdDetailsActivity)context).discountTv.setText("0đ");
+//                        ((ShopAdDetailsActivity)context).isPromoCodeApplied = false;
+//                        //show new net total after delivery fee
+//                        ((ShopAdDetailsActivity)context).finalPriceTv.setText(CurrencyFormatter.getFormatter().format(totalPrice));
+//                    }
+//                    else {
+//                        ((ShopAdDetailsActivity)context).applyBtn.setVisibility(View.VISIBLE);
+//                        ((ShopAdDetailsActivity)context).promoDescriptionTv.setVisibility(View.VISIBLE);
+//                        ((ShopAdDetailsActivity)context).promoDescriptionTv.setText(((ShopAdDetailsActivity)context).promoDescription);
+//                        //show new total price after adding delivery fee and subtracting promo fee
+//                        ((ShopAdDetailsActivity)context).isPromoCodeApplied = true;
+//                        ((ShopAdDetailsActivity)context).finalPriceTv.setText(CurrencyFormatter.getFormatter().format(totalPrice-stotalPrice));
+//                    }
+//                }
+//                else {
+//                    //not applied
+//                    ((ShopAdDetailsActivity)context).finalPriceTv.setText(CurrencyFormatter.getFormatter().format(totalPrice));
+//                }
+//                ((ShopAdDetailsActivity)context).cartCount(); // tăng số lượng đặt hàng ở biểu tượng giỏ hàng
             }
+
         });
+
     }
 
     @Override
@@ -163,6 +200,7 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
         ShapeableImageView productIv;
 
         TextView titleTv,sQuantityTv,priceTv,finalPriceTv;
+        Button btnXoacart;
 
         public HolderCart(@NonNull View itemView) {
             super(itemView);
@@ -171,6 +209,7 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
             sQuantityTv = binding.sQuantityTv;
             priceTv = binding.priceTv;
             finalPriceTv = binding.finalPriceTv;
+            btnXoacart = binding.btnXoacart;
         }
     }
 }
