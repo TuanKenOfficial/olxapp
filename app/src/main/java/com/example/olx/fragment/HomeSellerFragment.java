@@ -30,8 +30,12 @@ import com.example.olx.Utils;
 import com.example.olx.activities.LocationPickerActivity;
 import com.example.olx.adapter.AdapterAddProduct;
 
+import com.example.olx.adapter.AdapterOrderSeller;
+import com.example.olx.adapter.AdapterOrderUser;
 import com.example.olx.databinding.FragmentHomeSellerBinding;
 import com.example.olx.model.ModelAddProduct;
+import com.example.olx.model.ModelOrderSeller;
+import com.example.olx.model.ModelOrderUser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,6 +44,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class HomeSellerFragment extends Fragment {
 
@@ -54,8 +59,9 @@ public class HomeSellerFragment extends Fragment {
     private ArrayList<ModelAddProduct> productList;
     private AdapterAddProduct adapterAddProduct;
 
-//    private ArrayList<ModelOrderShop> orderShopArrayList;
-//    private AdapterOrderShop adapterOrderShop;
+    private ArrayList<ModelOrderSeller> orderSellerArrayList;
+    private AdapterOrderSeller adapterOrderSeller;
+
 
     private static final int MAX_DISTANCE_TO_LOAD_ADS_KM=10;
     private double currentLatitude=0.0;
@@ -104,6 +110,7 @@ public class HomeSellerFragment extends Fragment {
         }
         //Nếu muốn không cần chọn vị trí vẫn load được thì mở nó, ko thì đóng nó lại
         loadAllAdProducts();
+        loadAllOrders();
         showProductsUI();
 
         binding.tabProductsTv.setOnClickListener(v -> {
@@ -139,6 +146,30 @@ public class HomeSellerFragment extends Fragment {
             }
         });
 
+        binding.searchOderEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                try {
+                    Log.d(TAG, "onTextChanged: CharSequence: "+s);
+                    String query = s.toString();
+                    Log.d(TAG, "onTextChanged: query:"+query);
+                    adapterOrderSeller.getFilter().filter(query);
+                }catch (Exception e){
+                    Log.d(TAG, "onTextChanged: Lỗi: "+e);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         binding.filterProductBtn.setOnClickListener(v -> {
             Log.d(TAG, "onViewCreated: "+binding.filteredProductsTv);
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -162,13 +193,13 @@ public class HomeSellerFragment extends Fragment {
                         //handle item clicks
                         if (which==0){
                             //All clicked
-//                            filteredOrdersTv.setText("Hiển thị tất cả các đơn đặt hàng");
-//                            adapterOrderShop.getFilter().filter(""); //show all orders
+                            binding.filteredOrdersTv.setText("Hiển thị tất cả các đơn đặt hàng");
+                            adapterOrderSeller.getFilter().filter(""); //show all orders
                         }
                         else {
                             String optionClicked = options[which];
-//                            filteredOrdersTv.setText("Hiển thị "+optionClicked+" Đơn hàng"); //e.g. Showing Completed Orders
-//                            adapterOrderShop.getFilter().filter(optionClicked);
+                            binding.filteredOrdersTv.setText("Hiển thị "+optionClicked+" Đơn hàng"); //e.g. Showing Completed Orders
+                            adapterOrderSeller.getFilter().filter(optionClicked);
                         }
                     })
                     .show();
@@ -186,7 +217,36 @@ public class HomeSellerFragment extends Fragment {
 
 
     }
+    private void loadAllOrders() {
+        Log.d(TAG, "loadAllOrders: ");
+        //init array list
+        orderSellerArrayList = new ArrayList<>();
 
+        //load orders of shop
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.child((firebaseAuth.getUid())).child("Order")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        //clear list before adding new data in it
+                        orderSellerArrayList.clear();
+                        for (DataSnapshot ds: dataSnapshot.getChildren()){
+                            ModelOrderSeller modelOrderSeller = ds.getValue(ModelOrderSeller.class);
+                            //add to list
+                            orderSellerArrayList.add(modelOrderSeller);
+                        }
+                        //setup adapter
+                        adapterOrderSeller = new AdapterOrderSeller(mContext, orderSellerArrayList);
+                        //set adapter to recyclerview
+                        binding.ordersRv.setAdapter(adapterOrderSeller);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+    }
 
 
     private void showProductsUI() {
@@ -267,6 +327,7 @@ public class HomeSellerFragment extends Fragment {
 
                             binding.locationTv.setText(currentAddress);
                             loadAllAdProducts();
+                            loadAllOrders();
                         }
                     }
                 }

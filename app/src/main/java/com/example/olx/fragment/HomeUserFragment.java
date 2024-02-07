@@ -28,11 +28,14 @@ import android.view.ViewGroup;
 import com.example.olx.R;
 import com.example.olx.Utils;
 import com.example.olx.activities.LocationPickerActivity;
+import com.example.olx.activities.MainUserActivity;
 import com.example.olx.adapter.AdapterAddProduct;
 
+import com.example.olx.adapter.AdapterOrderUser;
 import com.example.olx.databinding.FragmentHomeSellerBinding;
 import com.example.olx.databinding.FragmentHomeUserBinding;
 import com.example.olx.model.ModelAddProduct;
+import com.example.olx.model.ModelOrderUser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -55,8 +58,9 @@ public class HomeUserFragment extends Fragment {
     private ArrayList<ModelAddProduct> productList;
     private AdapterAddProduct adapterAddProduct;
 
-//    private ArrayList<ModelOrderShop> orderShopArrayList;
-//    private AdapterOrderShop adapterOrderShop;
+    private ArrayList<ModelOrderUser> ordersList;
+    private AdapterOrderUser adapterOrderUser;
+
 
     private static final int MAX_DISTANCE_TO_LOAD_ADS_KM = 10;
     private double currentLatitude = 0.0;
@@ -106,6 +110,7 @@ public class HomeUserFragment extends Fragment {
         }
         //Nếu muốn không cần chọn vị trí vẫn load được thì mở nó, ko thì đóng nó lại
         loadAllAdProducts();
+        loadOrders();
         showProductsUI();
 
         binding.tabProductsTv.setOnClickListener(v -> {
@@ -141,6 +146,7 @@ public class HomeUserFragment extends Fragment {
             }
         });
 
+
         binding.filterProductBtn.setOnClickListener(v -> {
             Log.d(TAG, "onViewCreated: " + binding.filteredProductsTv);
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -163,13 +169,15 @@ public class HomeUserFragment extends Fragment {
                     .setItems(options, (dialog, which) -> {
                         //handle item clicks
                         if (which == 0) {
+                            Log.d(TAG, "onViewCreated: 0");
                             //All clicked
-//                            filteredOrdersTv.setText("Hiển thị tất cả các đơn đặt hàng");
-//                            adapterOrderShop.getFilter().filter(""); //show all orders
+                            binding.filteredOrdersTv.setText("Hiển thị tất cả các đơn đặt hàng");
+                            adapterOrderUser.getFilter().filter(""); //show all orders
                         } else {
                             String optionClicked = options[which];
-//                            filteredOrdersTv.setText("Hiển thị "+optionClicked+" Đơn hàng"); //e.g. Showing Completed Orders
-//                            adapterOrderShop.getFilter().filter(optionClicked);
+                            Log.d(TAG, "onViewCreated: "+optionClicked);
+                            binding.filteredOrdersTv.setText("Hiển thị "+optionClicked+" Đơn hàng"); //e.g. Showing Completed Orders
+                            adapterOrderUser.getFilter().filter(optionClicked);
                         }
                     })
                     .show();
@@ -188,7 +196,53 @@ public class HomeUserFragment extends Fragment {
 
     }
 
+    private void loadOrders() {
+        //init order list
+        ordersList = new ArrayList<>();
 
+        //get orders
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ordersList.clear();
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+                    String uid = ""+ds.getRef().getKey();
+                    Log.d(TAG, "onDataChange: uid: "+uid);
+
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("Order");
+                    ref.orderByChild("orderBy").equalTo(firebaseAuth.getUid())
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()){
+                                        for (DataSnapshot ds: dataSnapshot.getChildren()){
+                                            ModelOrderUser modelOrderUser = ds.getValue(ModelOrderUser.class);
+
+                                            //add to list
+                                            ordersList.add(modelOrderUser);
+                                        }
+                                        //setup adapter
+                                        adapterOrderUser = new AdapterOrderUser(mContext, ordersList);
+                                        //set to recyclerview
+                                        binding.ordersRv.setAdapter(adapterOrderUser);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
     private void showProductsUI() {
 //show products ui and hide orders ui
         binding.productsRl.setVisibility(View.VISIBLE);
@@ -270,6 +324,7 @@ public class HomeUserFragment extends Fragment {
 
                             binding.locationTv.setText(currentAddress);
                             loadAllAdProducts();
+                            loadOrders();
                         }
                     }
                 }

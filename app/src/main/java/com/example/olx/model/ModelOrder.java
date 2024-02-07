@@ -1,7 +1,6 @@
 package com.example.olx.model;
 
-public class ModelCart {
-    private int id;
+public class ModelOrder {
     private String productAdsId;
     private String ten;
     private int price;
@@ -11,11 +10,10 @@ public class ModelCart {
     private String uidNguoiMua;
 
 
-    public ModelCart() {
+    public ModelOrder() {
     }
 
-    public ModelCart(int id, String productAdsId, String ten, int price, int soluongdadat, int tongtien, String uidNguoiBan, String uidNguoiMua) {
-        this.id = id;
+    public ModelOrder(String productAdsId, String ten, int price, int soluongdadat, int tongtien, String uidNguoiBan, String uidNguoiMua) {
         this.productAdsId = productAdsId;
         this.ten = ten;
         this.price = price;
@@ -23,14 +21,6 @@ public class ModelCart {
         this.tongtien = tongtien;
         this.uidNguoiBan = uidNguoiBan;
         this.uidNguoiMua = uidNguoiMua;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getProductAdsId() {

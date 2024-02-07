@@ -1,6 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginBottom="2dp"
+    android:elevation="2dp"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/maHD"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:background="#FFFFFF"
+            android:textSize="18sp"
+            android:text="Hóa đơn #123123123125"
+            android:textColor="#000000"/>
+        <TextView
+            android:id="@+id/tenNM"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tên NM"
+            android:textSize="15sp"
+            android:paddingHorizontal="10dp"/>
+        <TextView
+            android:id="@+id/tenNB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tên NB"
+            android:textSize="15sp"
+            android:paddingHorizontal="10dp"/>
+        <TextView
+            android:id="@+id/soluongSP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Số lượng SP"
+            android:textSize="15sp"
+            android:paddingHorizontal="10dp"/>
+        <TextView
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:paddingHorizontal="10dp"
+            android:textSize="15sp"/>
+        <TextView
+            android:id="@+id/sdt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SĐT: 0123456789"
+            android:paddingHorizontal="10dp"
+            android:textSize="15sp"/>
+        <TextView
+            android:id="@+id/diachi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Địa chỉ"
+            android:paddingHorizontal="10dp"
+            android:textSize="15sp"/>
+
+
+        <TextView
+            android:id="@+id/titleSP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sản phẩm"
+            android:paddingHorizontal="10dp"
+            android:textSize="15sp"/>
+        <TextView
+            android:id="@+id/ngayDat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ngày đặt"
+            android:paddingHorizontal="10dp"
+            android:textColor="#4CAF50"
+            android:textSize="15sp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tongHoaDon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#4CAF50"
+                android:text="Tổng hóa đơn: 100000đ"
+                android:paddingHorizontal="10dp"
+                android:textSize="15sp"
+                android:layout_marginBottom="10dp"/>
+            <TextView
+                android:id="@+id/statusTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp"
+                android:text="Chưa duyệt"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/colorred" />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorgray"/>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

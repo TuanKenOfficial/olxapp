@@ -59,11 +59,11 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
     public void onBindViewHolder(@NonNull AdapterCart.HolderCart holder,  int position) {
         ModelCart modelCart = cartArrayList.get(position);
         int idGH = modelCart.getId();
-        String pId = modelCart.getpId();
-        String title = modelCart.getTenSP();
-        int Soluongdadat = modelCart.getQuantity();
+        String pId = modelCart.getProductAdsId();
+        String title = modelCart.getTen();
+        int Soluongdadat = modelCart.getSoluongdadat();
         int price = modelCart.getPrice();
-        int tongtiensp = modelCart.getTongtienSP();
+        int tongtiensp = modelCart.getTongtien();
         String uidNguoiMua = modelCart.getUidNguoiMua();
 
 

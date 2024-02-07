@@ -632,34 +632,35 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         hashMap.put("orderBy", ""+uidNguoiMua);
         hashMap.put("orderTo", ""+uidNguoiBan);
         hashMap.put("address", ""+address);
-        hashMap.put("latitude", ""+latitude);
-        hashMap.put("longitude", ""+longitude);
+        hashMap.put("timestamp", timestamp);
+        hashMap.put("latitude", latitude);
+        hashMap.put("longitude",longitude);
 
         //add to db
         reference.child(uidNguoiBan).child("Order").child(idHD).setValue(hashMap)
                 .addOnSuccessListener(aVoid -> {
                     //order info added now add order items
                     for ( int i=0; i<cartItemList.size(); i++){
-                        String pId = cartItemList.get(i).getpId();
+                        String pId = cartItemList.get(i).getProductAdsId();
                         int id = cartItemList.get(i).getId();
-                        tenSP = cartItemList.get(i).getTenSP();
+                        tenSP = cartItemList.get(i).getTen();
                         int price = cartItemList.get(i).getPrice();
-                        int quantity = cartItemList.get(i).getQuantity();
-                        int tongtienSP = cartItemList.get(i).getTongtienSP();
+                        int soluongdadat = cartItemList.get(i).getSoluongdadat();
+                        int tongtien = cartItemList.get(i).getTongtien();
                         String uidNguoiMua1 = cartItemList.get(i).getUidNguoiMua();
                         String uidNguoiBan1 = cartItemList.get(i).getUidNguoiBan();
                         Log.d(TAG, "submitOrder: id: "+id);
                         Log.d(TAG, "submitOrder: pId: "+pId);
                         Log.d(TAG, "submitOrder: tenSP: "+tenSP);
                         Log.d(TAG, "submitOrder: price: "+price);
-                        Log.d(TAG, "submitOrder: quantity: "+quantity);
-                        Log.d(TAG, "submitOrder: tongtienSP: "+tongtienSP);
+                        Log.d(TAG, "submitOrder: quantity: "+soluongdadat);
+                        Log.d(TAG, "submitOrder: tongtienSP: "+tongtien);
                         Log.d(TAG, "submitOrder: uidNguoiMua1: "+uidNguoiMua1);
                         Log.d(TAG, "submitOrder: uidNguoiBan1: "+uidNguoiBan1);
                         HashMap<String, Object> hashMap1 = new HashMap<>();
                         hashMap1.put("productAdsId", pId);
                         hashMap1.put("ten", tenSP);
-                        hashMap1.put("tongtien", tongtienSP);
+                        hashMap1.put("tongtien", tongtien);
                         hashMap1.put("price",price);
                         hashMap1.put("soluongdadat", sluong);
                         hashMap1.put("uidNguoiMua", ""+uidNguoiMua1);
@@ -957,7 +958,6 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         easyDB.deleteAllDataFromTable();
     }
 
-    // nếu bạn không muốn thì đóng cmt method xóa giỏ hàng
 
 
 }

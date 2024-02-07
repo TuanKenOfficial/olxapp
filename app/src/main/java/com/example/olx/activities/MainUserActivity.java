@@ -32,6 +32,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /** @noinspection deprecation*/
@@ -42,6 +43,7 @@ public class MainUserActivity extends AppCompatActivity {
     private FirebaseUser firebaseUser;
     private static final String TAG ="MaiUser";
     private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -192,6 +194,8 @@ public class MainUserActivity extends AppCompatActivity {
             updateFCMToken();
         }
     }
+
+
     //update FCM Token thông báo chat
     private void updateFCMToken(){
         String myUid = ""+firebaseAuth.getUid();

@@ -102,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/searchProductCv"
             android:textColor="@color/colorblack"
-            android:text="Hiển thị tất cả"
+            android:text="Hiển thị tất cả sản phẩm"
             android:textSize="20sp"
             android:layout_marginStart="5dp"
             android:layout_marginBottom="5dp"/>
@@ -148,19 +148,28 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_alignParentEnd="true"
-
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
             android:background="@null"
             android:scaleType="fitXY"
             android:src="@drawable/ic_apps" />
+        <TextView
+            android:id="@+id/filteredOrdersTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/searchOderCv"
+            android:textColor="@color/colorblack"
+            android:text="Hiển thị tất cả hoá đơn"
+            android:textSize="20sp"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="5dp"/>
         <!--show orders-->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/ordersRv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/searchOderCv"
-            tools:listitem="@layout/row_oder_seller"
+            android:layout_below="@id/filteredOrdersTv"
+            tools:listitem="@layout/row_order_user"
             app:reverseLayout="true"
             app:stackFromEnd="true"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
