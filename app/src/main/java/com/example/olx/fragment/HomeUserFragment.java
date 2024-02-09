@@ -115,7 +115,7 @@ public class HomeUserFragment extends Fragment {
         }
         //Nếu muốn không cần chọn vị trí vẫn load được thì mở nó, ko thì đóng nó lại
 //        loadAllAdProducts();
-        loadOrders();
+
         showProductsUI();
 
         binding.tabProductsTv.setOnClickListener(v -> {
@@ -219,6 +219,7 @@ public class HomeUserFragment extends Fragment {
     }
 
     private void showOrdersUI() {
+        loadOrders();
         binding.productsRl.setVisibility(View.GONE);
         binding.ordersRl.setVisibility(View.VISIBLE);
         binding.filterOrderBtn.setVisibility(View.GONE);
@@ -252,7 +253,6 @@ public class HomeUserFragment extends Fragment {
 
                                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                         ModelOrderUser modelOrderUser = ds.getValue(ModelOrderUser.class);
-
                                         //add to list
                                         ordersList.add(modelOrderUser);
                                     }

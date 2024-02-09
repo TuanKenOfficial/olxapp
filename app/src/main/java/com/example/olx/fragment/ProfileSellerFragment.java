@@ -32,6 +32,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import p32929.androideasysql_library.Column;
+import p32929.androideasysql_library.EasyDB;
+
 
 public class ProfileSellerFragment extends Fragment {
 
@@ -44,7 +47,7 @@ public class ProfileSellerFragment extends Fragment {
 
     private FirebaseAuth firebaseAuth;
     private String registerUserUid;
-
+    private EasyDB easyDB;
     public ProfileSellerFragment() {
         // Required empty public constructor
     }
@@ -73,7 +76,9 @@ public class ProfileSellerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 firebaseAuth.signOut();
+                xoaGioHang();
                 startActivity(new Intent(mContext, LoginOptionActivity.class));
+                getActivity().finishAffinity();
             }
         });
 
@@ -116,7 +121,23 @@ public class ProfileSellerFragment extends Fragment {
 
         return binding.getRoot();
     }
-
+    //Xoá giỏ hàng
+    public void xoaGioHang() {
+        // Xóa hết sp khỏi giỏ
+        //declare it to class level and init in onCreate
+        easyDB = EasyDB.init(mContext, "GIOHANG_DB")
+                .setTableName("GIOHANG_TABLE")
+                .addColumn(new Column("GH_Id", "text", "unique"))
+                .addColumn(new Column("GH_PID", "text", "not null"))
+                .addColumn(new Column("GH_Title", "text", "not null"))
+                .addColumn(new Column("GH_Price", "text", "not null"))
+                .addColumn(new Column("GH_Quantity", "text", "not null"))
+                .addColumn(new Column("GH_FinalPrice", "text", "not null"))
+                .addColumn(new Column("GH_UidNguoiBan", "text", "not null"))
+                .addColumn(new Column("GH_UidNguoiMua", "text", "not null"))
+                .doneTableColumn();
+        easyDB.deleteAllDataFromTable();
+    }
 
     private void loadMyInfo() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
