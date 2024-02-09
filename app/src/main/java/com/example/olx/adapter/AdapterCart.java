@@ -41,7 +41,6 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
     private  static  final  String TAG ="ADAPTER_GIO";
     private Context context;
     private ArrayList<ModelCart> cartArrayList;
-    private ArrayList<ModelAddProduct> addProductArrayList;
 
     public AdapterCart(Context context, ArrayList<ModelCart> cartArrayList) {
         this.context = context;
@@ -154,37 +153,8 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
                         (((ShopAdDetailsActivity)context).finalPriceTv.getText().toString().
                                 replace("đ", ""))));
                 double totalPrice = subTotalWithoutDiscount - Double.parseDouble(CurrencyFormatter.getFormatter().format(Double.valueOf(tongtiensp)));
-                double stotalPrice = Double.parseDouble(CurrencyFormatter.getFormatter().format(Double.valueOf(tongtiensp)));
-                ((ShopAdDetailsActivity)context).priceTv.setText(CurrencyFormatter.getFormatter().format(stotalPrice));
                 ((ShopAdDetailsActivity)context).finalPriceTv.setText(CurrencyFormatter.getFormatter().format(totalPrice));
 
-//                if (((ShopAdDetailsActivity)context).isPromoCodeApplied){
-//                    //applied
-//                    if (totalPrice < Double.parseDouble(((ShopAdDetailsActivity)context).promoMinimumOrderPrice)){
-//                        //current order price is less then minimum required price
-//                        Utils.toastyInfo(context, "Mã này hợp lệ cho đơn hàng với số tiền tối thiểu: VNĐ"+((ShopAdDetailsActivity)context).promoMinimumOrderPrice);
-//                        ((ShopAdDetailsActivity)context).applyBtn.setVisibility(View.GONE);
-//                        ((ShopAdDetailsActivity)context).promoDescriptionTv.setVisibility(View.GONE);
-//                        ((ShopAdDetailsActivity)context).promoDescriptionTv.setText("");
-//                        ((ShopAdDetailsActivity)context).discountTv.setText("0đ");
-//                        ((ShopAdDetailsActivity)context).isPromoCodeApplied = false;
-//                        //show new net total after delivery fee
-//                        ((ShopAdDetailsActivity)context).finalPriceTv.setText(CurrencyFormatter.getFormatter().format(totalPrice));
-//                    }
-//                    else {
-//                        ((ShopAdDetailsActivity)context).applyBtn.setVisibility(View.VISIBLE);
-//                        ((ShopAdDetailsActivity)context).promoDescriptionTv.setVisibility(View.VISIBLE);
-//                        ((ShopAdDetailsActivity)context).promoDescriptionTv.setText(((ShopAdDetailsActivity)context).promoDescription);
-//                        //show new total price after adding delivery fee and subtracting promo fee
-//                        ((ShopAdDetailsActivity)context).isPromoCodeApplied = true;
-//                        ((ShopAdDetailsActivity)context).finalPriceTv.setText(CurrencyFormatter.getFormatter().format(totalPrice-stotalPrice));
-//                    }
-//                }
-//                else {
-//                    //not applied
-//                    ((ShopAdDetailsActivity)context).finalPriceTv.setText(CurrencyFormatter.getFormatter().format(totalPrice));
-//                }
-//                ((ShopAdDetailsActivity)context).cartCount(); // tăng số lượng đặt hàng ở biểu tượng giỏ hàng
             }
 
         });

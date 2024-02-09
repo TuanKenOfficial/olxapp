@@ -71,15 +71,15 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hold
         loadUserInfo(modelOrderUser, holder);
         loadOrderInfo(modelOrderUser,holder);
         loadOrderSellerInfo(modelOrderUser,holder);
+        loadOrderUserInfo(modelOrderUser,holder);
 
         //set data
         String formatted = Utils.formatTimestampDateTime(timestamp); // load dd/MM/yyyy HH:mm
         holder.ngayDat.setText("Thời gian: "+formatted);
         holder.maHD.setText("Hoá đơn: #"+orderMaHD);
-        holder.tenNM.setText("Người mua: "+orderBy);
         holder.diachi.setText("Địa chỉ: "+address);
         holder.tongHoaDon.setText("Tổng cộng: "+ CurrencyFormatter.getFormatter().format(Double.parseDouble(String.valueOf(orderTongTien))));
-        holder.statusTv.setText(orderStatus);
+        holder.statusTv.setText("Trạng thái: "+orderStatus);
 
         //change order status text color
         switch (orderStatus) {
@@ -102,7 +102,24 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hold
             context.startActivity(intent);
         });
     }
+    //load tên nguời mua
+    private void loadOrderUserInfo(ModelOrderUser modelOrderUser, AdapterOrderUser.HolderOrderUser holder) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference.child(modelOrderUser.getOrderBy()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String name = ""+snapshot.child("name").getValue();
+                Log.d(TAG, "onDataChange: tên người bán: "+name);
+                holder.tenNM.setText("Người mua: "+name);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    //load tên người bán
     private void loadOrderSellerInfo(ModelOrderUser modelOrderUser, AdapterOrderUser.HolderOrderUser holder) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
         reference.child(modelOrderUser.getOrderTo()).addValueEventListener(new ValueEventListener() {
@@ -120,10 +137,11 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hold
         });
     }
 
+    //load hoá đơn
     private void loadOrderInfo(ModelOrderUser modelOrderUser, AdapterOrderUser.HolderOrderUser holder) {
         //load thông tin tên và số lượng đã đặt của sản phẩm
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.child(modelOrderUser.getOrderTo()).child("Order").child(modelOrderUser.getOrderId()).child("GioHang").addValueEventListener(new ValueEventListener() {
+        reference.child(modelOrderUser.getOrderBy()).child("Order").child(modelOrderUser.getOrderId()).child("GioHang").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds: snapshot.getChildren()){
@@ -144,6 +162,7 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hold
         });
     }
 
+    //load email and số điện thoại người mua
     private void loadUserInfo(ModelOrderUser modelOrderUser, final AdapterOrderUser.HolderOrderUser holder) {
         //to load email of the user/buyer: modelOrderShop.getOrderBy() contains uid of that user/buyer
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
@@ -155,7 +174,8 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hold
                         Log.d(TAG, "onDataChange: sdt"+sdt);
                         holder.sdt.setText("Số điện thoại: "+sdt);
                         String email = ""+dataSnapshot.child("email").getValue();
-                        holder.email.setText(email);
+                        holder.email.setText("Email: "+email);
+                        Log.d(TAG, "onDataChange: email"+email);
                     }
 
                     @Override

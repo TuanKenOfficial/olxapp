@@ -454,6 +454,7 @@ public class ProfileEditSellerActivity extends AppCompatActivity {
                          */
 
                         binding.emailEt.setEnabled(false); //không cho người dùng thay đổi email
+                        binding.nameShopEt.setEnabled(false); //không cho người dùng thay đổi email
                         binding.addressEt.setEnabled(true);
                         binding.phoneNumber.setEnabled(true);
                         binding.memberSingleEt.setEnabled(false);

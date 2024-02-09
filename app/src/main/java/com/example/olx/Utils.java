@@ -48,6 +48,28 @@ public class Utils  {
             "Nông nghiệp",
             "Thể loại khác",
     };
+    //danh sách sản phẩm liên quan đến HomeUserFragment và HomeSellerFragment
+    public static final String[] categoriess = {
+            "Tất cả sản phẩm",
+            "Quán cafe & Trà sửa",
+            "Điện thoại",
+            "Máy tính/Laptop",
+            "Cửa hàng tạp hoá",
+            "Cửa hàng xe",
+            "Sách",
+            "Thời trang",
+            "Thú cưng",
+            "Bất động sản",
+            "Nông nghiệp",
+            "Thể loại khác",
+    };
+
+    public static final String[] options = {
+            "Tất cả hoá đơn",
+            "Chưa duyệt",
+            "Đã duyệt",
+            "Đã hủy"
+    };
 
 
 

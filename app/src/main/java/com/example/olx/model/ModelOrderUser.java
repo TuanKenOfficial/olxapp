@@ -5,11 +5,12 @@ public class ModelOrderUser {
     private long orderMaHD,timestamp;
     private int orderTongTien;
     private String orderBy,orderStatus,orderTo,address;
+    private double latitude, longitude;
 
     public ModelOrderUser() {
     }
 
-    public ModelOrderUser(String orderId, long orderMaHD, long timestamp, int orderTongTien, String orderBy, String orderStatus, String orderTo, String address) {
+    public ModelOrderUser(String orderId, long orderMaHD, long timestamp, int orderTongTien, String orderBy, String orderStatus, String orderTo, String address, double latitude, double longitude) {
         this.orderId = orderId;
         this.orderMaHD = orderMaHD;
         this.timestamp = timestamp;
@@ -18,6 +19,8 @@ public class ModelOrderUser {
         this.orderStatus = orderStatus;
         this.orderTo = orderTo;
         this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getOrderId() {
@@ -76,11 +79,28 @@ public class ModelOrderUser {
         this.address = address;
     }
 
+
     public String getOrderStatus() {
         return orderStatus;
     }
 
     public void setOrderStatus(String orderStatus) {
         this.orderStatus = orderStatus;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }

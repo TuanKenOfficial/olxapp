@@ -131,7 +131,8 @@
             android:layout_height="wrap_content"
             app:cardUseCompatPadding="true"
             android:layout_toLeftOf="@id/filterOrderBtn"
-            app:cardCornerRadius="5dp">
+            app:cardCornerRadius="5dp"
+            android:visibility="visible">
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -161,6 +162,7 @@
             android:layout_below="@+id/searchOderCv"
             android:textColor="@color/colorblack"
             android:text="Hiển thị tất cả hoá đơn"
+            android:layout_marginTop="10dp"
             android:textSize="20sp"
             android:layout_marginStart="5dp"
             android:layout_marginBottom="5dp"/>
@@ -169,6 +171,7 @@
             android:id="@+id/ordersRv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
             android:layout_below="@id/filteredOrdersTv"
             tools:listitem="@layout/row_oder_seller"
             app:reverseLayout="true"

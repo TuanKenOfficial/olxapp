@@ -145,6 +145,7 @@
         <!--Filter orders-->
         <ImageButton
             android:id="@+id/filterOrderBtn"
+            android:visibility="visible"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_alignParentEnd="true"

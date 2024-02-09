@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,11 +75,10 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
 
     private String sellerUid = null; // tài khoản user = null
 
-    private String sellerPhone = "";
 
     private boolean favorite = false;
 
-    private String idImage = "";
+    private RatingBar ratingBar;
 
     private ArrayList<ModelImageSlider> imageSliderArrayList;
     private ArrayList<ModelAddProduct> addProductArrayList;
@@ -105,7 +105,7 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         }
         loadAdImages();
         loadDetails();
-
+        loadReviews();
         //init progress dialog
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Vui lòng đợi");
@@ -208,7 +208,7 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                 if (firebaseAuth.getCurrentUser() == null) {
                     Utils.toast(ShopAdDetailsActivity.this, "Bạn cần đăng nhập tài khoản");
                 } else {
-                    Utils.startSMSIntent(ShopAdDetailsActivity.this, sellerPhone);
+                    Utils.startSMSIntent(ShopAdDetailsActivity.this, phone);
                 }
 
             }
@@ -220,7 +220,6 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         //add menu items to our menu
         popupMenu.getMenu().add("Gọi điện");
         popupMenu.getMenu().add("Chats");
-        popupMenu.getMenu().add("Đánh giá sản phẩm");
         //handle menu item click
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             if (menuItem.getTitle() == "Gọi điện") {
@@ -230,7 +229,7 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                 if (firebaseAuth.getCurrentUser() == null) {
                     Utils.toast(ShopAdDetailsActivity.this, "Bạn cần đăng nhập tài khoản");
                 } else {
-                    Utils.callIntent(ShopAdDetailsActivity.this, sellerPhone);
+                    Utils.callIntent(ShopAdDetailsActivity.this, phone);
                 }
             } else if (menuItem.getTitle() == "Chats") {
                 //open same reviews activity as used in user main page
@@ -240,12 +239,6 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                 intent.putExtra("receiptUid", sellerUid);
                 startActivity(intent);
 
-            } else if (menuItem.getTitle() == "Đánh giá sản phẩm") {
-                //start promotions list screen
-                Utils.toast(ShopAdDetailsActivity.this, "Chức năng đang code, đợi clip sau");
-                //                Intent intent = new Intent(MainSellerActivity.this, ShopReviewsActivity.class);
-//                intent.putExtra("shopUid", ""+firebaseAuth.getUid());
-//                startActivity(intent);
             }
 
             return true;
@@ -266,22 +259,14 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
     }
 
 
-
-
     public int tongtien = 0; // tạo một biến tạm để tính tổng các mặt hàng
     public int sluong = 0;//tạo một biến tạm để tính số lượng đã đặt tổng các mặt hàng
     public String tenSP = ""; //tạo một biến tạm để lấy tên các mặt hàng
-    public int promoPrice; //giá khuyến mãi
-    public String promoId, promoTimestamp, promoCode, promoDescription, promoExpDate, promoMinimumOrderPrice = "";
-    public boolean isPromoCodeApplied = false;
     public String uidNguoiBan;
     public String uidNguoiMua;
-    public TextView priceTv;
-    public TextView promotionTv;
     public TextView finalPriceTv;
-    public TextView promoDescriptionTv;
-    public EditText promoCodeEt;
-    public Button applyBtn;
+    public String shopNames;
+    public String phone;
     @SuppressLint("MissingInflatedId")
     private void showCartDialog() {
         cartItemList = new ArrayList<>();
@@ -291,92 +276,15 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         TextView shopNameTv = view.findViewById(R.id.shopNameTv);
         TextView sdtTv = view.findViewById(R.id.sdtTv);
         RecyclerView cartItemsRv = view.findViewById(R.id.cartItemsRv);
-        promoCodeEt = view.findViewById(R.id.promoCodeEt); //  mã khuyến mãi
-        FloatingActionButton validateBtn = view.findViewById(R.id.validateBtn);// khuyến mãi
-        promoDescriptionTv = view.findViewById(R.id.promoDescriptionTv);// mô tả khuyến mãi
-        applyBtn = view.findViewById(R.id.applyBtn);// khuyến mãi
-        priceTv = view.findViewById(R.id.priceTv); // giá
-        promotionTv = view.findViewById(R.id.promotionTv);// giá khuyến mãi
         finalPriceTv = view.findViewById(R.id.finalPriceTv);// tổng giá
         Button checkoutBtn = view.findViewById(R.id.checkoutBtn);
         //bất cứ khi nào hộp thoại giỏ hàng hiển thị, hãy kiểm tra xem mã khuyến mãi có được áp dụng hay không
-        if (isPromoCodeApplied){
-            //applied
-            promoDescriptionTv.setVisibility(View.VISIBLE);
-            applyBtn.setVisibility(View.VISIBLE);
-            applyBtn.setText("Đã áp dụng");
-            promoCodeEt.setText(promoCode);
-            promoDescriptionTv.setText(promoDescription);
-        }
-        else {
-            //not applied
-            promoDescriptionTv.setVisibility(View.GONE);
-            applyBtn.setVisibility(View.GONE);
-            applyBtn.setText("Chưa áp dụng");
-        }
         //dialog
         android.app.AlertDialog.Builder builder = new AlertDialog.Builder(this);
         //set view to dialog
         builder.setView(view);
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.child(firebaseAuth.getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String uid = "" + snapshot.child("uid").getValue();
-                String accountType = "" + snapshot.child("accountType").getValue();
-                String name = ""+snapshot.child("name").getValue();
-                String phone = ""+snapshot.child("phone").getValue();
-                Log.d(TAG, "onDataChange: accountType: " + accountType);
-                Log.d(TAG, "onDataChange: uid: " + uid);
-                if (accountType.equals("Seller")){
-                    String uid1 = uid;
-                    String name1 = name;
-                    String phone1 = phone;
-                    Log.d(TAG, "onDataChange: uid1: " + uid1);
-                    Log.d(TAG, "onDataChange: name1: " + name1);
-                    shopNameTv.setText(name1);
-                    sdtTv.setText(phone1);
-                }
-               else if (accountType.equals("User")){
-                    String uid2 = uid;
-                    String name2 = name;
-                    String phone2 = phone;
-                    Log.d(TAG, "onDataChange: uid2: " + uid2);
-                    Log.d(TAG, "onDataChange: name2: " + name2);
-                    Log.d(TAG, "onDataChange: phone2: " + phone2);
-                    shopNameTv.setText(name2);
-                    sdtTv.setText(phone2);
-                }
-                else if (accountType.equals("Phone")){
-                    String uid3 = uid;
-                    String name3 = name;
-                    String phone3 = phone;
-                    Log.d(TAG, "onDataChange: uid3: " + uid3);
-                    Log.d(TAG, "onDataChange: name3: " + name3);
-                    Log.d(TAG, "onDataChange: phone3: " + phone3);
-                    shopNameTv.setText(name3);
-                    sdtTv.setText(phone3);
-                }
-                else if (accountType.equals("Google")){
-                    String uid4 = uid;
-                    String name4 = name;
-                    String phone4 = phone;
-                    Log.d(TAG, "onDataChange: uid2: " + uid4);
-                    Log.d(TAG, "onDataChange: name4: " + name4);
-                    Log.d(TAG, "onDataChange: phone4: " + phone4);
-                    shopNameTv.setText(name4);
-                    sdtTv.setText(phone4);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-
+        shopNameTv.setText(shopNames);
+        sdtTv.setText(phone);
 
         //declare it to class level and init in onCreate
         EasyDB easyDB = EasyDB.init(ShopAdDetailsActivity.this, "GIOHANG_DB")
@@ -393,12 +301,6 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         //show dialog
         AlertDialog dialog = builder.create();
         dialog.show();
-        //        if (isPromoCodeApplied){
-//            priceWithDiscount();
-//        }
-//        else {
-//            priceWithoutDiscount();
-//        }
 
         //get all records from db
         Cursor res = easyDB.getAllData();
@@ -415,16 +317,14 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
 
             tongtien = tongtien + tongtienSP;
 
-            sluong = sluong + quantity;
             finalPriceTv.setText(""+CurrencyFormatter.getFormatter().format(Double.valueOf(tongtien)));
-            priceTv.setText(""+CurrencyFormatter.getFormatter().format(Double.valueOf(tongtien)));
             ModelCart modelCart = new ModelCart(
                     id,
                     ""+pId,
                     ""+tenSP,
                     price,
                     quantity,
-                    tongtien,
+                    tongtienSP,
                     ""+uidNguoiBan,
                     ""+uidNguoiMua
             );
@@ -438,10 +338,7 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                //còn ko muốn thì đóng dòng xoaGioHang lại thì nó sẽ vẫn load sản phẩm người này đặt
-                //khi đăng nhập tài khoản khác
-                xoaGioHang(); // xóa sạch giỏ hàng sau khi thoát activity
-                priceTv.setText("0đ");
+                xoaGioHang();
                 finalPriceTv.setText("0đ");
             }
         });
@@ -451,166 +348,16 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (cartItemList.size() == 0){
                     Utils.toastyInfo(ShopAdDetailsActivity.this,"Không có mặt hàng nào được đặt trong giỏ hàng");
-//                    xoaGioHang();
+
                 }else {
                     submitOrder();
+                    xoaGioHang();// xóa sạch giỏ hàng sau khi thoát activity
                 }
             }
         });
 
-//        //bắt đầu xác thực mã khuyến mãi khi nhấn nút xác thực
-//        validateBtn.setOnClickListener(view12 -> {
-//           /*Chảy:
-//             * 1) Nhận mã từ EditText
-//                  Nếu không trống: có thể áp dụng khuyến mãi, nếu không thì không khuyến mãi
-//             * 2) Kiểm tra xem mã có hợp lệ hay không, tức là db khuyến mãi của người bán id có sẵn
-//             * Nếu có: có thể áp dụng khuyến mãi, nếu không thì không khuyến mãi
-//             * 3) Kiểm tra xem đã hết hạn hay chưa
-//             * Nếu chưa hết hạn: có thể áp dụng khuyến mãi, nếu không sẽ không được khuyến mại
-//             * 4) Kiểm tra xem giá đặt hàng tối thiểu
-//             * Nếu Giá đặt hàng tối thiểu >= Tổng giá: có khuyến mãi, nếu không thì không có khuyến mãi*/
-//            String promotionCode = promoCodeEt.getText().toString().trim();
-//            if (TextUtils.isEmpty(promotionCode)){
-//                Toast.makeText(ShopAdDetailsActivity.this, "Vui lòng nhập mã khuyến mãi...", Toast.LENGTH_SHORT).show();
-//            }
-//            else {
-//                checkCodeAvailability(promotionCode);
-//            }
-//        });
-//
-//        //apply code if valid, no need to check if valid or not, because this button will be visible only if code is valid
-//        applyBtn.setOnClickListener(view1 -> {
-//            isPromoCodeApplied = true;
-//            applyBtn.setText("Đã áp dụng");
-//
-//            priceWithDiscount();
-//        });
-
     }
 
-//    private void checkCodeAvailability(String promotionCode) {
-//        //progress bar
-//        final ProgressDialog progressDialog = new ProgressDialog(this);
-//        progressDialog.setTitle("Vui lòng đợi");
-//        progressDialog.setMessage("Kiểm tra mã khuyến mại...");
-//        progressDialog.setCanceledOnTouchOutside(false);
-//
-//        //promo is not applied yet
-//        isPromoCodeApplied = false;
-//        applyBtn.setText("Chưa áp dụng");
-//        priceWithoutDiscount();
-//
-//        //check promo code availability
-//        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ProductAds");
-//        ref.child(id).child("Promotions").orderByChild("promoCode").equalTo(promotionCode)
-//                .addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        //check if promo code exists
-//                        if (snapshot.exists()){
-//                            //promo code exists
-//                            progressDialog.dismiss();
-//                            for (DataSnapshot ds: snapshot.getChildren()){
-//                                promoId = ""+ds.child("id").getValue();
-//                                promoTimestamp = ""+ds.child("timestamp").getValue();
-//                                promoCode = ""+ds.child("promoCode").getValue();
-//                                promoDescription = ""+ds.child("description").getValue();
-//                                promoExpDate = ""+ds.child("expireDate").getValue();
-//                                promoMinimumOrderPrice = ""+ds.child("minimumOrderPrice").getValue();
-//                                promoPrice = Integer.parseInt(""+ds.child("promoPrice").getValue());
-//
-//                                //now check if code is expired or not
-//                                checkCodeExpireDate();
-//                            }
-//                        }
-//                        else {
-//                            //entered promo code doesn't exists
-//                            progressDialog.dismiss();
-//                            Utils.toastyError(ShopAdDetailsActivity.this, "Mã khuyến mại không hợp lệ");
-//                            applyBtn.setVisibility(View.GONE);
-//                            promoDescriptionTv.setVisibility(View.GONE);
-//                            promoDescriptionTv.setText("");
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
-//    }
-
-//    private void checkCodeExpireDate() {
-//        //Get current date
-//        Calendar calendar = Calendar.getInstance();
-//        int year = calendar.get(Calendar.YEAR);
-//        int month = calendar.get(Calendar.MONTH) + 1;//it starts from 0 instead of 1 thats why did +1
-//        int day = calendar.get(Calendar.DAY_OF_MONTH);
-//        //concatenate date
-//        String todayDate = day +"/"+ month +"/"+ year; //e.g. 11/07/2020
-//
-//        /*----Check for expiry*/
-//        try {
-//            @SuppressLint("SimpleDateFormat") SimpleDateFormat sdformat = new SimpleDateFormat("dd/MM/yyyy");
-//            Date currentDate = sdformat.parse(todayDate);
-//            Date expireDate = sdformat.parse(promoExpDate);
-//            //compare dates
-//            assert expireDate != null;
-//            if (expireDate.compareTo(currentDate) > 0){
-//                //date 1 occurs after date 2 (i.e. not expire date)
-//                checkMinimumOrderPrice();
-//            }
-//            else if (expireDate.compareTo(currentDate) < 0){
-//                //date 1 occurs before date 2 (i.e. not expired)
-//                Toast.makeText(this, "Mã khuyến mãi hết hạn vào "+promoExpDate, Toast.LENGTH_SHORT).show();
-//                applyBtn.setVisibility(View.GONE);
-//                promoDescriptionTv.setVisibility(View.GONE);
-//                promoDescriptionTv.setText("");
-//            }
-//            else if (expireDate.compareTo(currentDate) == 0){
-//                //both dates are equal  (i.e. not expire date)
-//                checkMinimumOrderPrice();
-//            }
-//        }
-//        catch (Exception e){
-//            //if anything goes wrong causing exception while comparing current date and expiry date
-//            Toast.makeText(this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-//            applyBtn.setVisibility(View.GONE);
-//            promoDescriptionTv.setVisibility(View.GONE);
-//            promoDescriptionTv.setText("");
-//        }
-//    }
-
-//    private void checkMinimumOrderPrice() {
-//        // mỗi mã khuyến mãi có yêu cầu về giá đặt hàng tối thiểu, nếu giá đặt hàng thấp hơn mức yêu cầu thì không cho phép áp dụng mã
-//        if (Double.parseDouble(String.format("%.2f", allTotalPrice)) < Double.parseDouble(promoMinimumOrderPrice)){
-//            //giá đặt hàng hiện tại thấp hơn giá đặt hàng tối thiểu theo yêu cầu của mã khuyến mãi, vì vậy không cho phép áp dụng
-//            Toast.makeText(this, "Mã này hợp lệ cho đơn hàng với số tiền tối thiểu: $"+promoMinimumOrderPrice, Toast.LENGTH_SHORT).show();
-//            applyBtn.setVisibility(View.GONE);
-//            promoDescriptionTv.setVisibility(View.GONE);
-//            promoDescriptionTv.setText("");
-//        }
-//        else {
-//            //giá đơn hàng hiện tại bằng hoặc lớn hơn giá đơn hàng tối thiểu mà mã khuyến mãi yêu cầu, cho phép áp dụng mã
-//            applyBtn.setVisibility(View.VISIBLE);
-//            promoDescriptionTv.setVisibility(View.VISIBLE);
-//            promoDescriptionTv.setText(promoDescription);
-//        }
-//    }
-
-//    private void priceWithoutDiscount() {
-//        promotionTv.setText(""+ CurrencyFormatter.getFormatter().format(Double.valueOf(promoPrice)));
-//        priceTv.setText("" + CurrencyFormatter.getFormatter().format(Double.valueOf(tongtien)));
-//        finalPriceTv.setText("" +tongtien);
-//    }
-//
-//    @SuppressLint("SetTextI18n")
-//    private void priceWithDiscount() {
-//        promotionTv.setText(""+ CurrencyFormatter.getFormatter().format(Double.valueOf(promoPrice)));
-//        priceTv.setText("" + CurrencyFormatter.getFormatter().format(Double.valueOf(tongtien)));
-//        finalPriceTv.setText("" + (tongtien  - promoPrice));
-//
-//    }
 
     private void submitOrder() {
         //show progress dialog
@@ -683,11 +430,6 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
 
     }
 
-
-//    // xóa tất cả sản phẩm  khỏi giỏ hàng
-    private void deleteCartData() {
-        easyDB.deleteAllDataFromTable();
-    }
 
     private void editOptions() {
         Log.d(TAG, "editOptions: ");
@@ -790,7 +532,50 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                     }
                 });
     }
+    //đánh giá sản phẩm
+    private float ratingSum = 0;
 
+    private void loadReviews() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    String uid = "" + ds.getRef().getKey();
+                    Log.d(TAG, "onDataChange: uid: " + uid);
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users").child(uid);
+                    ref.orderByChild("uid").equalTo(firebaseAuth.getUid())
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    //clear list before adding data into it
+                                    ratingSum = 0;
+                                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                        float rating = Float.parseFloat("" + ds.child("ratings").getValue()); //e.g. 4.3
+                                        ratingSum = ratingSum + rating; //for avg rating, add(addition of) all ratings, later will divide it by number of reviews
+                                    }
+
+                                    long numberOfReviews = dataSnapshot.getChildrenCount();
+                                    float avgRating = ratingSum / numberOfReviews;
+
+                                    binding.ratingBar.setRating(avgRating);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
     //load sản phẩm quảng cáo
     private void loadDetails() {
         addProductArrayList = new ArrayList<>();
@@ -813,7 +598,6 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                             String condition = modelAd.getCondition();
                             String category = modelAd.getCategory();
                             int reducedprice = modelAd.getReducedprice();
-                            boolean discount = modelAd.isDiscount();
                             int price = modelAd.getPrice();
                             latitude = modelAd.getLatitude();
                             longitude = modelAd.getLongitude();
@@ -847,19 +631,19 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                                 Log.d(TAG, "onDataChange: reducedprice");
                                 binding.priceTv.setVisibility(View.VISIBLE); //hiện giá gốc
                                 binding.priceSymbolTv.setVisibility(View.GONE);
-                                binding.priceTv.setText(CurrencyFormatter.getFormatter().format(Double.valueOf(price)));
+                                binding.priceTv.setText("Giá: "+CurrencyFormatter.getFormatter().format(Double.valueOf(price)));
                                 binding.priceTv.setTextColor(Color.RED);
 
                             } else {
                                 binding.priceSymbolTv.setVisibility(View.VISIBLE);//hiện giá giảm
                                 binding.priceTv.setVisibility(View.GONE); // đóng giá gốc lại
                                 binding.priceSymbolTv.setTextColor(Color.RED);
-                                binding.priceSymbolTv.setText(CurrencyFormatter.getFormatter().format(Double.valueOf(reducedprice)));
+                                binding.priceSymbolTv.setText("Giá: "+CurrencyFormatter.getFormatter().format(Double.valueOf(reducedprice)));
 
                             }
 
 
-                            binding.dateTv.setText(formatteDate);
+                            binding.dateTv.setText("Thời gian: "+formatteDate);
 
                             loadSellerDetails();
                         } catch (Exception e) {
@@ -883,14 +667,13 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String phone = "" + snapshot.child("phone").getValue();
                         String name = "" + snapshot.child("name").getValue();
+                        shopNames = ""+snapshot.child("shopName").getValue();
+                        phone = ""+snapshot.child("phone").getValue();
                         String profileImage = "" + snapshot.child("profileImage").getValue();
                         String timestamp = "" + snapshot.child("timestamp").getValue();
 
                         String formattedDate = Utils.formatTimestampDate(Long.valueOf(timestamp));
-
-                        sellerPhone = phone;
 
                         binding.sellerNameTv.setText(name);
                         binding.memberSingleTv.setText(formattedDate);

@@ -62,7 +62,6 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
     }
 
 
-
     @NonNull
     @Override
     public AdapterAddProduct.HolderAddProduct onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -73,44 +72,41 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
     @Override
     public void onBindViewHolder(@NonNull AdapterAddProduct.HolderAddProduct holder, int position) {
         Log.d(TAG, "onBindViewHolder: ");
-        ModelAddProduct modelAd = adArrayList.get(position);
+        ModelAddProduct modelAddProduct = adArrayList.get(position);
 
-        String id = modelAd.getId();
+        String id = modelAddProduct.getId();
 
-        String title = modelAd.getTitle();
-        String description = modelAd.getDescription();
-        String address = modelAd.getAddress();
-        String condition = modelAd.getCondition();
-        int price = modelAd.getPrice();
-        int quantity = modelAd.getQuantity();
-        int raito = modelAd.getRaito();
-        int reducedprice = modelAd.getReducedprice();
-        long timestamp = modelAd.getTimestamp();
+        String title = modelAddProduct.getTitle();
+        String description = modelAddProduct.getDescription();
+        String address = modelAddProduct.getAddress();
+        String condition = modelAddProduct.getCondition();
+        int price = modelAddProduct.getPrice();
+        int quantity = modelAddProduct.getQuantity();
+        int raito = modelAddProduct.getRaito();
+        int reducedprice = modelAddProduct.getReducedprice();
+        long timestamp = modelAddProduct.getTimestamp();
+        String uid = modelAddProduct.getUid();
         String formattedDate = Utils.formatTimestampDate(timestamp);
 
-        loadAdFirstImage(modelAd, holder);
+        loadAdFirstImage(modelAddProduct, holder);
 
         if (firebaseAuth.getCurrentUser() != null) {
-            checkIsFavorites(modelAd, holder);
+            checkIsFavorites(modelAddProduct, holder);
         }
 
-
-        holder.titleTv.setText(title);
-        holder.descriptionTv.setText(description);
-        holder.addressTv.setText(address);
+        holder.titleTv.setText("Sản phẩm: " + title);
+        holder.descriptionTv.setText("Mô tả: " + description);
         holder.conditionTv.setText("Tình trạng: " + condition);
-        holder.priceTv.setText(CurrencyFormatter.getFormatter().format(Double.valueOf(price)));
-        ;
-        holder.raitoTv.setText(raito + "%");
-        holder.pricesTv.setText(CurrencyFormatter.getFormatter().format(Double.valueOf(reducedprice)));
+        holder.priceTv.setText("Giá gốc: " + CurrencyFormatter.getFormatter().format(Double.valueOf(price)));
+        holder.raitoTv.setText("-" + raito + "%");
+        holder.pricesTv.setText("Giảm giá: " + CurrencyFormatter.getFormatter().format(Double.valueOf(reducedprice)));
         holder.dateTv.setText(formattedDate);
-        ;
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intentShopAd = new Intent(context, ShopAdDetailsActivity.class);
-                intentShopAd.putExtra("adId", modelAd.getId());
+                intentShopAd.putExtra("adId", modelAddProduct.getId());
                 context.startActivity(intentShopAd);
             }
         });
@@ -118,7 +114,7 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
         holder.favBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean favorite = modelAd.isFavorite();
+                boolean favorite = modelAddProduct.isFavorite();
                 if (favorite) {
                     Utils.removeFavorite(context, id);
                 } else {
@@ -127,20 +123,24 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
                 }
             }
         });
+
         holder.ortherBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OderAd(modelAd);
+                OderAd(modelAddProduct);
+
             }
         });
 
     }
+
     //phần xử lý thêm vào giỏ hàng
     private int quantitys = 0; // khi người dùng bấm tăng số lượng cần đặt hàng vào giỏ hàng
     private int giaTien = 0;
     private int tongGiaTienSanPham = 0; //giá tiền và tổng giá tiền
     public String giaReducedPrice = ""; //giá giảm
     public String giaPrice = ""; // giá gốc
+
     private void OderAd(ModelAddProduct modelAddProducts) {
         //inflate layout for dialog
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_order, null);
@@ -298,11 +298,13 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
 
             Utils.toast(context, "Bạn mới đặt hàng");
             //add to db
-            addToCart(addId, titleOrder, priceOrder, quantitySL, tongGiaTienSP,uidNguoiBan,uidNguoiMua);
+            addToCart(addId, titleOrder, priceOrder, quantitySL, tongGiaTienSP, uidNguoiBan, uidNguoiMua);
             dialog.dismiss();
         });
     }
+
     private int itemId = 1;
+
     private void addToCart(String addId, String titleOrder, int priceOrder, int quantitySL, int tongGiaTienSP, String uidNguoiBan, String uidNguoiMua) {
         Log.d(TAG, "addToCart: ");
         itemId++;
@@ -328,7 +330,7 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
                 .addData("GH_UidNguoiMua", uidNguoiMua)
                 .doneDataAdding();
 
-        Utils.toastySuccess(context,"Thêm vào giỏ hàng thành công");
+        Utils.toastySuccess(context, "Thêm vào giỏ hàng thành công");
 
     }
 
@@ -342,7 +344,7 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                         boolean favotite = snapshot.exists();
-                        Log.d(TAG, "onDataChange: favotite: "+favotite);
+                        Log.d(TAG, "onDataChange: favotite: " + favotite);
                         modelAd.setFavorite(favotite);
 
                         if (favotite) {
@@ -362,7 +364,7 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
     private void loadAdFirstImage(ModelAddProduct modelAd, HolderAddProduct holder) {
         Log.d(TAG, "loadAdFirstImage: ");
         String id = modelAd.getId();
-        Log.d(TAG, "loadAdFirstImage: "+id);
+        Log.d(TAG, "loadAdFirstImage: " + id);
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ProductAds");
         ref.child(id).child("Images").limitToFirst(1)
@@ -371,7 +373,7 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot ds : snapshot.getChildren()) {
                             String imageUrl = "" + ds.child("imageUrl").getValue();
-                            Log.d(TAG, "onDataChange: "+imageUrl);
+                            Log.d(TAG, "onDataChange: " + imageUrl);
                             try {
                                 Glide.with(context)
                                         .load(imageUrl)
@@ -395,6 +397,7 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
     public int getItemCount() {
         return adArrayList.size();
     }
+
     @Override
     public Filter getFilter() {
         if (filterAddProducts == null) {
@@ -403,9 +406,9 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
         return filterAddProducts;
     }
 
-    public class HolderAddProduct extends RecyclerView.ViewHolder{
+    public class HolderAddProduct extends RecyclerView.ViewHolder {
         ShapeableImageView imageIv;
-        TextView titleTv, descriptionTv, addressTv, conditionTv, raitoTv, pricesTv, priceTv, dateTv,ortherBtn;
+        TextView titleTv, descriptionTv, conditionTv, raitoTv, pricesTv, priceTv, dateTv, ortherBtn;
 
         ImageButton favBtn;
 
@@ -414,7 +417,6 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
             imageIv = binding.imageIv;
             titleTv = binding.titleTv;
             descriptionTv = binding.descriptionTv;
-            addressTv = binding.addressTv;
             conditionTv = binding.conditionTv;
             raitoTv = binding.raitoTv;
             pricesTv = binding.pricesTv;

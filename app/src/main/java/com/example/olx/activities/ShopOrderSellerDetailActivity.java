@@ -171,15 +171,6 @@ public class ShopOrderSellerDetailActivity extends AppCompatActivity {
                         String latitude = ""+dataSnapshot.child("latitude").getValue();
                         String longitude = ""+dataSnapshot.child("longitude").getValue();
                         long timestamp = Long.parseLong(""+dataSnapshot.child("timestamp").getValue());
-                        String discount = ""+dataSnapshot.child("discount").getValue(); //in previous orders this will be null
-
-//                        if (discount.equals("null") || discount.equals("0")){
-//                            //value is either null or "0"
-//                            discount = "& Miễn giảm $0";
-//                        }
-//                        else {
-//                            discount = "& Miễn giảm $"+discount;
-//                        }
 
                         //convert timestamp
 

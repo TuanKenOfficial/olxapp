@@ -90,7 +90,7 @@ public class ShopAdCreateActivity extends AppCompatActivity {
         binding.quantityEt.setAdapter(adapterQuantitys);
 
         Intent intent = getIntent();
-        isEditMode = intent.getBooleanExtra("isEditMode", false);
+        isEditMode = intent.getBooleanExtra("isEditMode", true);
         Log.d(TAG, "onCreate: isEditMode: " + isEditMode);
 
         if (isEditMode) {
@@ -100,10 +100,8 @@ public class ShopAdCreateActivity extends AppCompatActivity {
             binding.toolbarTitleTv.setText("Chỉnh sửa sản phẩm");
 //            binding.postAdBtn.setImageResource(R.drawable.uploading);
             binding.giamgiaSC.setChecked(false);
-            binding.raitoEt.setVisibility(View.GONE);
             loadAdDetail();
         } else {
-            binding.raitoEt.setVisibility(View.GONE);
             binding.giamgiaSC.setChecked(false);
             binding.toolbarTitleTv.setText("Thêm sản phẩm");
             binding.postAdBtn.setImageResource(R.drawable.upload);
@@ -656,14 +654,10 @@ public class ShopAdCreateActivity extends AppCompatActivity {
 
                         if (discount) {
                             binding.giamgiaSC.setChecked(true);
-//                            binding.edtGiamCon.setVisibility(View.VISIBLE);
                             binding.raitoEt.setVisibility(View.VISIBLE);
-//                            binding.edtGiamCon.setText(reducedprice);
                         } else {
                             binding.giamgiaSC.setChecked(false);
-//                            binding.edtGiamCon.setVisibility(View.VISIBLE);
                             binding.raitoEt.setVisibility(View.GONE);
-//                            binding.edtGiamCon.setText(reducedprice);
                         }
 
 

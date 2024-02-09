@@ -64,116 +64,12 @@
             android:layout_below="@id/cartItemsRv"
             android:padding="10dp">
             <!--Promo input layout-->
-            <RelativeLayout
-                android:id="@+id/promoRl"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_rec02"
-                android:padding="5dp">
 
-                <TextView
-                    android:id="@+id/promoLabelTv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:padding="5dp"
-                    android:text="Mã khuyến mãi"
-                    android:textColor="@color/colorblack"
-                    android:textSize="16sp"
-                    android:textStyle="bold"/>
-
-                <EditText
-                    android:id="@+id/promoCodeEt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/promoLabelTv"
-                    android:layout_marginEnd="5dp"
-                    android:layout_toStartOf="@id/validateBtn"
-                    android:hint="Mã khuyến mãi"
-                    android:padding="10dp"
-                    android:textColor="@color/colorblack"
-                    android:textColorHint="@color/colorgray"
-                    android:textSize="14sp"/>
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/validateBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/promoLabelTv"
-                    android:layout_alignParentEnd="true"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/sendmessage"
-                    android:tint="@color/colorwhite"
-                    app:fabSize="mini"/>
-
-                <TextView
-                    android:id="@+id/promoDescriptionTv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/promoCodeEt"
-                    android:hint="Mô tả mã khuyến mãi"
-                    android:padding="10dp"
-                    android:textColor="@color/colorblack"
-                    android:textColorHint="@color/colorgray"
-                    android:textSize="14sp"/>
-
-                <Button
-                    android:id="@+id/applyBtn"
-                    style="@style/Widget.AppCompat.Button.Colored"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/promoDescriptionTv"
-                    android:text="Apply"
-                    android:textColor="@color/colorwhite"/>
-
-
-            </RelativeLayout>
-            <TextView
-                android:id="@+id/priceLabelTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/promoRl"
-                android:padding="5dp"
-                android:text="Tổng giá:"
-                android:textStyle="bold"
-                android:textColor="@color/colorblack"/>
-
-            <TextView
-                android:id="@+id/priceTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:layout_below="@id/promoRl"
-                android:text="0đ"
-                android:textStyle="bold"
-                android:layout_alignParentEnd="true"
-                android:textColor="@color/colorblack"/>
-            <TextView
-                android:id="@+id/promotionLabelTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:layout_below="@id/priceLabelTv"
-                android:text="Giá khuyến mãi:"
-                android:textStyle="bold"
-                android:textColor="@color/colorblack"/>
-
-            <TextView
-                android:id="@+id/promotionTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:layout_below="@id/priceTv"
-                android:text="0đ"
-                android:textStyle="bold"
-                android:layout_alignParentEnd="true"
-                android:textColor="@color/colorblack"/>
             <TextView
                 android:id="@+id/finalPriceLabelTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:layout_below="@id/promotionLabelTv"
                 android:text="Tổng cộng:"
                 android:textStyle="bold"
                 android:textColor="@color/colorblack"/>
@@ -183,12 +79,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:layout_below="@id/promotionTv"
                 android:text="0đ"
                 android:textStyle="bold"
                 android:layout_alignParentEnd="true"
                 android:textColor="@color/colorblack"/>
-        </RelativeLayout>
+            </RelativeLayout>
+
 
         <Button
             android:id="@+id/checkoutBtn"

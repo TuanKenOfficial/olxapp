@@ -22,6 +22,7 @@ import com.example.olx.activities.ShopOrderSellerDetailActivity;
 import com.example.olx.databinding.RowOderSellerBinding;
 import com.example.olx.model.ModelCart;
 import com.example.olx.model.ModelOrderSeller;
+import com.example.olx.model.ModelOrderUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -69,15 +70,15 @@ public class AdapterOrderSeller extends RecyclerView.Adapter<AdapterOrderSeller.
         //load user/buyer info
         loadUserInfo(modelOrderSeller, holder);
         loadOrderInfo(modelOrderSeller,holder);
+        loadOrderUserInfo(modelOrderSeller,holder);
 
         //set data
         String formatted = Utils.formatTimestampDateTime(timestamp); // load dd/MM/yyyy HH:mm
         holder.ngayDat.setText("Thời gian đặt hàng: "+formatted);
         holder.maHD.setText("Hoá đơn: #"+orderMaHD);
-        holder.tenNM.setText("Người mua: "+orderBy);
         holder.diachi.setText("Địa chỉ: "+address);
         holder.tongHoaDon.setText("Tổng cộng: "+ CurrencyFormatter.getFormatter().format(Double.parseDouble(String.valueOf(orderTongTien))));
-        holder.statusTv.setText(orderStatus);
+        holder.statusTv.setText("Trạng thái: "+orderStatus);
 
         //change order status text color
         switch (orderStatus) {
@@ -100,7 +101,23 @@ public class AdapterOrderSeller extends RecyclerView.Adapter<AdapterOrderSeller.
             context.startActivity(intent);
         });
     }
+    //load tên nguời mua
+    private void loadOrderUserInfo(ModelOrderSeller modelOrderSeller, AdapterOrderSeller.HolderOrderSeller holder) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference.child(modelOrderSeller.getOrderBy()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String name = ""+snapshot.child("name").getValue();
+                Log.d(TAG, "onDataChange: tên người bán: "+name);
+                holder.tenNM.setText("Người mua: "+name);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
     private void loadOrderInfo(ModelOrderSeller modelOrderSeller, HolderOrderSeller holder) {
         //load thông tin tên và số lượng đã đặt của sản phẩm
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");

@@ -124,6 +124,17 @@
                 android:layout_margin="2dp"
                 android:textSize="12sp"
                 android:text="0đ"/>
+            <!--Ratingbar: show avg rating-->
+            <RatingBar
+                android:id="@+id/ratingBar"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/imageSliderVp"
+                android:layout_alignParentEnd="true"
+                android:numStars="5"
+                android:progressBackgroundTint="@color/colorgray"
+                android:progressTint="@color/colorblack"/>
 
             <TextView
                 android:id="@+id/dateTv"
@@ -132,8 +143,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/imageSliderVp"
                 android:layout_centerInParent="true"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="2dp"
                 android:text="dd/MM/yyyy"
-                android:layout_margin="2dp"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 

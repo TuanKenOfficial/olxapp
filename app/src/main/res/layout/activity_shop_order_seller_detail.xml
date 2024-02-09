@@ -124,7 +124,6 @@
 
             </TableRow>
 
-
             <TableRow>
 
                 <TextView
@@ -132,7 +131,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="5dp"
-                    android:text="Email"
+                    android:text="Email người mua"
                     android:textColor="@color/colorblack"
                     android:textStyle="bold"/>
 
@@ -154,7 +153,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="5dp"
-                    android:text="SĐT"
+                    android:text="SĐT người mua"
                     android:textColor="@color/colorblack"
                     android:textStyle="bold"/>
 

@@ -32,8 +32,8 @@ public class FilterOrderUser extends Filter {
             //store our filtered list
             ArrayList<ModelOrderUser> filteredModels = new ArrayList<>();
             for (int i=0; i<filterList.size(); i++){
-                //check, search by title and category
-                if (filterList.get(i).getOrderStatus().contains(constraint)){
+                //check, search by trạng thái hoá đơn
+                if (filterList.get(i).getOrderStatus().toUpperCase().contains(constraint)){
                     //add filtered data to list
                     filteredModels.add(filterList.get(i));
                 }

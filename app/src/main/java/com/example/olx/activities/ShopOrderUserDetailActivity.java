@@ -54,6 +54,12 @@ public class ShopOrderUserDetailActivity extends AppCompatActivity {
         loadShopInfo();
         loadOrderDetails();
         loadOrderedItems();
+        //handle writeReviewBtn click, start write review activity
+        binding.writeReviewBtn.setOnClickListener(v -> {
+            Intent intent1 = new Intent(ShopOrderUserDetailActivity.this, WriteReviewActivity.class);
+            intent1.putExtra("shopUid", orderTo); // to write review to a shop we must have uid of shop
+            startActivity(intent1);
+        });
     }
 
     private void loadOrderedItems() {
@@ -109,15 +115,6 @@ public class ShopOrderUserDetailActivity extends AppCompatActivity {
                         String latitude = ""+dataSnapshot.child("latitude").getValue();
                         String longitude = ""+dataSnapshot.child("longitude").getValue();
                         long timestamp = modelOrderUser.getTimestamp();
-                        String discount = ""+dataSnapshot.child("discount").getValue(); //in previous orders this will be null
-
-//                        if (discount.equals("null") || discount.equals("0")){
-//                            //value is either null or "0"
-//                            discount = "& Discount $0";
-//                        }
-//                        else {
-//                            discount = "& Discount $"+discount;
-//                        }
 
 
                         String dateFormated = Utils.formatTimestampDateTime(timestamp);

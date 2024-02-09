@@ -156,7 +156,7 @@ public class LoginPhoneActivity extends AppCompatActivity {
 
         HashMap<String,Object> hashMap = new HashMap<>();
         hashMap.put("name","Phone");
-        hashMap.put("shopName", "shopName");
+        hashMap.put("shopName", "ShopPhone");
         hashMap.put("phoneCode",phoneCode);
         hashMap.put("phoneNumber",phoneNumber);
         hashMap.put("phone",phoneNumberWithCode);

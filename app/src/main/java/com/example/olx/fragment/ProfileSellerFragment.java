@@ -182,14 +182,14 @@ public class ProfileSellerFragment extends Fragment {
                         else if (accountType.equals("Phone")) {
                             binding.verifiedCv.setVisibility(View.GONE);
                             binding.deleteAccountCv.setVisibility(View.GONE);
-                            binding.shopNameTv.setVisibility(View.GONE);
+                            binding.shopNameTv.setVisibility(View.VISIBLE);
                             binding.verifiedTv.setText("Đã xác minh");
 
                         }
                         else {
                             binding.verifiedCv.setVisibility(View.GONE);
                             binding.deleteAccountCv.setVisibility(View.GONE);
-                            binding.shopNameTv.setVisibility(View.GONE);
+                            binding.shopNameTv.setVisibility(View.VISIBLE);
                             binding.verifiedTv.setText("Đã xác minh");
                         }
 

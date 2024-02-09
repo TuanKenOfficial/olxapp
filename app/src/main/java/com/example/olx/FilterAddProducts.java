@@ -29,9 +29,8 @@ public class FilterAddProducts extends Filter {
 
             for (int i=0; i<filterList.size(); i++){
                 //validate
+                //check, search by title and category
                 if (filterList.get(i).getCategory().toUpperCase().contains(constraint) ||
-                        filterList.get(i).getBrand().toUpperCase().contains(constraint) ||
-                        filterList.get(i).getAddress().toUpperCase().contains(constraint)||
                         filterList.get(i).getTitle().toUpperCase().contains(constraint)){
                     //add to filtered list
                     filteredModels.add(filterList.get(i));

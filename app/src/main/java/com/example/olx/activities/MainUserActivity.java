@@ -20,6 +20,7 @@ import com.example.olx.fragment.ChatsFragment;
 import com.example.olx.fragment.HomeUserFragment;
 import com.example.olx.fragment.NotificationFragment;
 import com.example.olx.fragment.ProfileFragment;
+import com.example.olx.fragment.ProfileSellerFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationBarView;
@@ -41,7 +42,7 @@ public class MainUserActivity extends AppCompatActivity {
     private ActivityMainUserBinding binding;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
-    private static final String TAG ="MaiUser";
+    private static final String TAG ="MainUser";
     private ProgressDialog progressDialog;
 
     @Override
@@ -103,7 +104,27 @@ public class MainUserActivity extends AppCompatActivity {
                         return false;
                     }
                     else{
-                        showProfileFragment();
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+                        reference.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                String accountType = ""+snapshot.child("accountType").getValue();
+                                Log.d(TAG, "onDataChange: "+accountType);
+                                if (accountType.equals("User")){
+                                    showProfileFragment();
+                                } else if (accountType.equals("Google")) {
+                                    showProfileSellerFragment();
+                                }
+                                else if (accountType.equals("Phone")) {
+                                    showProfileSellerFragment();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                         return true;
                     }
 
@@ -118,7 +139,6 @@ public class MainUserActivity extends AppCompatActivity {
         binding.sellFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String userTypes ;
                 DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
                 reference.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
                     @Override
@@ -127,6 +147,7 @@ public class MainUserActivity extends AppCompatActivity {
                         Log.d(TAG, "onDataChange: "+accountType);
                         if (accountType.equals("User")){
                             Utils.toastyInfo(MainUserActivity.this, "tài khoản của bạn không dùng được chức năng này");
+                            Utils.toastyInfo(MainUserActivity.this, "bạn phải đăng ký tài khoản người bán");
                         }
                         else {
                             Intent intent = new Intent(MainUserActivity.this, ShopAdCreateActivity.class);
@@ -147,26 +168,51 @@ public class MainUserActivity extends AppCompatActivity {
         final PopupMenu popupMenu = new PopupMenu(MainUserActivity.this, binding.moreBtn);
         //add menu items to our menu
         popupMenu.getMenu().add("Cài đặt");
-        popupMenu.getMenu().add("Reviews");
-        popupMenu.getMenu().add("Khuyến mãi");
+        popupMenu.getMenu().add("Đánh giá");
+        popupMenu.getMenu().add("Doanh thu");
         //handle menu item click
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             if (menuItem.getTitle() == "Cài đặt"){
                 //start settings screen
-                Utils.toast(MainUserActivity.this,"Chức năng đang code, đợi clip sau");
+                Utils.toast(MainUserActivity.this,"Chức năng đang phát triển");
 //                startActivity(new Intent(MainSellerActivity.this, SettingsActivity.class));
             }
-            else if (menuItem.getTitle() == "Reviews"){
-                //open same reviews activity as used in user main page
-                Utils.toast(MainUserActivity.this,"Chức năng đang code, đợi clip sau");
-//                Intent intent = new Intent(MainSellerActivity.this, ShopReviewsActivity.class);
-//                intent.putExtra("shopUid", ""+firebaseAuth.getUid());
-//                startActivity(intent);
+            else if (menuItem.getTitle() == "Đánh giá"){
+                Utils.toast(MainUserActivity.this,"Chức năng đánh giá");
+                Intent intent = new Intent(MainUserActivity.this, ShopReviewsActivity.class);
+                intent.putExtra("shopUid", ""+firebaseAuth.getUid());
+                startActivity(intent);
             }
-            else if (menuItem.getTitle() == "Khuyến mãi"){
+            else if (menuItem.getTitle() == "Doanh thu"){
                 //start promotions list screen
-                Utils.toast(MainUserActivity.this,"Chức năng đang hoàn thiện");
-//                startActivity(new Intent(MainSellerActivity.this, PromotionCodesActivity.class));
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+                reference.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String accountType = ""+snapshot.child("accountType").getValue();
+                        Log.d(TAG, "onDataChange: "+accountType);
+                        if (accountType.equals("User")){
+                            Utils.toastyInfo(MainUserActivity.this, "tài khoản của bạn không có quyền xem chức năng này!!");
+                            Utils.toastyInfo(MainUserActivity.this, "bạn phải đăng ký tài khoản người bán, google, hoặc phone");
+                        }
+                        else if (accountType.equals("Google") && accountType.equals("Phone")){
+                            Utils.toast(MainUserActivity.this,"Chức năng doanh thu");
+                            Intent intent = new Intent(MainUserActivity.this, DoanhThuSellerActivity.class);
+                            startActivity(intent);
+                        }
+                        else {
+                            Utils.toast(MainUserActivity.this,"Chức năng doanh thu");
+                            Intent intent = new Intent(MainUserActivity.this, DoanhThuSellerActivity.class);
+                            startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
             }
 
             return true;
@@ -281,7 +327,15 @@ public class MainUserActivity extends AppCompatActivity {
                     }
                 });
     }
+    private void showProfileSellerFragment() {
+        binding.toolbarRl.setVisibility(View.GONE);
+        Utils.toast(MainUserActivity.this,"Profile Seller");
+        ProfileSellerFragment fragment = new ProfileSellerFragment();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(binding.fragmentsFl.getId(), fragment, "ProfileSellerFragment");
+        fragmentTransaction.commit();
 
+    }
     private void showProfileFragment() {
         binding.toolbarRl.setVisibility(View.GONE);
         Utils.toast(MainUserActivity.this,"Profile User");

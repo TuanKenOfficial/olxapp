@@ -133,8 +133,8 @@ public class LoginGoogleActivity extends AppCompatActivity {
         String registerUserUid = firebaseAuth.getUid();
 
         HashMap<String,Object> hashMap = new HashMap<>();
-        hashMap.put("shopName", "shopName");
-        hashMap.put("phone", "+84123456789");
+        hashMap.put("shopName", "ShopGoogle");
+        hashMap.put("phone", "0123456789");
         hashMap.put("address", "");
         hashMap.put("latitude", 0.0);
         hashMap.put("longitude", 0.0);

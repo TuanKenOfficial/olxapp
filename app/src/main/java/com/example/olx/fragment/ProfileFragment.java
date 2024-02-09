@@ -21,6 +21,7 @@ import com.example.olx.activities.DeleteAccountActivity;
 import com.example.olx.activities.LoginOptionActivity;
 import com.example.olx.activities.ProfileEditSellerActivity;
 import com.example.olx.activities.ProfileEditActivity;
+import com.example.olx.activities.ShopAdDetailsActivity;
 import com.example.olx.databinding.FragmentProfileBinding;
 import com.example.olx.model.ModelUsers;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -31,6 +32,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import p32929.androideasysql_library.Column;
+import p32929.androideasysql_library.EasyDB;
 
 
 public class ProfileFragment extends Fragment {
@@ -44,6 +48,7 @@ public class ProfileFragment extends Fragment {
 
     private FirebaseAuth firebaseAuth;
 
+    private EasyDB easyDB;
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -70,9 +75,13 @@ public class ProfileFragment extends Fragment {
         binding.logoutCv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //còn ko muốn thì đóng dòng xoaGioHang lại thì nó sẽ vẫn load sản phẩm người này đặt
+                //khi đăng nhập tài khoản khác
                 firebaseAuth.signOut();
+                xoaGioHang();
                 startActivity(new Intent(mContext, LoginOptionActivity.class));
                 getActivity().finishAffinity();
+
             }
         });
 
@@ -114,7 +123,23 @@ public class ProfileFragment extends Fragment {
 
         return binding.getRoot();
     }
-
+    //Xoá giỏ hàng
+    public void xoaGioHang() {
+        // Xóa hết sp khỏi giỏ
+        //declare it to class level and init in onCreate
+        easyDB = EasyDB.init(mContext, "GIOHANG_DB")
+                .setTableName("GIOHANG_TABLE")
+                .addColumn(new Column("GH_Id", "text", "unique"))
+                .addColumn(new Column("GH_PID", "text", "not null"))
+                .addColumn(new Column("GH_Title", "text", "not null"))
+                .addColumn(new Column("GH_Price", "text", "not null"))
+                .addColumn(new Column("GH_Quantity", "text", "not null"))
+                .addColumn(new Column("GH_FinalPrice", "text", "not null"))
+                .addColumn(new Column("GH_UidNguoiBan", "text", "not null"))
+                .addColumn(new Column("GH_UidNguoiMua", "text", "not null"))
+                .doneTableColumn();
+        easyDB.deleteAllDataFromTable();
+    }
 
     private void loadMyInfo() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");

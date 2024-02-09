@@ -146,37 +146,13 @@ public class HomeSellerFragment extends Fragment {
             }
         });
 
-        binding.searchOderEt.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                try {
-                    Log.d(TAG, "onTextChanged: CharSequence: "+s);
-                    String query = s.toString();
-                    Log.d(TAG, "onTextChanged: query:"+query);
-                    adapterOrderSeller.getFilter().filter(query);
-                }catch (Exception e){
-                    Log.d(TAG, "onTextChanged: Lỗi: "+e);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
         binding.filterProductBtn.setOnClickListener(v -> {
             Log.d(TAG, "onViewCreated: "+binding.filteredProductsTv);
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setTitle("Sản phẩm:")
-                    .setItems(Utils.categories, (dialog, which) -> {
+                    .setItems(Utils.categoriess, (dialog, which) -> {
                         //get selected item
-                        String selected = Utils.categories[which];
+                        String selected = Utils.categoriess[which];
                         binding.filteredProductsTv.setText(selected);
                         loadFilteredProducts(selected);
                     })
@@ -198,7 +174,7 @@ public class HomeSellerFragment extends Fragment {
                         }
                         else {
                             String optionClicked = options[which];
-                            binding.filteredOrdersTv.setText("Hiển thị "+optionClicked+" Đơn hàng"); //e.g. Showing Completed Orders
+                            binding.filteredOrdersTv.setText("Hiển thị đơn hàng: "+optionClicked); //e.g. Showing Completed Orders
                             adapterOrderSeller.getFilter().filter(optionClicked);
                         }
                     })
@@ -262,6 +238,7 @@ public class HomeSellerFragment extends Fragment {
     private void showOrdersUI() {
         binding.productsRl.setVisibility(View.GONE);
         binding.ordersRl.setVisibility(View.VISIBLE);
+        binding.searchOderCv.setVisibility(View.GONE);
         binding.tabProductsTv.setTextColor(getResources().getColor(R.color.colorblack));
         binding.tabProductsTv.setBackgroundColor(getResources().getColor(android.R.color.transparent));
         binding.tabOrdersTv.setTextColor(getResources().getColor(R.color.colorgold));
