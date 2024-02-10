@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ import com.example.olx.CurrencyFormatter;
 import com.example.olx.FilterOrderSeller;
 import com.example.olx.R;
 import com.example.olx.Utils;
+import com.example.olx.activities.DoanhThuSellerActivity;
 import com.example.olx.activities.ShopOrderSellerDetailActivity;
 import com.example.olx.databinding.RowOderSellerBinding;
 import com.example.olx.model.ModelCart;
@@ -100,7 +102,17 @@ public class AdapterOrderSeller extends RecyclerView.Adapter<AdapterOrderSeller.
             intent.putExtra("orderBy", orderBy); //để tải thông tin của người dùng đã đặt hàng
             context.startActivity(intent);
         });
-
+        holder.doanhthuBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //open order details
+                Intent intent = new Intent(context, DoanhThuSellerActivity.class);
+                intent.putExtra("orderId", orderId); //để tải thông tin đơn hàng
+                intent.putExtra("orderBy", orderBy); //để tải thông tin của người dùng đã đặt hàng
+                intent.putExtra("orderTo", orderTo); //để tải thông tin của người bán đã đặt hàng
+                context.startActivity(intent);
+            }
+        });
     }
     //load tên nguời mua
     private void loadOrderUserInfo(ModelOrderSeller modelOrderSeller, AdapterOrderSeller.HolderOrderSeller holder) {
@@ -184,7 +196,7 @@ public class AdapterOrderSeller extends RecyclerView.Adapter<AdapterOrderSeller.
         //ui views of row_order_seller.xml
         public  TextView maHD, tenNM, soluongSP, sdt, diachi,
                 titleSP,ngayDat,tongHoaDon,statusTv,email;
-
+        public Button doanhthuBtn;
         public HolderOrderSeller(@NonNull View itemView) {
             super(itemView);
 
@@ -199,6 +211,7 @@ public class AdapterOrderSeller extends RecyclerView.Adapter<AdapterOrderSeller.
             ngayDat = binding.ngayDat;
             tongHoaDon = binding.tongHoaDon;
             statusTv = binding.statusTv;
+            doanhthuBtn = binding.doanhthuBtn;
         }
     }
 }

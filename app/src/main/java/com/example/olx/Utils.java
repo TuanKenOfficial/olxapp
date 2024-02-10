@@ -124,6 +124,15 @@ public class Utils  {
         return date;
     }
 
+    //định dạng ngày/tháng/năm
+    public static String formatTimestampDates(Long timestamp){
+        Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
+        calendar.setTimeInMillis(timestamp);
+
+        String date = DateFormat.format("MM/yyyy",calendar).toString();
+        return date;
+    }
+
     //định dạng ngày/tháng/năm giờ/phút/giây
     public static String formatTimestampDateTime(Long timestamp){
         Calendar calendar = Calendar.getInstance(Locale.ENGLISH);

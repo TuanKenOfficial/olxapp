@@ -123,39 +123,7 @@ public class MainSellerActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        //popup menu
-        final PopupMenu popupMenu = new PopupMenu(MainSellerActivity.this, binding.moreBtn);
-        //add menu items to our menu
-        popupMenu.getMenu().add("Cài đặt");
-        popupMenu.getMenu().add("Đánh giá");
-        popupMenu.getMenu().add("Doanh thu");
-        //handle menu item click
-        popupMenu.setOnMenuItemClickListener(menuItem -> {
-            if (menuItem.getTitle() == "Cài đặt"){
-                //start settings screen
-                Utils.toast(MainSellerActivity.this,"Chức năng đang phát triển");
-            }
-            else if (menuItem.getTitle() == "Đánh giá"){
-                //open same reviews activity as used in user main page
-                Utils.toast(MainSellerActivity.this,"Chức năng đang code, đợi clip sau");
-                Intent intent = new Intent(MainSellerActivity.this, ShopReviewsActivity.class);
-                intent.putExtra("shopUid", ""+firebaseAuth.getUid());
-                startActivity(intent);
-            }
-            else if (menuItem.getTitle() == "Doanh thu"){
-                //start promotions list screen
-                Utils.toast(MainSellerActivity.this,"Chức năng đang code, đợi clip sau");
-                startActivity(new Intent(MainSellerActivity.this, DoanhThuSellerActivity.class));
-            }
 
-            return true;
-        });
-
-        //show more options: Settings, Reviews, Promotion Codes
-        binding.moreBtn.setOnClickListener(view -> {
-            //show popup menu
-            popupMenu.show();
-        });
     }
 
 

@@ -105,14 +105,14 @@ public class SplashActivity extends AppCompatActivity {
                                 //nếu người dùng là user thì vào trang người dùng
                                 Utils.toast(SplashActivity.this,"Google");
                                 Log.d(TAG, "onDataChange: Google");
-                                startActivity(new Intent(SplashActivity.this, MainUserActivity.class));
+                                startActivity(new Intent(SplashActivity.this, MainSellerActivity.class));
                                 finish();
                             }
                             else if (accountType.equals("Phone")){
                                 //nếu người dùng là admin thì vào trang số điện thoai
                                 Utils.toast(SplashActivity.this,"Phone");
                                 Log.d(TAG, "onDataChange: Phone");
-                                startActivity(new Intent(SplashActivity.this, MainUserActivity.class));
+                                startActivity(new Intent(SplashActivity.this, MainSellerActivity.class));
                                 finish();
                             }
                             else if (accountType.equals("User")){

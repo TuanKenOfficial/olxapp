@@ -42,7 +42,7 @@ public class ShopOrderSellerDetailActivity extends AppCompatActivity {
 
     private ActivityShopOrderSellerDetailBinding binding;
 
-    String orderId, orderBy;
+    private String orderId, orderBy;
     //to open destination in map
     private double latitude;
     private double longitude;
@@ -155,7 +155,7 @@ public class ShopOrderSellerDetailActivity extends AppCompatActivity {
     private void loadOrderDetails(){
         //load detailed info of this order, based on order id
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.child(Objects.requireNonNull(firebaseAuth.getUid())).child("Order").child(orderId)
+        ref.child(firebaseAuth.getUid()).child("Order").child(orderId)
                 .addValueEventListener(new ValueEventListener() {
                     @SuppressLint("SetTextI18n")
                     @Override

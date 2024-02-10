@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
@@ -19,10 +20,12 @@ import com.example.olx.FilterOrderUser;
 import com.example.olx.R;
 import com.example.olx.Utils;
 
+import com.example.olx.activities.DoanhThuSellerActivity;
 import com.example.olx.activities.ShopOrderUserDetailActivity;
 import com.example.olx.databinding.RowOrderUserBinding;
 import com.example.olx.model.ModelCart;
 import com.example.olx.model.ModelOrderUser;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,6 +41,7 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hold
     public ArrayList<ModelOrderUser> orderUserArrayList, filterList;
     private FilterOrderUser filter;
     private static final String TAG ="Order_Seller";
+    private FirebaseAuth firebaseAuth;
 
     public AdapterOrderUser(Context context, ArrayList<ModelOrderUser> orderUserArrayList) {
         this.context = context;
@@ -66,7 +70,7 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hold
         String orderStatus = modelOrderUser.getOrderStatus();
         long timestamp = modelOrderUser.getTimestamp();
         String orderTo = modelOrderUser.getOrderTo();
-
+        firebaseAuth = FirebaseAuth.getInstance();
         //load user/buyer info
         loadUserInfo(modelOrderUser, holder);
         loadOrderInfo(modelOrderUser,holder);
@@ -101,6 +105,7 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hold
             intent.putExtra("orderTo", orderTo); //để tải thông tin của người bán
             context.startActivity(intent);
         });
+
     }
     //load tên nguời mua
     private void loadOrderUserInfo(ModelOrderUser modelOrderUser, AdapterOrderUser.HolderOrderUser holder) {
@@ -205,7 +210,6 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hold
         //ui views of row_order_seller.xml
         public TextView maHD, tenNM,tenNB, soluongSP, sdt, diachi,
                 titleSP,ngayDat,tongHoaDon,statusTv,email;
-
         public HolderOrderUser(@NonNull View itemView) {
             super(itemView);
 
@@ -221,6 +225,7 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hold
             ngayDat = binding.ngayDat;
             tongHoaDon = binding.tongHoaDon;
             statusTv = binding.statusTv;
+
         }
     }
 }

@@ -164,66 +164,6 @@ public class MainUserActivity extends AppCompatActivity {
 
             }
         });
-        //popup menu
-        final PopupMenu popupMenu = new PopupMenu(MainUserActivity.this, binding.moreBtn);
-        //add menu items to our menu
-        popupMenu.getMenu().add("Cài đặt");
-        popupMenu.getMenu().add("Đánh giá");
-        popupMenu.getMenu().add("Doanh thu");
-        //handle menu item click
-        popupMenu.setOnMenuItemClickListener(menuItem -> {
-            if (menuItem.getTitle() == "Cài đặt"){
-                //start settings screen
-                Utils.toast(MainUserActivity.this,"Chức năng đang phát triển");
-//                startActivity(new Intent(MainSellerActivity.this, SettingsActivity.class));
-            }
-            else if (menuItem.getTitle() == "Đánh giá"){
-                Utils.toast(MainUserActivity.this,"Chức năng đánh giá");
-                Intent intent = new Intent(MainUserActivity.this, ShopReviewsActivity.class);
-                intent.putExtra("shopUid", ""+firebaseAuth.getUid());
-                startActivity(intent);
-            }
-            else if (menuItem.getTitle() == "Doanh thu"){
-                //start promotions list screen
-                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-                reference.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String accountType = ""+snapshot.child("accountType").getValue();
-                        Log.d(TAG, "onDataChange: "+accountType);
-                        if (accountType.equals("User")){
-                            Utils.toastyInfo(MainUserActivity.this, "tài khoản của bạn không có quyền xem chức năng này!!");
-                            Utils.toastyInfo(MainUserActivity.this, "bạn phải đăng ký tài khoản người bán, google, hoặc phone");
-                        }
-                        else if (accountType.equals("Google") && accountType.equals("Phone")){
-                            Utils.toast(MainUserActivity.this,"Chức năng doanh thu");
-                            Intent intent = new Intent(MainUserActivity.this, DoanhThuSellerActivity.class);
-                            startActivity(intent);
-                        }
-                        else {
-                            Utils.toast(MainUserActivity.this,"Chức năng doanh thu");
-                            Intent intent = new Intent(MainUserActivity.this, DoanhThuSellerActivity.class);
-                            startActivity(intent);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-            }
-
-            return true;
-        });
-
-        //show more options: Settings, Reviews, Promotion Codes
-        binding.moreBtn.setOnClickListener(view -> {
-            //show popup menu
-            popupMenu.show();
-        });
-//        loadUserProfile();
     }
 
 

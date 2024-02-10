@@ -363,7 +363,7 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
 
                 }else {
                     submitOrder();
-                    xoaGioHang();// xóa sạch giỏ hàng sau khi thoát activity
+                    xoaGioHang();// xóa sạch giỏ hàng sau khi xác nhận đơn hàng
                 }
             }
         });
@@ -753,7 +753,5 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                 .doneTableColumn();
         easyDB.deleteAllDataFromTable();
     }
-
-
 
 }

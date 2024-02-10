@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.example.olx.CurrencyFormatter;
 import com.example.olx.Utils;
+import com.example.olx.adapter.AdapterOrderSeller;
 import com.example.olx.databinding.ActivityDoanhThuSellerBinding;
 import com.example.olx.model.ModelCart;
 import com.example.olx.model.ModelOrder;
@@ -31,10 +32,11 @@ public class DoanhThuSellerActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private String customTitle = "Chọn tháng/năm cần coi doanh thu";
     private MonthYearPickerDialogFragment dialogFragment = null;
-    private int thang, nam, count;
-    private String idHD = "";
+    private ArrayList<ModelOrderSeller> modelOrderSellers;
+    private int thang, nam ;
+    private int tongtiens,count;
     private static final String TAG = "DoanhThu";
-
+    private String orderId, orderBy,orderTo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +44,15 @@ public class DoanhThuSellerActivity extends AppCompatActivity {
         binding = ActivityDoanhThuSellerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        idHD = getIntent().getStringExtra("idHD");
-        Log.d(TAG, "onCreate: idHD: " + idHD);
+        //get data from intent
+        orderId = getIntent().getStringExtra("orderId");
+        orderBy = getIntent().getStringExtra("orderBy");
+        orderTo = getIntent().getStringExtra("orderTo");//Người bán
+        Log.d(TAG, "onCreate: idHD: " + orderId);
+        Log.d(TAG, "onCreate: Người bán uid: " + orderBy);
         firebaseAuth = FirebaseAuth.getInstance();
         binding.chonThoiGian.setOnClickListener(view1 -> {
+
             xulyHoaDon();
         });
         //reset lai cac mat hang
@@ -59,239 +66,80 @@ public class DoanhThuSellerActivity extends AppCompatActivity {
         binding.thoat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                binding.tongDonHang.setText("");
+                binding.doanhThu.setText("");
+                binding.chonThoiGian.setText("");
                 onBackPressed();
             }
         });
     }
 
-    private  int Soluong;
     private void xulyHoaDon() {
         Log.d(TAG, "xulyHoaDon: ");
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("HoaDon");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-                reference.child("" + firebaseAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        Calendar calendar = Calendar.getInstance();
+        thang = calendar.get(Calendar.MONTH);
+        nam = calendar.get(Calendar.YEAR);
+        MonthYearPickerDialogFragment dialogFragment = MonthYearPickerDialogFragment.getInstance(thang, nam);
+        dialogFragment.show(getSupportFragmentManager(), null);
+        dialogFragment.setOnDateSetListener((year, monthOfYear) -> {
+            String thoiGian = "0" + (monthOfYear + 1) + "/" + year;
+            binding.chonThoiGian.setText(thoiGian);
+            truyVanThangNam(thoiGian);
+        });
+    }
+
+    private void truyVanThangNam(String thoiGian) {
+        Calendar calendar = Calendar.getInstance();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference.child(orderTo).child("Order").child(orderId)
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String uid = "" + snapshot.getRef().getKey();
-                        String accountType = "" + snapshot.child("accountType").getValue();
-                        Log.d(TAG, "onDataChange: accountType: " + accountType);
-                        Log.d(TAG, "onDataChange: uid: " + uid);
+                            // lấy dl từ csdl
+                            int tongtien = Integer.parseInt(""+snapshot.child("orderTongTien").getValue());
+                            long ngayDat = Long.parseLong(""+snapshot.child("timestamp").getValue());
+                            Log.d(TAG, "onDataChange: tongtien"+tongtien);
+                            Log.d(TAG, "onDataChange: ngayDat"+ngayDat);
+                            calendar.clear();
+                            calendar.setTimeInMillis(ngayDat);
+                            // rồi chuyển đổi nó sang chuỗi
+                            String ngay_dat = DateFormat.format("MM/yyyy", calendar).toString();
+                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+                            reference.child(orderTo).child("Order").child(orderId).child("GioHang").addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for (DataSnapshot ds: snapshot.getChildren()){
+                                        ModelCart modelCart = ds.getValue(ModelCart.class);
+                                        int Soluong = modelCart.getSoluongdadat();
+                                        count = Soluong;
+                                        Log.d(TAG, "onDataChange: "+count);
+                                    }
+                                }
 
-                        //Xét điều kiện nếu là tài khoản email và phone
-                        if (accountType.equals("Seller")) {
-                            Log.d(TAG, "onDataChange: Hoa don đang hiển thị");
-                            String uid1 = uid;
-                            Log.d(TAG, "onDataChange: uid1: " + uid1);
-                            chonThoiGianEmail(uid1);
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
 
-                        } else if (accountType.equals("Phone")) {
-                            String uid2 = uid;
-                            chonThoiGianPhone(uid2);
-                            Log.d(TAG, "onDataChange: Hoa don đang hiển thị");
-                            Log.d(TAG, "onDataChange: uid2: " + uid2);
-                        } else if (accountType.equals("Google")) {
-                            String uid3 = uid;
-                            chonThoiGianGoogle(uid3);
-                            Log.d(TAG, "onDataChange: Hoa don đang hiển thị");
-                            Log.d(TAG, "onDataChange: uid3: " + uid3);
-                        } else {
-                            Utils.toast(DoanhThuSellerActivity.this, "Bạn là người mua nên không xem được doanh thu, vì bạn không được đăng bán hàng, xin cảm ơn!!");
+                                }
+                            });
+                            if (thoiGian.equals(ngay_dat)) {
+                                int counts = count;
+                                tongtiens = tongtien;
+                                binding.doanhThu.setText("Số lượng sản phẩm: "+counts);
+                                binding.tongDonHang.setText(CurrencyFormatter.getFormatter().format(Double.parseDouble(String.valueOf(tongtiens))));
+                            } else  {
+                                tongtiens = 0;
+                                int countss = 0;
+                                binding.doanhThu.setText(CurrencyFormatter.getFormatter().format(Double.parseDouble(String.valueOf(tongtiens))));
+                                binding.tongDonHang.setText("Số lượng sản phẩm: "+countss);
+                            }
                         }
 
-
-                    }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
                     }
                 });
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    private void chonThoiGianGoogle(String uid3) {
-        Log.d(TAG, "chonThoiGianPhone: ");
-        count = 0;
-        Calendar calendar = Calendar.getInstance();
-        thang = calendar.get(Calendar.MONTH);
-        nam = calendar.get(Calendar.YEAR);
-        dialogFragment = MonthYearPickerDialogFragment.getInstance(thang, nam);
-        dialogFragment = MonthYearPickerDialogFragment.getInstance(thang, nam, customTitle);
-        dialogFragment.show(getSupportFragmentManager(), null);
-        dialogFragment.setOnDateSetListener((year, monthOfYear) -> {
-            String thoiGian = (monthOfYear + 1) + "/" + year;
-            binding.chonThoiGian.setText(thoiGian);
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-            ref.child(firebaseAuth.getUid()).child("Order").orderByChild("orderTo").equalTo(uid3).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    // lấy dl từ
-                        ModelOrderSeller modelOrderSeller = snapshot.getValue(ModelOrderSeller.class);
-                        Log.d(TAG, "onDataChange: 111");
-                        int tongtien = modelOrderSeller.getOrderTongTien();
-                        Log.d(TAG, "onDataChange: tongtien: " + tongtien);
-                        long timestamp = modelOrderSeller.getTimestamp();
-                        Log.d(TAG, "onDataChange: timestamp: " + timestamp);
-                        DatabaseReference ref1 = FirebaseDatabase.getInstance().getReference("Users");
-                        ref1.child(firebaseAuth.getUid()).child("Order").child("GioHang").addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for (DataSnapshot ds1 : snapshot.getChildren()){
-                                    ModelCart modelCart = ds1.getValue(ModelCart.class);
-                                    Soluong = modelCart.getSoluongdadat();
-                                    Log.d(TAG, "onDataChange: "+Soluong);
-                                }
-
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-
-                        calendar.setTimeInMillis(timestamp);
-                        String ngay_dat = DateFormat.format("MM/yyyy", calendar).toString();
-                        if (thoiGian.equals(ngay_dat)) {
-                            //xử lý đoạn code ở đây
-                            Log.d(TAG, "onDataChange: " + thoiGian.equals(ngay_dat));
-                            count = Soluong;
-                            binding.doanhThu.setText(CurrencyFormatter.getFormatter().format(Double.valueOf(tongtien)));
-                            binding.tongDonHang.setText(count + " đơn");
-                        } else {
-                            Log.d(TAG, "onDataChange: ");
-                            count = 0;
-                            binding.doanhThu.setText(CurrencyFormatter.getFormatter().format(Double.valueOf(tongtien)));
-                            binding.tongDonHang.setText(count + " đơn");
-                        }
-
-
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        });
-    }
-
-    private void chonThoiGianPhone(String uid2) {
-
-        Log.d(TAG, "chonThoiGianPhone: ");
-        count = 0;
-        Calendar calendar = Calendar.getInstance();
-        thang = calendar.get(Calendar.MONTH);
-        nam = calendar.get(Calendar.YEAR);
-        dialogFragment = MonthYearPickerDialogFragment.getInstance(thang, nam);
-        dialogFragment = MonthYearPickerDialogFragment.getInstance(thang, nam, customTitle);
-        dialogFragment.show(getSupportFragmentManager(), null);
-        dialogFragment.setOnDateSetListener((year, monthOfYear) -> {
-            String thoiGian = (monthOfYear + 1) + "/" + year;
-            binding.chonThoiGian.setText(thoiGian);
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-            reference.child(firebaseAuth.getUid()).child("Order").orderByChild("orderByTo").equalTo(uid2).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    // lấy dl từ
-                    for (DataSnapshot ds : snapshot.getChildren()) {
-                        ModelOrderSeller modelOrderSeller = ds.getValue(ModelOrderSeller.class);
-                        Log.d(TAG, "onDataChange: ");
-                        int tongtien = modelOrderSeller.getOrderTongTien();
-                        Log.d(TAG, "onDataChange: tongtien: " + tongtien);
-                        long timestamp = modelOrderSeller.getTimestamp();
-                        Log.d(TAG, "onDataChange: timestamp: " + timestamp);
-                        ModelOrder modelOrder = ds.getValue(ModelOrder.class);
-                        int Soluong = modelOrder.getSoluongdadat();
-                        calendar.setTimeInMillis(timestamp);
-                        String ngay_dat = DateFormat.format("MM/yyyy", calendar).toString();
-                        if (thoiGian.equals(ngay_dat)) {
-                            //xử lý đoạn code ở đây
-                            Log.d(TAG, "onDataChange: ");
-                            count = Soluong;
-                            binding.doanhThu.setText(CurrencyFormatter.getFormatter().format(Double.valueOf(tongtien)));
-                            binding.tongDonHang.setText(count + " đơn");
-                        } else {
-                            Log.d(TAG, "onDataChange: ");
-                            count = 0;
-                            binding.doanhThu.setText(CurrencyFormatter.getFormatter().format(Double.valueOf(tongtien)));
-                            binding.tongDonHang.setText(count + " đơn");
-                        }
-
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        });
-    }
-
-    //dành cho tài khoản email
-    private void chonThoiGianEmail(String uid1) {
-
-        Log.d(TAG, "chonThoiGianEmail: ");
-        count = 0;
-        Calendar calendar = Calendar.getInstance();
-        thang = calendar.get(Calendar.MONTH);
-        nam = calendar.get(Calendar.YEAR);
-        dialogFragment = MonthYearPickerDialogFragment.getInstance(thang, nam, customTitle);
-        dialogFragment.show(getSupportFragmentManager(), null);
-        dialogFragment.setOnDateSetListener((year, monthOfYear) -> {
-            String thoiGian = (monthOfYear + 1) + "/" + year;
-            binding.chonThoiGian.setText(thoiGian);
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-            reference.child(firebaseAuth.getUid()).child("Order").orderByChild("orderByTo").equalTo(uid1).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    Log.d(TAG, "onDataChange: 111");
-                    for (DataSnapshot ds: snapshot.getChildren()){
-                        // lấy dl từ
-                        ModelOrderSeller modelOrderSeller = ds.getValue(ModelOrderSeller.class);
-                        Log.d(TAG, "onDataChange: 222");
-                        int tongtien = modelOrderSeller.getOrderTongTien();
-                        Log.d(TAG, "onDataChange: tongtien: " + tongtien);
-                        long timestamp = modelOrderSeller.getTimestamp();
-                        Log.d(TAG, "onDataChange: timestamp: " + timestamp);
-                        ModelCart modelCart = ds.getValue(ModelCart.class);
-                        int Soluong = modelCart.getSoluongdadat();
-                        calendar.setTimeInMillis(timestamp);
-                        String ngay_dat = DateFormat.format("MM/yyyy", calendar).toString();
-                        if (thoiGian.equals(ngay_dat)) {
-                            //xử lý đoạn code ở đây
-                            Log.d(TAG, "onDataChange: ");
-                            count = Soluong;
-                            binding.doanhThu.setText(CurrencyFormatter.getFormatter().format(Double.valueOf(tongtien)));
-                            binding.tongDonHang.setText(count + " đơn");
-                        } else {
-                            Log.d(TAG, "onDataChange: ");
-                            count = 0;
-                            binding.doanhThu.setText(CurrencyFormatter.getFormatter().format(Double.valueOf(tongtien)));
-                            binding.tongDonHang.setText(count + " đơn");
-                        }
-                    }
-
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        });
     }
 }

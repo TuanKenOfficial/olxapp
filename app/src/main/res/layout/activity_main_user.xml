@@ -14,25 +14,6 @@
         android:background="@drawable/shape_rec01"
         android:visibility="visible">
 
-        <!--more button-->
-        <ImageButton
-            android:id="@+id/moreBtn"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentEnd="true"
-            android:background="@null"
-            android:src="@drawable/ic_more" />
-
-        <!--Add product button-->
-        <ImageButton
-            android:id="@+id/addProductBtn"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_toStartOf="@id/moreBtn"
-            android:background="@null"
-            android:src="@drawable/cart" />
-
-
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profileIv"
