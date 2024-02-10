@@ -87,6 +87,8 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
 
     private EasyDB easyDB;
 
+    private String idHD;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -220,6 +222,7 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         //add menu items to our menu
         popupMenu.getMenu().add("Gọi điện");
         popupMenu.getMenu().add("Chats");
+        popupMenu.getMenu().add("Doanh Thu");
         //handle menu item click
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             if (menuItem.getTitle() == "Gọi điện") {
@@ -237,6 +240,15 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                 //chat
                 Intent intent = new Intent(ShopAdDetailsActivity.this, ChatActivity.class);
                 intent.putExtra("receiptUid", sellerUid);
+                startActivity(intent);
+
+            }
+            else if (menuItem.getTitle() == "Doanh Thu") {
+                //open same reviews activity as used in user main page
+                Utils.toast(ShopAdDetailsActivity.this, "Doanh thu");
+                //chat
+                Intent intent = new Intent(ShopAdDetailsActivity.this, DoanhThuSellerActivity.class);
+                intent.putExtra("idHD", idHD);
                 startActivity(intent);
 
             }
@@ -368,7 +380,8 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         //setup oder data
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        String idHD = reference.push().getKey();
+
+        idHD = reference.push().getKey();
 
         //setup oder data
         HashMap<String, Object> hashMap = new HashMap<>();

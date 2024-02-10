@@ -1,9 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.DoanhThuSellerActivity">
+    android:background="@color/white"
+    tools:context=".activity.DoanhThuActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@drawable/shop"/>
+        <LinearLayout
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+            <TextView
+                android:padding="10dp"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="Chọn thời gian"/>
+            <TextView
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_calendar_month"
+                android:layout_width="200dp"
+                android:padding="10dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/chonThoiGian"
+                android:background="@drawable/shape_button"
+                android:hint="Tháng/Năm" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginBottom="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+            <TextView
+                android:padding="10dp"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="Doanh thu"/>
+            <TextView
+                android:gravity="center_vertical"
+                android:layout_width="200dp"
+                android:padding="10dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/doanhThu"
+                android:background="@drawable/shape_button"
+                android:hint="..." />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginBottom="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+            <TextView
+                android:padding="10dp"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="Tổng đơn hàng"/>
+            <TextView
+                android:gravity="center_vertical"
+                android:layout_width="200dp"
+                android:padding="10dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/tongDonHang"
+                android:background="@drawable/shape_button"
+                android:hint="..." />
+        </LinearLayout>
+
+        <Button
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/xoaHet"
+            android:textColor="@color/white"
+            android:text="Làm mới"
+            android:padding="10dp"
+            android:background="@drawable/shape_button"
+            android:textAllCaps="false"/>
+        <Button
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/thoat"
+            android:textColor="@color/white"
+            android:text="Thoát"
+            android:padding="10dp"
+            android:background="@drawable/shape_button"
+            android:textAllCaps="false"/>
+    </LinearLayout>
+
+</FrameLayout>

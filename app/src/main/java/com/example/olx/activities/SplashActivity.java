@@ -56,7 +56,7 @@ public class SplashActivity extends AppCompatActivity {
                 checkUser(); //kiểm tra tình trạng đăng nhập
 
             }
-        },8000);
+        },5000);
     }
     // tạo hiệu ứng hình ảnh
     private class MyAminationListener implements Animation.AnimationListener{
@@ -70,7 +70,7 @@ public class SplashActivity extends AppCompatActivity {
         public void onAnimationEnd(Animation animation) {
             progressDialog.show();
             binding.lv.setVisibility(View.GONE);
-            binding.img.setVisibility(View.VISIBLE);
+            binding.img.setVisibility(View.GONE);
             binding.lv.animate().alpha(1f).setDuration(1000);
         }
 

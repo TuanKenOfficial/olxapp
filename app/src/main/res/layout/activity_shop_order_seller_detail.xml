@@ -31,7 +31,13 @@
             android:textColor="@color/colorwhite"
             android:textSize="20sp"
             android:textStyle="bold"/>
-
+        <ImageButton
+            android:id="@+id/doanhthuBtn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_toLeftOf="@id/mapBtn"
+            android:background="@null"
+            android:src="@drawable/ic_doanhthu"/>
         <ImageButton
             android:id="@+id/editBtn"
             android:layout_width="30dp"

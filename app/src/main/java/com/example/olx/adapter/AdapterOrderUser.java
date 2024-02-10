@@ -109,7 +109,7 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hold
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String name = ""+snapshot.child("name").getValue();
-                Log.d(TAG, "onDataChange: tên người bán: "+name);
+                Log.d(TAG, "onDataChange: tên người mua: "+name);
                 holder.tenNM.setText("Người mua: "+name);
             }
 
@@ -141,7 +141,7 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hold
     private void loadOrderInfo(ModelOrderUser modelOrderUser, AdapterOrderUser.HolderOrderUser holder) {
         //load thông tin tên và số lượng đã đặt của sản phẩm
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.child(modelOrderUser.getOrderBy()).child("Order").child(modelOrderUser.getOrderId()).child("GioHang").addValueEventListener(new ValueEventListener() {
+        reference.child(modelOrderUser.getOrderTo()).child("Order").child(modelOrderUser.getOrderId()).child("GioHang").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot ds: snapshot.getChildren()){

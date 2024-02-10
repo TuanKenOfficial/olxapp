@@ -100,6 +100,7 @@ public class AdapterOrderSeller extends RecyclerView.Adapter<AdapterOrderSeller.
             intent.putExtra("orderBy", orderBy); //để tải thông tin của người dùng đã đặt hàng
             context.startActivity(intent);
         });
+
     }
     //load tên nguời mua
     private void loadOrderUserInfo(ModelOrderSeller modelOrderSeller, AdapterOrderSeller.HolderOrderSeller holder) {
@@ -108,7 +109,7 @@ public class AdapterOrderSeller extends RecyclerView.Adapter<AdapterOrderSeller.
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String name = ""+snapshot.child("name").getValue();
-                Log.d(TAG, "onDataChange: tên người bán: "+name);
+                Log.d(TAG, "onDataChange: tên người mua: "+name);
                 holder.tenNM.setText("Người mua: "+name);
             }
 
