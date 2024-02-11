@@ -327,6 +327,7 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
 
 
             tongtien = tongtien + tongtienSP;
+            sluong = sluong + quantity;
 
             finalPriceTv.setText(""+CurrencyFormatter.getFormatter().format(Double.valueOf(tongtien)));
             ModelCart modelCart = new ModelCart(
@@ -421,7 +422,7 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                         hashMap1.put("ten", tenSP);
                         hashMap1.put("tongtien", tongtien);
                         hashMap1.put("price",price);
-                        hashMap1.put("soluongdadat", soluongdadat);
+                        hashMap1.put("soluongdadat", sluong);
                         hashMap1.put("uidNguoiMua", ""+uidNguoiMua1);
                         hashMap1.put("uidNguoiBan", ""+uidNguoiBan1);
                         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
