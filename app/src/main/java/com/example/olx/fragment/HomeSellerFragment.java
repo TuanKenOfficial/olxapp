@@ -24,10 +24,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 
 import com.example.olx.R;
 import com.example.olx.Utils;
+import com.example.olx.activities.ChatActivity;
+import com.example.olx.activities.DoanhThuSellerActivity;
 import com.example.olx.activities.LocationPickerActivity;
+import com.example.olx.activities.ShopAdDetailsActivity;
 import com.example.olx.adapter.AdapterAddProduct;
 
 import com.example.olx.adapter.AdapterOrderSeller;
@@ -62,6 +66,8 @@ public class HomeSellerFragment extends Fragment {
     private ArrayList<ModelOrderSeller> orderSellerArrayList;
     private AdapterOrderSeller adapterOrderSeller;
 
+    private ArrayList<ModelOrderUser> ordersList;
+    private AdapterOrderUser adapterOrderUser;
 
     private static final int MAX_DISTANCE_TO_LOAD_ADS_KM=10;
     private double currentLatitude=0.0;
@@ -109,18 +115,48 @@ public class HomeSellerFragment extends Fragment {
             binding.locationTv.setText(currentAddress);
         }
         //Nếu muốn không cần chọn vị trí vẫn load được thì mở nó, ko thì đóng nó lại
-        loadAllAdProducts();
-        loadAllOrders();
-        showProductsUI();
 
+//        loadAllOrders();
+        showProductsUI(); // load tab product
+        loadAllAdProducts(); // load product
+        //popup menu
+        final PopupMenu popupMenu = new PopupMenu(mContext, binding.tabOrdersTv);
+        //add menu items to our menu
+        popupMenu.getMenu().add("Hoá đơn mua hàng");
+        popupMenu.getMenu().add("Hoá đơn bán hàng");
+        //handle menu item click
+        popupMenu.setOnMenuItemClickListener(menuItem -> {
+            if (menuItem.getTitle() == "Hoá đơn mua hàng") {
+                //start settings screen
+                //call
+                if (firebaseAuth.getCurrentUser() == null) {
+                    Utils.toast(mContext, "Bạn cần đăng nhập tài khoản");
+                } else {
+                    showOrdersUI();
+                    loadOrders();
+                }
+            } else if (menuItem.getTitle() == "Hoá đơn bán hàng") {
+                //open same reviews activity as used in user main page
+                if (firebaseAuth.getCurrentUser() == null) {
+                    Utils.toast(mContext, "Bạn cần đăng nhập tài khoản");
+                } else {
+                    showOrdersUI();
+                    loadAllOrders();
+                }
+            }
+
+            return true;
+        });
         binding.tabProductsTv.setOnClickListener(v -> {
             //load products
             showProductsUI();
         });
         binding.tabOrdersTv.setOnClickListener(v -> {
             //load orders
-            showOrdersUI();
+            popupMenu.show();
+//            showOrdersUI();
         });
+
         binding.searchProductEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -192,6 +228,53 @@ public class HomeSellerFragment extends Fragment {
         });
 
 
+    }
+    // load tất cả hoá đơn
+    private void loadOrders() {
+        Log.d(TAG, "loadOrders: ");
+        //init order list
+        ordersList = new ArrayList<>();
+
+        //get orders
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ordersList.clear();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    String uid = "" + ds.getRef().getKey();
+                    Log.d(TAG, "onDataChange: uid: " + uid);
+
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("Order");
+                    ref.orderByChild("orderBy").equalTo(firebaseAuth.getUid())
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                        ModelOrderUser modelOrderUser = ds.getValue(ModelOrderUser.class);
+                                        //add to list
+                                        ordersList.add(modelOrderUser);
+                                    }
+                                    //setup adapter
+                                    adapterOrderUser = new AdapterOrderUser(mContext, ordersList);
+                                    //set to recyclerview
+                                    binding.ordersRv.setAdapter(adapterOrderUser);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
     private void loadAllOrders() {
         Log.d(TAG, "loadAllOrders: ");

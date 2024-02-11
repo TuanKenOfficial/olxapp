@@ -227,7 +227,6 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             if (menuItem.getTitle() == "Gọi điện") {
                 //start settings screen
-                Utils.toast(ShopAdDetailsActivity.this, "Chức năng đang code, đợi clip sau");
                 //call
                 if (firebaseAuth.getCurrentUser() == null) {
                     Utils.toast(ShopAdDetailsActivity.this, "Bạn cần đăng nhập tài khoản");
