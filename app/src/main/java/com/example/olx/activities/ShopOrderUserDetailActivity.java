@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.view.View;
 
 
 import com.example.olx.CurrencyFormatter;
@@ -54,6 +55,12 @@ public class ShopOrderUserDetailActivity extends AppCompatActivity {
         loadShopInfo();
         loadOrderDetails();
         loadOrderedItems();
+        binding.backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         //handle writeReviewBtn click, start write review activity
         binding.writeReviewBtn.setOnClickListener(v -> {
             Intent intent1 = new Intent(ShopOrderUserDetailActivity.this, WriteReviewActivity.class);

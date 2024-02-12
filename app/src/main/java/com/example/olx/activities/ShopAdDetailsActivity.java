@@ -222,7 +222,7 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         //add menu items to our menu
         popupMenu.getMenu().add("Gọi điện");
         popupMenu.getMenu().add("Chats");
-        popupMenu.getMenu().add("Doanh Thu");
+        popupMenu.getMenu().add("Đánh giá");
         //handle menu item click
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             if (menuItem.getTitle() == "Gọi điện") {
@@ -242,13 +242,14 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                 startActivity(intent);
 
             }
-            else if (menuItem.getTitle() == "Doanh Thu") {
+            else if (menuItem.getTitle() == "Đánh giá") {
                 //open same reviews activity as used in user main page
-                Utils.toast(ShopAdDetailsActivity.this, "Doanh thu");
+                Utils.toast(ShopAdDetailsActivity.this, "Đánh giá");
                 //chat
-                Intent intent = new Intent(ShopAdDetailsActivity.this, DoanhThuSellerActivity.class);
-                intent.putExtra("idHD", idHD);
+                Intent intent = new Intent(ShopAdDetailsActivity.this,ShopReviewsActivity.class);
+                intent.putExtra("shopUid",firebaseAuth.getUid());
                 startActivity(intent);
+//
 
             }
 
@@ -262,7 +263,6 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         binding.cartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("");
                 showCartDialog();
             }
         });
@@ -350,7 +350,6 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                xoaGioHang();
                 finalPriceTv.setText("0đ");
             }
         });
@@ -363,7 +362,6 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
 
                 }else {
                     submitOrder();
-                    xoaGioHang();// xóa sạch giỏ hàng sau khi xác nhận đơn hàng
                 }
             }
         });
@@ -430,7 +428,7 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                     }
                     progressDialog.dismiss();
                     Utils.toastySuccess(ShopAdDetailsActivity.this,"Đặt hàng thành công...");
-
+//                    xoaGioHang();// xóa sạch giỏ hàng sau khi xác nhận đơn hàng
                 })
                 .addOnFailureListener(e -> {
                     //failed placing order
@@ -550,36 +548,19 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
 
     private void loadReviews() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.child(firebaseAuth.getUid()).child("Ratings").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ratingSum = 0;
                 for (DataSnapshot ds : snapshot.getChildren()) {
-                    String uid = "" + ds.getRef().getKey();
-                    Log.d(TAG, "onDataChange: uid: " + uid);
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users").child(uid);
-                    ref.orderByChild("uid").equalTo(firebaseAuth.getUid())
-                            .addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    //clear list before adding data into it
-                                    ratingSum = 0;
-                                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                        float rating = Float.parseFloat("" + ds.child("ratings").getValue()); //e.g. 4.3
-                                        ratingSum = ratingSum + rating; //for avg rating, add(addition of) all ratings, later will divide it by number of reviews
-                                    }
-
-                                    long numberOfReviews = dataSnapshot.getChildrenCount();
-                                    float avgRating = ratingSum / numberOfReviews;
-
-                                    binding.ratingBar.setRating(avgRating);
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
+                    float rating = Float.parseFloat("" + ds.child("ratings").getValue()); //e.g. 4.3
+                    ratingSum = ratingSum + rating; //for avg rating, add(addition of) all ratings, later will divide it by number of reviews
                 }
+
+                long numberOfReviews = snapshot.getChildrenCount();
+                float avgRating = ratingSum / numberOfReviews;
+
+                binding.ratingBar.setRating(avgRating);
             }
 
             @Override

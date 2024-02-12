@@ -2,6 +2,7 @@ package com.example.olx.activities;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -28,6 +29,7 @@ public class ShopReviewsActivity extends AppCompatActivity {
     private AdapterReview adapterReview;
 
     private String shopUid;
+    private static final String TAG = "Reviews";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,7 @@ public class ShopReviewsActivity extends AppCompatActivity {
 
         //get shop uid from intent
         shopUid = getIntent().getStringExtra("shopUid");
+        Log.d(TAG, "onCreate: "+shopUid);
         loadShopDetails(); //for shop name, image
         loadReviews(); //for reviews list, avg rating
 
