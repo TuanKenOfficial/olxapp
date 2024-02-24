@@ -134,6 +134,7 @@ public class ProfileFragment extends Fragment {
                 .addColumn(new Column("GH_Title", "text", "not null"))
                 .addColumn(new Column("GH_Price", "text", "not null"))
                 .addColumn(new Column("GH_Quantity", "text", "not null"))
+                .addColumn(new Column("GH_Soluongdadat", "text", "not null"))
                 .addColumn(new Column("GH_FinalPrice", "text", "not null"))
                 .addColumn(new Column("GH_UidNguoiBan", "text", "not null"))
                 .addColumn(new Column("GH_UidNguoiMua", "text", "not null"))

@@ -3,18 +3,19 @@ package com.example.olx.model;
 public class ModelOrderSeller {
     private String orderId;
     private long orderMaHD,timestamp;
-    private int orderTongTien;
+    private int orderTongTien, soluongdadat;
     private String orderBy,orderTo,address,orderStatus;
     private double latitude,longitude;
 
     public ModelOrderSeller() {
     }
 
-    public ModelOrderSeller(String orderId, long orderMaHD, long timestamp, int orderTongTien, String orderBy, String orderTo, String address, String orderStatus, double latitude, double longitude) {
+    public ModelOrderSeller(String orderId, long orderMaHD, long timestamp, int orderTongTien, int soluongdadat, String orderBy, String orderTo, String address, String orderStatus, double latitude, double longitude) {
         this.orderId = orderId;
         this.orderMaHD = orderMaHD;
         this.timestamp = timestamp;
         this.orderTongTien = orderTongTien;
+        this.soluongdadat = soluongdadat;
         this.orderBy = orderBy;
         this.orderTo = orderTo;
         this.address = address;
@@ -53,6 +54,14 @@ public class ModelOrderSeller {
 
     public void setOrderTongTien(int orderTongTien) {
         this.orderTongTien = orderTongTien;
+    }
+
+    public int getSoluongdadat() {
+        return soluongdadat;
+    }
+
+    public void setSoluongdadat(int soluongdadat) {
+        this.soluongdadat = soluongdadat;
     }
 
     public String getOrderBy() {

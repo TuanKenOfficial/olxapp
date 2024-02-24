@@ -387,6 +387,7 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         hashMap.put("orderMaHD", timestamp);
         hashMap.put("orderStatus", "Chưa duyệt"); //In Progress/Completed/Cancelled
         hashMap.put("orderTongTien", tongtien);
+        hashMap.put("soluongdadat", sluong);
         hashMap.put("orderBy", ""+uidNguoiMua);
         hashMap.put("orderTo", ""+uidNguoiBan);
         hashMap.put("address", ""+address);
@@ -428,12 +429,17 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                     }
                     progressDialog.dismiss();
                     Utils.toastySuccess(ShopAdDetailsActivity.this,"Đặt hàng thành công...");
-//                    xoaGioHang();// xóa sạch giỏ hàng sau khi xác nhận đơn hàng
+//                    Intent intent = new Intent(ShopAdDetailsActivity.this, DoanhThuSellerActivity.class);
+//                    intent.putExtra("orderId",idHD);
+//                    intent.putExtra("orderBy",uidNguoiMua);
+//                    intent.putExtra("orderTo",uidNguoiBan);
+//                    startActivity(intent);
+                    //xoaGioHang();// xóa sạch giỏ hàng sau khi xác nhận đơn hàng
                 })
                 .addOnFailureListener(e -> {
                     //failed placing order
                     progressDialog.dismiss();
-                    Utils.toast(ShopAdDetailsActivity.this,"Lỗi"+e.getMessage());
+                    Log.d(TAG, "submitOrder: Lỗi: "+e.getMessage());
                 });
 
         Utils.toast(ShopAdDetailsActivity.this,"Tạo hoá đơn thành công");
