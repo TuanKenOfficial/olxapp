@@ -16,7 +16,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hello các bạn đến với app OLX"
+            android:text="Chào mừng đã đến với app OLX"
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:textColor="@color/red"
@@ -26,13 +26,8 @@
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:layout_gravity="center"
-            android:src="@drawable/tuanken"/>
+            android:src="@drawable/olx"/>
     </LinearLayout>
-    <ImageView
-        android:id="@+id/img"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/olx_trangbia"/>
 
     <TextView
         android:id="@+id/txt"

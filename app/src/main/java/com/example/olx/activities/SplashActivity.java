@@ -63,14 +63,12 @@ public class SplashActivity extends AppCompatActivity {
 
         @Override
         public void onAnimationStart(Animation animation) {
-
+            progressDialog.show();
+            binding.lv.setVisibility(View.GONE);
         }
 
         @Override
         public void onAnimationEnd(Animation animation) {
-            progressDialog.show();
-            binding.lv.setVisibility(View.GONE);
-            binding.img.setVisibility(View.GONE);
             binding.lv.animate().alpha(1f).setDuration(1000);
         }
 

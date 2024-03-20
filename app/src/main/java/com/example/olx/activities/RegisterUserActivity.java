@@ -35,13 +35,13 @@ import java.util.Locale;
 public class RegisterUserActivity extends AppCompatActivity implements LocationListener {
 
     private ActivityRegisterUserBinding binding;
-    private static final String TAG = "RSUser";
+    private static final String TAG = "RSSeller";
     private FirebaseAuth firebaseAuth;
     //permission constants
     private static final int LOCATION_REQUEST_CODE = 100;
     //permission arrays
     private String[] locationPermissions;
-    private double latitude, longitude;
+    private double latitude , longitude;
     private ProgressDialog progressDialog;
 
 
@@ -92,6 +92,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
     }
 
     private String fullName;
+    private String shopName;
     private String phoneNumber;
     private String address;
     private String email;
@@ -107,6 +108,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
         String confirmPassword = binding.confirmpasswordEt.getText().toString().trim();
 
         Log.d(TAG, "inputData: fullName"+fullName);
+        Log.d(TAG, "inputData: shopName"+shopName);
         Log.d(TAG, "inputData: phoneNumber"+phoneNumber);
         Log.d(TAG, "inputData: address"+address);
         Log.d(TAG, "inputData: email"+email);
@@ -168,6 +170,100 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
                     Utils.toastyError(RegisterUserActivity.this, "Lỗi: " + e.getMessage());
                 });
     }
+
+    private void saverFirebaseData() {
+        Log.d(TAG, "saverFirebaseData: ");
+        progressDialog.setMessage("Lưu thông tin tài khoản...");
+
+        final String timestamp = "" + System.currentTimeMillis();
+        String registerUserEmail = firebaseAuth.getCurrentUser().getEmail();
+        String registerUserUid = firebaseAuth.getUid();
+        //setup data to save
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("uid", "" + registerUserUid);
+        hashMap.put("email", "" + registerUserEmail);
+        hashMap.put("name", "" + fullName);
+        hashMap.put("shopName", "ShopUser");
+        hashMap.put("phone", "" + phoneNumber);
+        hashMap.put("address", "" + address);
+        hashMap.put("latitude", latitude);
+        hashMap.put("longitude", longitude);
+        hashMap.put("timestamp", "" + timestamp);
+        hashMap.put("accountType", "User");
+        hashMap.put("online", "true");
+        hashMap.put("shopOpen", "true");
+        hashMap.put("profileImage", "https://firebasestorage.googleapis.com/v0/b/olxs-36d58.appspot.com/o/olx_trangbia.png?alt=media&token=84013b87-58da-401a-aa0d-cfced0202739");
+        hashMap.put("dob", "Email");
+
+        //save to db
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.child(registerUserUid).setValue(hashMap)
+                .addOnSuccessListener(aVoid -> {
+                    //db updated
+                    progressDialog.dismiss();
+                    Utils.toastySuccess(RegisterUserActivity.this, "Tạo tài khoản thành công");
+                    startActivity(new Intent(RegisterUserActivity.this, LoginActivity.class));
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    //failed updating db
+                    progressDialog.dismiss();
+                    Utils.toastyError(RegisterUserActivity.this, "Lỗi");
+                    finish();
+                });
+
+    }
+
+    private void detectLocation() {
+        Utils.toast(RegisterUserActivity.this, "Vui lòng đợi trong giây lát...");
+
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+    }
+
+
+    //Lấy địa chỉ
+    private void findAddress() {
+        //find address, country, state, city
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 1);
+
+            String address = addresses.get(0).getAddressLine(0); //complete address
+
+            //set addresses
+            binding.address.setText(address);
+
+        } catch (Exception e) {
+            Utils.toastyError(RegisterUserActivity.this, "Lỗi: " + e.getMessage());
+        }
+    }
+
+    private boolean checkLocationPermission() {
+
+        return ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) ==
+                (PackageManager.PERMISSION_GRANTED);
+    }
+
+    private void requestLocationPermission() {
+        ActivityCompat.requestPermissions(this, locationPermissions, LOCATION_REQUEST_CODE);
+    }
+
+    //điểm đầu - cuối vị trí
     @Override
     public void onLocationChanged(@NonNull Location location) {
         //location detected
@@ -175,7 +271,6 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
         longitude = location.getLongitude();
 
         findAddress();
-        saverFirebaseData();
     }
 
     @Override
@@ -211,102 +306,6 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
     }
-    private void saverFirebaseData() {
-        Log.d(TAG, "saverFirebaseData: ");
-        progressDialog.setMessage("Lưu thông tin tài khoản...");
-
-        final String timestamp = "" + System.currentTimeMillis();
-        String registerUserEmail = firebaseAuth.getCurrentUser().getEmail();
-        String registerUserUid = firebaseAuth.getUid();
-        //setup data to save
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("uid", "" + registerUserUid);
-        hashMap.put("email", "" + email);
-        hashMap.put("name", "" + fullName);
-        hashMap.put("phone", "" + phoneNumber);
-        hashMap.put("address", "" + address);
-        hashMap.put("latitude", latitude);
-        hashMap.put("longitude", longitude);
-        hashMap.put("timestamp", "" + timestamp);
-        hashMap.put("accountType", "User");
-        hashMap.put("online", "true");
-        hashMap.put("shopOpen", "true");
-        hashMap.put("dob", "Email");
-        hashMap.put("profileImage", "https://firebasestorage.googleapis.com/v0/b/olxs-36d58.appspot.com/o/olx_trangbia.png?alt=media&token=84013b87-58da-401a-aa0d-cfced0202739");
-
-        //save to db
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.child(registerUserUid).setValue(hashMap)
-                .addOnSuccessListener(aVoid -> {
-                    //db updated
-                    progressDialog.dismiss();
-                    Utils.toastySuccess(RegisterUserActivity.this, "Tạo tài khoản thành công");
-                    startActivity(new Intent(RegisterUserActivity.this, LoginActivity.class));
-                    finish();
-                })
-                .addOnFailureListener(e -> {
-                    //failed updating db
-                    progressDialog.dismiss();
-                    Utils.toastyError(RegisterUserActivity.this, "Lỗi");
-                    finish();
-                });
-
-    }
-
-    private void detectLocation() {
-        Utils.toast(RegisterUserActivity.this, "Vui lòng đợi trong giây lát...");
-
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-    }
-
-
-    //Lấy địa chỉ
-    private void findAddress() {
-        //find address, country, state, city
-        Geocoder geocoder;
-        List<Address> addresses;
-        geocoder = new Geocoder(this, Locale.getDefault());
-
-        try {
-
-            addresses = geocoder.getFromLocation(latitude, longitude, 1);
-
-            String address = addresses.get(0).getAddressLine(0); //complete address
-
-            //set addresses
-            binding.address.setText(address);
-
-        } catch (Exception e) {
-            Utils.toastyError(RegisterUserActivity.this, "Lỗi: " + e.getMessage());
-        }
-    }
-
-    private boolean checkLocationPermission() {
-
-        return ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) ==
-                (PackageManager.PERMISSION_GRANTED);
-    }
-
-    private void requestLocationPermission() {
-        ActivityCompat.requestPermissions(this, locationPermissions, LOCATION_REQUEST_CODE);
-    }
-
-    //điểm đầu - cuối vị trí
-
 
 
 }

@@ -98,13 +98,13 @@ public class ShopAdCreateActivity extends AppCompatActivity {
             Log.d(TAG, "onCreate: adId: " + adId);
 
             binding.toolbarTitleTv.setText("Chỉnh sửa sản phẩm");
-//            binding.postAdBtn.setImageResource(R.drawable.uploading);
             binding.giamgiaSC.setChecked(false);
             loadAdDetail();
         } else {
             binding.giamgiaSC.setChecked(false);
             binding.toolbarTitleTv.setText("Thêm sản phẩm");
             binding.postAdBtn.setImageResource(R.drawable.upload);
+            binding.raitoEt.setVisibility(View.GONE);
         }
 
         imagePickedArrayList = new ArrayList<>();
