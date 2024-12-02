@@ -34,6 +34,7 @@ import com.example.olx.R;
 import com.example.olx.Utils;
 import com.example.olx.adapter.AdapterCart;
 import com.example.olx.adapter.AdapterImageSlider;
+import com.example.olx.adapter.AdapterOrderSeller;
 import com.example.olx.databinding.ActivityShopAdDetailsBinding;
 import com.example.olx.model.ModelAddProduct;
 import com.example.olx.model.ModelCart;
@@ -55,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
@@ -113,11 +115,6 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         progressDialog.setTitle("Vui lòng đợi");
         progressDialog.setCanceledOnTouchOutside(false);
 
-
-        // mỗi cửa hàng có sản phẩm và đơn hàng riêng nên nếu người dùng thêm mặt hàng vào giỏ hàng và quay lại và mở giỏ hàng ở cửa hàng khác thì giỏ hàng sẽ khác
-        // vì vậy hãy xóa dữ liệu giỏ hàng bất cứ khi nào người dùng mở hoạt động này
-        // xóa tất cả sản phẩm  khỏi giỏ hàng
-//        deleteCartData();
 
         binding.backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -278,6 +275,10 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
     public TextView finalPriceTv;
     public String shopNames;
     public String phone;
+    public String productId;
+    public int giohangId;
+
+    public List<String> tenSPList = new ArrayList<>();
     @SuppressLint("MissingInflatedId")
     private void showCartDialog() {
         cartItemList = new ArrayList<>();
@@ -325,10 +326,12 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
             uidNguoiBan = res.getString(7);
             uidNguoiMua = res.getString(8);
 
+            productId = pId;
+            giohangId = id;
+            tenSPList.add(tenSP);
 
             tongtien = tongtien + tongtienSP;
             sluong = sluong + quantity;
-
             finalPriceTv.setText(""+CurrencyFormatter.getFormatter().format(Double.valueOf(tongtien)));
             ModelCart modelCart = new ModelCart(
                     id,
@@ -375,25 +378,31 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         progressDialog.show();
 
         long timestamp = Utils.getTimestamp();
+
         //setup oder data
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
 
         idHD = reference.push().getKey();
 
+        for (String tenSP : tenSPList) {
+            reference.child("Order").child(idHD).child("TenSanPham").push().setValue(tenSP);
+        }
         //setup oder data
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("orderId", ""+idHD);
+        hashMap.put("productId",""+productId);
         hashMap.put("orderMaHD", timestamp);
-        hashMap.put("orderStatus", "Chưa duyệt"); //In Progress/Completed/Cancelled
+        hashMap.put("sanpham", tenSP);
         hashMap.put("orderTongTien", tongtien);
-        hashMap.put("soluongdadat", sluong);
-        hashMap.put("orderBy", ""+uidNguoiMua);
-        hashMap.put("orderTo", ""+uidNguoiBan);
+        hashMap.put("soluong", sluong);
         hashMap.put("address", ""+address);
         hashMap.put("timestamp", timestamp);
         hashMap.put("latitude", latitude);
         hashMap.put("longitude",longitude);
+        hashMap.put("orderBy", ""+uidNguoiMua);
+        hashMap.put("orderTo", ""+uidNguoiBan);
+        hashMap.put("orderStatus", "Chưa duyệt");
 
         //add to db
         reference.child(uidNguoiBan).child("Order").child(idHD).setValue(hashMap)
@@ -412,16 +421,17 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                         Log.d(TAG, "submitOrder: pId: "+pId);
                         Log.d(TAG, "submitOrder: tenSP: "+tenSP);
                         Log.d(TAG, "submitOrder: price: "+price);
-                        Log.d(TAG, "submitOrder: quantity: "+soluongdadat);
-                        Log.d(TAG, "submitOrder: tongtienSP: "+tongtien);
+                        Log.d(TAG, "submitOrder: số lượng: "+soluongdadat);
+                        Log.d(TAG, "submitOrder: tongtien: "+tongtien);
                         Log.d(TAG, "submitOrder: uidNguoiMua1: "+uidNguoiMua1);
                         Log.d(TAG, "submitOrder: uidNguoiBan1: "+uidNguoiBan1);
                         HashMap<String, Object> hashMap1 = new HashMap<>();
                         hashMap1.put("productAdsId", pId);
+                        hashMap1.put("giohangId", giohangId);
                         hashMap1.put("ten", tenSP);
                         hashMap1.put("tongtien", tongtien);
                         hashMap1.put("price",price);
-                        hashMap1.put("soluongdadat", sluong);
+                        hashMap1.put("soluongdadat", soluongdadat);
                         hashMap1.put("uidNguoiMua", ""+uidNguoiMua1);
                         hashMap1.put("uidNguoiBan", ""+uidNguoiBan1);
                         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
@@ -429,12 +439,10 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                     }
                     progressDialog.dismiss();
                     Utils.toastySuccess(ShopAdDetailsActivity.this,"Đặt hàng thành công...");
-//                    Intent intent = new Intent(ShopAdDetailsActivity.this, DoanhThuSellerActivity.class);
-//                    intent.putExtra("orderId",idHD);
-//                    intent.putExtra("orderBy",uidNguoiMua);
-//                    intent.putExtra("orderTo",uidNguoiBan);
+                    xoaGioHang();// xóa sạch giỏ hàng sau khi xác nhận đơn hàng
+//                    Intent intent = new Intent(ShopAdDetailsActivity.this, ShopOrderSellerDetailActivity.class);
+//                    intent.putExtra("productId", productId);
 //                    startActivity(intent);
-                    //xoaGioHang();// xóa sạch giỏ hàng sau khi xác nhận đơn hàng
                 })
                 .addOnFailureListener(e -> {
                     //failed placing order
@@ -443,7 +451,6 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                 });
 
         Utils.toast(ShopAdDetailsActivity.this,"Tạo hoá đơn thành công");
-
 
     }
 

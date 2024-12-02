@@ -24,6 +24,7 @@ import com.example.olx.activities.DoanhThuSellerActivity;
 import com.example.olx.activities.ShopOrderUserDetailActivity;
 import com.example.olx.databinding.RowOrderUserBinding;
 import com.example.olx.model.ModelCart;
+import com.example.olx.model.ModelOrder;
 import com.example.olx.model.ModelOrderUser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -40,7 +41,7 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hold
     private final Context context;
     public ArrayList<ModelOrderUser> orderUserArrayList, filterList;
     private FilterOrderUser filter;
-    private static final String TAG ="Order_Seller";
+    private static final String TAG ="Order_User";
     private FirebaseAuth firebaseAuth;
 
     public AdapterOrderUser(Context context, ArrayList<ModelOrderUser> orderUserArrayList) {
@@ -66,43 +67,38 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hold
         long orderMaHD = modelOrderUser.getOrderMaHD();
         String orderBy = modelOrderUser.getOrderBy();
         String address = modelOrderUser.getAddress();
+        String sanpham = modelOrderUser.getSanpham();
+
+        int soluong = modelOrderUser.getSoluong();
         int orderTongTien = modelOrderUser.getOrderTongTien();
         String orderStatus = modelOrderUser.getOrderStatus();
         long timestamp = modelOrderUser.getTimestamp();
         String orderTo = modelOrderUser.getOrderTo();
-        firebaseAuth = FirebaseAuth.getInstance();
-        //load user/buyer info
-        loadUserInfo(modelOrderUser, holder);
-        loadOrderInfo(modelOrderUser,holder);
-        loadOrderSellerInfo(modelOrderUser,holder);
-        loadOrderUserInfo(modelOrderUser,holder);
 
         //set data
         String formatted = Utils.formatTimestampDateTime(timestamp); // load dd/MM/yyyy HH:mm
-        holder.ngayDat.setText("Thời gian: "+formatted);
+        holder.ngayDat.setText("Thời gian đặt hàng: "+formatted);
         holder.maHD.setText("Hoá đơn: #"+orderMaHD);
+        holder.soluongSP.setText("Số lượng: "+soluong);
+        holder.titleSP.setText("Sản phẩm: "+sanpham);
         holder.diachi.setText("Địa chỉ: "+address);
         holder.tongHoaDon.setText("Tổng cộng: "+ CurrencyFormatter.getFormatter().format(Double.parseDouble(String.valueOf(orderTongTien))));
         holder.statusTv.setText("Trạng thái: "+orderStatus);
 
-        //change order status text color
-        switch (orderStatus) {
-            case "Chưa duyệt":
-                holder.statusTv.setTextColor(context.getResources().getColor(R.color.colorblack));
-                break;
-            case "Đã duyệt":
-                holder.statusTv.setTextColor(context.getResources().getColor(R.color.colorgold));
-                break;
-            case "Đã hủy":
-                holder.statusTv.setTextColor(context.getResources().getColor(R.color.colorred));
-                break;
-        }
+        //load user/buyer info
+        loadUserInfo(modelOrderUser, holder);
+//        loadOrderInfo(modelOrderUser,holder);
+        loadOrderSellerInfo(modelOrderUser,holder);
+        loadOrderUserInfo(modelOrderUser,holder);
+
+
 
         holder.itemView.setOnClickListener(v -> {
             //open order details
             Intent intent = new Intent(context, ShopOrderUserDetailActivity.class);
-            intent.putExtra("orderId", orderId); //để tải thông tin đơn hàng
+            intent.putExtra("orderId", orderId); //để tải thông tin id hóa đơn đơn hàng
             intent.putExtra("orderTo", orderTo); //để tải thông tin của người bán
+            intent.putExtra("orderBy", orderBy); //để tải thông tin của người mua
             context.startActivity(intent);
         });
 
@@ -110,7 +106,7 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hold
     //load tên nguời mua
     private void loadOrderUserInfo(ModelOrderUser modelOrderUser, AdapterOrderUser.HolderOrderUser holder) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.child(modelOrderUser.getOrderBy()).addValueEventListener(new ValueEventListener() {
+        reference.child(modelOrderUser.getOrderBy()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String name = ""+snapshot.child("name").getValue();
@@ -127,7 +123,7 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hold
     //load tên người bán
     private void loadOrderSellerInfo(ModelOrderUser modelOrderUser, AdapterOrderUser.HolderOrderUser holder) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.child(modelOrderUser.getOrderTo()).addValueEventListener(new ValueEventListener() {
+        reference.child(modelOrderUser.getOrderTo()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String name = ""+snapshot.child("name").getValue();
@@ -141,38 +137,12 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hold
             }
         });
     }
-
-    //load hoá đơn
-    private void loadOrderInfo(ModelOrderUser modelOrderUser, AdapterOrderUser.HolderOrderUser holder) {
-        //load thông tin tên và số lượng đã đặt của sản phẩm
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.child(modelOrderUser.getOrderTo()).child("Order").child(modelOrderUser.getOrderId()).child("GioHang").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds: snapshot.getChildren()){
-                    ModelCart modelCart = ds.getValue(ModelCart.class);
-                    int Soluong = modelCart.getSoluongdadat();
-                    String titleSP = modelCart.getTen();
-                    Log.d(TAG, "onDataChange: số lượng: "+Soluong);
-                    Log.d(TAG, "onDataChange: tên sản phẩm: "+titleSP);
-                    holder.soluongSP.setText("Số lượng: "+Soluong);
-                    holder.titleSP.setText("Sản phẩm gồm: "+titleSP);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
     //load email and số điện thoại người mua
     private void loadUserInfo(ModelOrderUser modelOrderUser, final AdapterOrderUser.HolderOrderUser holder) {
         //to load email of the user/buyer: modelOrderShop.getOrderBy() contains uid of that user/buyer
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
         ref.child(modelOrderUser.getOrderBy())
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         String sdt = ""+dataSnapshot.child("phone").getValue();

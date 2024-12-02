@@ -1,27 +1,46 @@
 package com.example.olx.model;
 
 public class ModelOrderSeller {
-    private String orderId;
+    private String sanpham;
+    private String orderId, productId;
     private long orderMaHD,timestamp;
-    private int orderTongTien, soluongdadat;
+    private int orderTongTien, soluong;
     private String orderBy,orderTo,address,orderStatus;
     private double latitude,longitude;
 
     public ModelOrderSeller() {
     }
 
-    public ModelOrderSeller(String orderId, long orderMaHD, long timestamp, int orderTongTien, int soluongdadat, String orderBy, String orderTo, String address, String orderStatus, double latitude, double longitude) {
+    public ModelOrderSeller(String sanpham, String orderId, String productId, long orderMaHD, long timestamp, int orderTongTien, int soluong, String orderBy, String orderTo, String address, String orderStatus, double latitude, double longitude) {
+        this.sanpham = sanpham;
         this.orderId = orderId;
+        this.productId = productId;
         this.orderMaHD = orderMaHD;
         this.timestamp = timestamp;
         this.orderTongTien = orderTongTien;
-        this.soluongdadat = soluongdadat;
+        this.soluong = soluong;
         this.orderBy = orderBy;
         this.orderTo = orderTo;
         this.address = address;
         this.orderStatus = orderStatus;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+    public String getSanpham() {
+        return sanpham;
+    }
+
+    public void setSanpham(String sanpham) {
+        this.sanpham = sanpham;
     }
 
     public String getOrderId() {
@@ -56,12 +75,12 @@ public class ModelOrderSeller {
         this.orderTongTien = orderTongTien;
     }
 
-    public int getSoluongdadat() {
-        return soluongdadat;
+    public int getSoluong() {
+        return soluong;
     }
 
-    public void setSoluongdadat(int soluongdadat) {
-        this.soluongdadat = soluongdadat;
+    public void setSoluong(int soluong) {
+        this.soluong = soluong;
     }
 
     public String getOrderBy() {
@@ -70,6 +89,14 @@ public class ModelOrderSeller {
 
     public void setOrderBy(String orderBy) {
         this.orderBy = orderBy;
+    }
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
     public String getOrderTo() {
@@ -102,13 +129,5 @@ public class ModelOrderSeller {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
-    }
-
-    public String getOrderStatus() {
-        return orderStatus;
-    }
-
-    public void setOrderStatus(String orderStatus) {
-        this.orderStatus = orderStatus;
     }
 }

@@ -10,6 +10,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,14 +43,14 @@ public class ShopOrderSellerDetailActivity extends AppCompatActivity {
 
     private ActivityShopOrderSellerDetailBinding binding;
 
-    private String orderId, orderBy;
+    private String orderId, orderBy, orderTo;
     //to open destination in map
     private double latitude;
     private double longitude;
 
     private FirebaseAuth firebaseAuth;
 
-    private ArrayList<ModelOrder> orderArrayList;
+    private ArrayList<ModelCart> cartArrayList;
     private AdapterOrder adapterOrder;
     private static final String TAG ="ODER_DETAILS_SELLER";
     @Override
@@ -62,6 +63,9 @@ public class ShopOrderSellerDetailActivity extends AppCompatActivity {
         //get data from intent
         orderId = getIntent().getStringExtra("orderId");
         orderBy = getIntent().getStringExtra("orderBy");
+        orderTo = getIntent().getStringExtra("orderTo");
+
+
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -113,7 +117,7 @@ public class ShopOrderSellerDetailActivity extends AppCompatActivity {
         hashMap.put("orderStatus", ""+selectedOption);
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.child((firebaseAuth.getUid())).child("Order").child(orderId)
+        ref.child(firebaseAuth.getUid()).child("Order").child(orderId)
                 .updateChildren(hashMap)
                 .addOnSuccessListener(aVoid -> {
                     String message = "Đặt hàng bây giờ là "+selectedOption;
@@ -127,12 +131,15 @@ public class ShopOrderSellerDetailActivity extends AppCompatActivity {
                 });
     }
 
+    // load email, số điện thoại, địa chỉ người đặt hàng
     private void loadBuyerInfo() {
+
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
         ref.child(orderBy)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                         //get buyer info
                         latitude = Double.parseDouble(""+dataSnapshot.child("latitude").getValue());
                         longitude = Double.parseDouble(""+dataSnapshot.child("longitude").getValue());
@@ -153,6 +160,7 @@ public class ShopOrderSellerDetailActivity extends AppCompatActivity {
 
 
     private void loadOrderDetails(){
+
         //load detailed info of this order, based on order id
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
         ref.child(firebaseAuth.getUid()).child("Order").child(orderId)
@@ -160,6 +168,7 @@ public class ShopOrderSellerDetailActivity extends AppCompatActivity {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                         //get order info
                         String orderMaHD = ""+dataSnapshot.child("orderMaHD").getValue();
                         String orderTongTien = ""+dataSnapshot.child("orderTongTien").getValue();
@@ -223,9 +232,11 @@ public class ShopOrderSellerDetailActivity extends AppCompatActivity {
         }
     }
 
+    // load sản phẩm từ giỏ hàng
     private void loadOrderedItems() {
+        Log.d(TAG, "loadOrderedItems: ");
         //init list
-        orderArrayList = new ArrayList<>();
+        cartArrayList = new ArrayList<>();
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
         ref.child(firebaseAuth.getUid()).child("Order").child(orderId).child("GioHang")
@@ -233,18 +244,18 @@ public class ShopOrderSellerDetailActivity extends AppCompatActivity {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        orderArrayList.clear(); //before loading items clear list
+                        cartArrayList.clear(); //before loading items clear list
                         for (DataSnapshot ds: dataSnapshot.getChildren()){
-                            ModelOrder modelOrder = ds.getValue(ModelOrder.class);
+                            ModelCart modelCart = ds.getValue(ModelCart.class);
                             //add to list
-                            orderArrayList.add(modelOrder);
+                            cartArrayList.add(modelCart);
                         }
+
                         //all items added to list
                         //setup adapter
-                        adapterOrder = new AdapterOrder(ShopOrderSellerDetailActivity.this, orderArrayList);
+                        adapterOrder = new AdapterOrder(ShopOrderSellerDetailActivity.this,  cartArrayList);
                         //set adapter
-                        binding.itemsRv.setAdapter(adapterOrder);
-
+                        binding.row.setAdapter(adapterOrder);
                         //set items count
                         binding.totalItemsTv.setText(""+dataSnapshot.getChildrenCount());
                     }

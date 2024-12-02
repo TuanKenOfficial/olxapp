@@ -132,7 +132,7 @@ public class LoginPhoneActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                             Log.d(TAG, "onSuccess: Tài khoản đã có");
                             Utils.toastySuccess(LoginPhoneActivity.this, "Tài khoản số điện thoại đã đăng ký");
-                            startActivity(new Intent(LoginPhoneActivity.this, MainSellerActivity.class));
+                            startActivity(new Intent(LoginPhoneActivity.this, MainUserActivity.class));
                         }
 
                     }
@@ -156,7 +156,6 @@ public class LoginPhoneActivity extends AppCompatActivity {
 
         HashMap<String,Object> hashMap = new HashMap<>();
         hashMap.put("name","Phone");
-        hashMap.put("shopName", "ShopPhone");
         hashMap.put("phoneCode",phoneCode);
         hashMap.put("phoneNumber",phoneNumber);
         hashMap.put("phone",phoneNumberWithCode);
@@ -182,7 +181,7 @@ public class LoginPhoneActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         Utils.toastySuccess(LoginPhoneActivity.this, "Tạo tài khoản thành công");
                         Log.d(TAG, "onSuccess: Thành công");
-                        startActivity(new Intent(LoginPhoneActivity.this, MainSellerActivity.class));
+                        startActivity(new Intent(LoginPhoneActivity.this, MainUserActivity.class));
                         finishAffinity();
                     }
                 })

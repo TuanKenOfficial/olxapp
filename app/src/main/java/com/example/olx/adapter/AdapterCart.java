@@ -140,12 +140,9 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
 
                 easyDB.deleteRow(1, idGH); //xoá từng dòng
 //                easyDB.deleteAllDataFromTable();//xoá tất cả sản phẩm
-                Utils.toastySuccess(context,"Đã xóa khỏi giỏ hàng...");
-
                 //refresh list
                 cartArrayList.remove(position);
-                notifyItemChanged(position);
-                notifyDataSetChanged();
+
                 int quantity = Soluongdadat - Soluongdadat;
                 ((ShopAdDetailsActivity)context).sluong = quantity;
                 //điều chỉnh tính tổng  sau khi loại bỏ sản phẩm
@@ -154,7 +151,9 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
                                 replace("đ", ""))));
                 double totalPrice = subTotalWithoutDiscount - Double.parseDouble(CurrencyFormatter.getFormatter().format(Double.valueOf(tongtiensp)));
                 ((ShopAdDetailsActivity)context).finalPriceTv.setText(CurrencyFormatter.getFormatter().format(totalPrice));
-
+                notifyItemChanged(position);
+                notifyDataSetChanged();
+                Utils.toastySuccess(context,"Đã xóa khỏi giỏ hàng...");
             }
 
         });

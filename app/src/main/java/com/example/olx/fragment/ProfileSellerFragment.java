@@ -175,20 +175,7 @@ public class ProfileSellerFragment extends Fragment {
                         binding.memberSignleTv.setText(formattedDate);
 
                         //xử lý trạng thái tài khoản
-                        if (accountType.equals("User")) {
-                            boolean isVerified = firebaseAuth.getCurrentUser().isEmailVerified();
-                            if (isVerified) {
-                                binding.verifiedCv.setVisibility(View.GONE);
-                                binding.shopNameTv.setVisibility(View.GONE);
-                                binding.verifiedTv.setText("Đã xác minh");
-                            } else {
-                                binding.verifiedCv.setVisibility(View.VISIBLE);
-                                binding.shopNameTv.setVisibility(View.GONE);
-                                binding.verifiedTv.setText("Chưa xác minh");
-
-                            }
-                        }
-                        else if (accountType.equals("Seller")) {
+                        if (accountType.equals("Seller")) {
                             boolean isVerified = firebaseAuth.getCurrentUser().isEmailVerified();
                             if (isVerified) {
                                 binding.verifiedCv.setVisibility(View.GONE);
@@ -199,20 +186,12 @@ public class ProfileSellerFragment extends Fragment {
                                 binding.shopNameTv.setVisibility(View.VISIBLE);
                                 binding.verifiedTv.setText("Chưa xác minh");
                             }
-                        }
-                        else if (accountType.equals("Phone")) {
+                        }else {
                             binding.verifiedCv.setVisibility(View.GONE);
-                            binding.deleteAccountCv.setVisibility(View.GONE);
-                            binding.shopNameTv.setVisibility(View.VISIBLE);
+                            binding.shopNameTv.setVisibility(View.GONE);
                             binding.verifiedTv.setText("Đã xác minh");
+                        }
 
-                        }
-                        else {
-                            binding.verifiedCv.setVisibility(View.GONE);
-                            binding.deleteAccountCv.setVisibility(View.GONE);
-                            binding.shopNameTv.setVisibility(View.VISIBLE);
-                            binding.verifiedTv.setText("Đã xác minh");
-                        }
 
                         //hình ảnh profile
                         try {

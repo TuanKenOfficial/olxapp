@@ -43,12 +43,19 @@
             android:textSize="15sp"
             android:paddingHorizontal="10dp"/>
         <TextView
-            android:id="@+id/soluongSP"
+            android:id="@+id/titleSP"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Số lượng SP"
-            android:textSize="15sp"
-            android:paddingHorizontal="10dp"/>
+            android:text="Sản phẩm"
+            android:paddingHorizontal="10dp"
+            android:textSize="15sp"/>
+<!--        <TextView-->
+<!--            android:id="@+id/soluongSP"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Số lượng"-->
+<!--            android:textSize="15sp"-->
+<!--            android:paddingHorizontal="10dp"/>-->
         <TextView
             android:id="@+id/email"
             android:layout_width="wrap_content"
@@ -74,13 +81,7 @@
             android:textSize="15sp"/>
 
 
-        <TextView
-            android:id="@+id/titleSP"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sản phẩm"
-            android:paddingHorizontal="10dp"
-            android:textSize="15sp"/>
+
         <TextView
             android:id="@+id/ngayDat"
             android:layout_width="wrap_content"
@@ -89,6 +90,13 @@
             android:paddingHorizontal="10dp"
             android:textColor="#4CAF50"
             android:textSize="15sp"/>
+        <TextView
+            android:id="@+id/soluongSPDD"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Số lượng sản phẩm đã đặt"
+            android:textSize="15sp"
+            android:paddingHorizontal="10dp"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -110,6 +118,15 @@
                 android:text="Chưa duyệt"
                 android:layout_marginLeft="20dp"
                 android:textColor="@color/colorred" />
+            <ImageButton
+                android:id="@+id/editBtn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="2dp"
+                android:padding="5dp"
+                android:layout_alignParentEnd="true"
+                android:background="@null"
+                android:src="@drawable/edit"/>
         </LinearLayout>
         <View
             android:layout_width="match_parent"

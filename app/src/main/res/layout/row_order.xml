@@ -24,8 +24,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/productIv"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="2dp"
+            android:padding="3dp"
             android:text="Tên sản phẩm"
-            android:textColor="@color/red" />
+            android:textColor="@color/red"
+            android:textStyle="bold"/>
         <TextView
             android:id="@+id/sQuantityTv"
             android:layout_width="wrap_content"
@@ -34,7 +38,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="2dp"
             android:layout_toRightOf="@id/productIv"
-            android:text="Số lượng đã đặt: "
+            android:text="Số lượng"
+            android:padding="3dp"
             android:textColor="@color/red"
             android:textSize="16sp" />
 
@@ -44,6 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/sQuantityTv"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="2dp"
             android:layout_toRightOf="@id/productIv"
             android:padding="5dp"
@@ -55,6 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/priceTv"
             android:layout_marginTop="2dp"
+            android:layout_centerHorizontal="true"
             android:layout_toRightOf="@id/productIv"
             android:padding="5dp"
             android:text="0đ"

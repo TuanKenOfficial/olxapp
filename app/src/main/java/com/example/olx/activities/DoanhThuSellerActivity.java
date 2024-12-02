@@ -82,7 +82,7 @@ public class DoanhThuSellerActivity extends AppCompatActivity {
         MonthYearPickerDialogFragment dialogFragment = MonthYearPickerDialogFragment.getInstance(thang, nam);
         dialogFragment.show(getSupportFragmentManager(), null);
         dialogFragment.setOnDateSetListener((year, monthOfYear) -> {
-            String thoiGian = "0" + (monthOfYear + 1) + "/" + year;
+            String thoiGian = "" + (monthOfYear + 1) + "/" + year;
             binding.chonThoiGian.setText(thoiGian);
             truyVanThangNam(thoiGian);
         });
@@ -128,9 +128,9 @@ public class DoanhThuSellerActivity extends AppCompatActivity {
                                 binding.tongDonHang.setText(CurrencyFormatter.getFormatter().format(Double.parseDouble(String.valueOf(tongtiens))));
                             } else  {
                                 tongtiens = 0;
-                                int countss = 0;
+                                int counts = 0;
                                 binding.doanhThu.setText(CurrencyFormatter.getFormatter().format(Double.parseDouble(String.valueOf(tongtiens))));
-                                binding.tongDonHang.setText("Số lượng sản phẩm: "+countss);
+                                binding.tongDonHang.setText("Số lượng sản phẩm: "+counts);
                             }
                         }
 

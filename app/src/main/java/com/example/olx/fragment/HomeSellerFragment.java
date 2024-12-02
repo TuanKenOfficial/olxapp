@@ -114,8 +114,8 @@ public class HomeSellerFragment extends Fragment {
             Log.d(TAG, "onViewCreated: "+currentAddress);
             binding.locationTv.setText(currentAddress);
         }
-        //Nếu muốn không cần chọn vị trí vẫn load được thì mở nó, ko thì đóng nó lại
 
+        //Nếu muốn không cần chọn vị trí vẫn load được thì mở nó, ko thì đóng nó lại
 //        loadAllOrders();
         showProductsUI(); // load tab product
         loadAllAdProducts(); // load product
@@ -229,7 +229,7 @@ public class HomeSellerFragment extends Fragment {
 
 
     }
-    // load tất cả hoá đơn
+    // load tung hoá đơn
     private void loadOrders() {
         Log.d(TAG, "loadOrders: ");
         //init order list
@@ -276,6 +276,8 @@ public class HomeSellerFragment extends Fragment {
             }
         });
     }
+
+    //load tat ca hoa don
     private void loadAllOrders() {
         Log.d(TAG, "loadAllOrders: ");
         //init array list

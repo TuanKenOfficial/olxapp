@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 
@@ -36,7 +37,7 @@ public class ShopOrderUserDetailActivity extends AppCompatActivity {
     private ActivityShopOrderUserDetailBinding binding;
 
     String orderId, orderTo;
-    private ArrayList<ModelOrder> orderArrayList;
+    private ArrayList<ModelCart> cartArrayList;
     private AdapterOrder adapterOrder;
     private FirebaseAuth firebaseAuth;
     private static final String TAG ="ODER_DETAILS_USER";
@@ -69,38 +70,6 @@ public class ShopOrderUserDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void loadOrderedItems() {
-        //init list
-        orderArrayList = new ArrayList<>();
-
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.child(orderTo).child("Order").child(orderId).child("GioHang")
-                .addValueEventListener(new ValueEventListener() {
-                    @SuppressLint("SetTextI18n")
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        orderArrayList.clear(); //before loading items clear list
-                        for (DataSnapshot ds: dataSnapshot.getChildren()){
-                            ModelOrder modelOrder = ds.getValue(ModelOrder.class);
-                            //add to list
-                            orderArrayList.add(modelOrder);
-                        }
-                        //all items added to list
-                        //setup adapter
-                        adapterOrder = new AdapterOrder(ShopOrderUserDetailActivity.this, orderArrayList);
-                        //set adapter
-                        binding.itemsRv.setAdapter(adapterOrder);
-
-                        //set items count
-                        binding.totalItemsTv.setText(""+dataSnapshot.getChildrenCount());
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-    }
 
     private void loadOrderDetails() {
         //load order details
@@ -162,6 +131,39 @@ public class ShopOrderUserDetailActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         String shopName = ""+dataSnapshot.child("shopName").getValue();
                         binding.shopNameTv.setText(shopName);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+    }
+    private void loadOrderedItems() {
+        Log.d(TAG, "loadOrderedItems: ");
+        //init list
+        cartArrayList = new ArrayList<>();
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        ref.child(orderTo).child("Order").child(orderId).child("GioHang")
+                .addValueEventListener(new ValueEventListener() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        cartArrayList.clear(); //before loading items clear list
+                        for (DataSnapshot ds: dataSnapshot.getChildren()){
+                            ModelCart modelCart = ds.getValue(ModelCart.class);
+                            //add to list
+                            cartArrayList.add(modelCart);
+                        }
+
+                        //all items added to list
+                        //setup adapter
+                        adapterOrder = new AdapterOrder(ShopOrderUserDetailActivity.this,  cartArrayList);
+                        //set adapter
+                        binding.row.setAdapter(adapterOrder);
+                        //set items count
+                        binding.totalItemsTv.setText(""+dataSnapshot.getChildrenCount());
                     }
 
                     @Override
