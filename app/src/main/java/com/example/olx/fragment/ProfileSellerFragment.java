@@ -76,7 +76,7 @@ public class ProfileSellerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 firebaseAuth.signOut();
-                xoaGioHang();
+                xoaGioHang(); //đăng xuất xóa giỏ hàng
                 startActivity(new Intent(mContext, LoginOptionActivity.class));
                 getActivity().finishAffinity();
             }

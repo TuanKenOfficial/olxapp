@@ -40,7 +40,7 @@ public class ShopOrderUserDetailActivity extends AppCompatActivity {
     private ArrayList<ModelCart> cartArrayList;
     private AdapterOrder adapterOrder;
     private FirebaseAuth firebaseAuth;
-    private static final String TAG ="ODER_DETAILS_USER";
+    private static final String TAG ="ODERUSER";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

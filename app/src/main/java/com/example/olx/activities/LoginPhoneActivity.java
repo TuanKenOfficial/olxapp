@@ -65,6 +65,7 @@ public class LoginPhoneActivity extends AppCompatActivity {
         binding.btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Utils.toastyInfo(LoginPhoneActivity.this,"SĐT cần nhập vào ô phone: 123456789");
                 updateData();
             }
         });
@@ -96,6 +97,13 @@ public class LoginPhoneActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+        binding.chuyTv.setText("Chú ý: Do 1 số vấn đề từ Firebase nên số điện thoại không được nhận mã otp do BILLING NOT ENABLE, " +
+                "nên ở đây tôi đã import sẵn số điện thoại và mã otp ở trên cơ sở dữ liệu," +
+                "các bạn có thể sửa đổi ở trong cơ sở dữ liệu firebase nhá, xin cảm ơn!!" +
+                "Chúc các bạn thành công :))) ^^!!");
+        Utils.toastyInfo(LoginPhoneActivity.this,"SĐT cần nhập vào ô phone: 123456789");
 
 
     }
@@ -159,13 +167,13 @@ public class LoginPhoneActivity extends AppCompatActivity {
         hashMap.put("phoneCode",phoneCode);
         hashMap.put("phoneNumber",phoneNumber);
         hashMap.put("phone",phoneNumberWithCode);
-        hashMap.put("profileImageUrl","");
+        hashMap.put("profileImageUrl","gs://olxapp-2593f.appspot.com/phone.jpg");
         hashMap.put("timestamp",timestamp);
         hashMap.put("email", "olx@gmail.com");
         hashMap.put("uid", registerUserUid);
-        hashMap.put("address", "");
-        hashMap.put("latitude", 0.0);
-        hashMap.put("longitude", 0.0);
+        hashMap.put("address", "Phong Hòa, Lai Vung, Đồng Tháp, Việt Nam");
+        hashMap.put("latitude", 10.16885);
+        hashMap.put("longitude", 105.67334);
         hashMap.put("online", "true");
         hashMap.put("dob","Phone");
         hashMap.put("shopOpen", "true");

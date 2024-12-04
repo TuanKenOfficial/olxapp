@@ -2,6 +2,7 @@ package com.example.olx.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +39,7 @@ import p32929.androideasysql_library.EasyDB;
 public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
 
     private RowCartBinding binding;
-    private  static  final  String TAG ="ADAPTER_GIO";
+    private  static  final  String TAG ="AdapterCart";
     private Context context;
     private ArrayList<ModelCart> cartArrayList;
 
@@ -49,13 +50,13 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
 
     @NonNull
     @Override
-    public AdapterCart.HolderCart onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public HolderCart onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         binding = RowCartBinding.inflate(LayoutInflater.from(context), parent, false);
         return new AdapterCart.HolderCart(binding.getRoot());
     }
     @SuppressLint("RecyclerView")
     @Override
-    public void onBindViewHolder(@NonNull AdapterCart.HolderCart holder,  int position) {
+    public void onBindViewHolder(@NonNull HolderCart holder,  int position) {
         ModelCart modelCart = cartArrayList.get(position);
         int idGH = modelCart.getId();
         String pId = modelCart.getProductAdsId();
@@ -142,17 +143,22 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
 //                easyDB.deleteAllDataFromTable();//xoá tất cả sản phẩm
                 //refresh list
                 cartArrayList.remove(position);
-
-                int quantity = Soluongdadat - Soluongdadat;
-                ((ShopAdDetailsActivity)context).sluong = quantity;
-                //điều chỉnh tính tổng  sau khi loại bỏ sản phẩm
-                double subTotalWithoutDiscount = Double.parseDouble(CurrencyFormatter.getFormatter().format(Double.parseDouble
-                        (((ShopAdDetailsActivity)context).finalPriceTv.getText().toString().
-                                replace("đ", ""))));
-                double totalPrice = subTotalWithoutDiscount - Double.parseDouble(CurrencyFormatter.getFormatter().format(Double.valueOf(tongtiensp)));
-                ((ShopAdDetailsActivity)context).finalPriceTv.setText(CurrencyFormatter.getFormatter().format(totalPrice));
                 notifyItemChanged(position);
                 notifyDataSetChanged();
+                //điều chỉnh số lựợng
+                int quantity = Soluongdadat - Soluongdadat;
+                ((ShopAdDetailsActivity)context).sluong = quantity;
+                double price = 0.0;
+
+
+                //điều chỉnh tính tổng  sau khi loại bỏ sản phẩm
+//                double subTotalWithoutDiscount = Double.parseDouble(CurrencyFormatter.getFormatter().format(Double.parseDouble
+//                        (((ShopAdDetailsActivity)context).finalPriceTv.getText().toString().
+//                                replace("đ", ""))));
+                double totalPrice = Double.parseDouble(CurrencyFormatter.getFormatter().format(Double.valueOf(tongtiensp))) - Double.parseDouble(CurrencyFormatter.getFormatter().format(Double.valueOf(tongtiensp)));
+
+                ((ShopAdDetailsActivity)context).finalPriceTv.setText(CurrencyFormatter.getFormatter().format(totalPrice));
+
                 Utils.toastySuccess(context,"Đã xóa khỏi giỏ hàng...");
             }
 

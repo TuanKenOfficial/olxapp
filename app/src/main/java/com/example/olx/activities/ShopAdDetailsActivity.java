@@ -64,7 +64,7 @@ import p32929.androideasysql_library.EasyDB;
 public class ShopAdDetailsActivity extends AppCompatActivity {
     private ActivityShopAdDetailsBinding binding;
 
-    private static final String TAG = "AD_DETAILS";
+    private static final String TAG = "ShopDETAILS";
 
     private FirebaseAuth firebaseAuth;
 
@@ -240,13 +240,43 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
 
             }
             else if (menuItem.getTitle() == "Đánh giá") {
-                //open same reviews activity as used in user main page
-                Utils.toast(ShopAdDetailsActivity.this, "Đánh giá");
-                //chat
-                Intent intent = new Intent(ShopAdDetailsActivity.this,ShopReviewsActivity.class);
-                intent.putExtra("shopUid",firebaseAuth.getUid());
-                startActivity(intent);
-//
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+                ref.child(firebaseAuth.getUid())
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                //get người dùng
+                                String accountType = ""+snapshot.child("accountType").getValue();
+                                //check người dùng
+                                if (accountType.equals("Google")){
+                                    Utils.toast(ShopAdDetailsActivity.this, "Đánh giá");
+                                    Utils.toastyInfo(ShopAdDetailsActivity.this, "Xin lỗi bạn không dùng được chức năng này!!");
+                                }
+                                else if (accountType.equals("Phone")){
+                                    Utils.toast(ShopAdDetailsActivity.this, "Đánh giá");
+                                    Utils.toastyInfo(ShopAdDetailsActivity.this, "Xin lỗi bạn không dùng được chức năng này!!");
+                                }
+                                else if (accountType.equals("User")){
+                                    Utils.toast(ShopAdDetailsActivity.this, "Đánh giá");
+                                    Utils.toastyInfo(ShopAdDetailsActivity.this, "Xin lỗi bạn không dùng được chức năng này!!");
+                                }
+
+                                else if (accountType.equals("Seller")){
+                                    //open same reviews activity as used in user main page
+                                    Utils.toast(ShopAdDetailsActivity.this, "Đánh giá");
+                                    //chat
+                                    Intent intent = new Intent(ShopAdDetailsActivity.this,ShopReviewsActivity.class);
+                                    intent.putExtra("shopUid",firebaseAuth.getUid());
+                                    startActivity(intent);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
 
             }
 
@@ -260,6 +290,7 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         binding.cartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "onClick: cart");
                 showCartDialog();
             }
         });
@@ -288,6 +319,7 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         TextView shopNameTv = view.findViewById(R.id.shopNameTv);
         TextView sdtTv = view.findViewById(R.id.sdtTv);
         RecyclerView cartItemsRv = view.findViewById(R.id.cartItemsRv);
+        Log.d(TAG, "showCartDialog: "+cartItemsRv);
         finalPriceTv = view.findViewById(R.id.finalPriceTv);// tổng giá
         Button checkoutBtn = view.findViewById(R.id.checkoutBtn);
         //bất cứ khi nào hộp thoại giỏ hàng hiển thị, hãy kiểm tra xem mã khuyến mãi có được áp dụng hay không
@@ -346,7 +378,7 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
             cartItemList.add(modelCart);
         }
         //setup adapter
-        AdapterCart adapterCart = new AdapterCart(this, cartItemList);
+        AdapterCart adapterCart = new AdapterCart(ShopAdDetailsActivity.this, cartItemList);
         //set to recyclerview
         cartItemsRv.setAdapter(adapterCart);
 

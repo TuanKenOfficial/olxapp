@@ -52,7 +52,7 @@ public class ShopOrderSellerDetailActivity extends AppCompatActivity {
 
     private ArrayList<ModelCart> cartArrayList;
     private AdapterOrder adapterOrder;
-    private static final String TAG ="ODER_DETAILS_SELLER";
+    private static final String TAG ="ODERSELLER";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

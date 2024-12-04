@@ -113,10 +113,10 @@ public class MainUserActivity extends AppCompatActivity {
                                 if (accountType.equals("User")){
                                     showProfileFragment();
                                 } else if (accountType.equals("Google")) {
-                                    showProfileSellerFragment();
+                                    showProfileFragment();
                                 }
                                 else if (accountType.equals("Phone")) {
-                                    showProfileSellerFragment();
+                                    showProfileFragment();
                                 }
                             }
 
@@ -267,15 +267,15 @@ public class MainUserActivity extends AppCompatActivity {
                     }
                 });
     }
-    private void showProfileSellerFragment() {
-        binding.toolbarRl.setVisibility(View.GONE);
-        Utils.toast(MainUserActivity.this,"Profile Seller");
-        ProfileSellerFragment fragment = new ProfileSellerFragment();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(binding.fragmentsFl.getId(), fragment, "ProfileSellerFragment");
-        fragmentTransaction.commit();
-
-    }
+//    private void showProfileSellerFragment() {
+//        binding.toolbarRl.setVisibility(View.GONE);
+//        Utils.toast(MainUserActivity.this,"Profile Seller");
+//        ProfileSellerFragment fragment = new ProfileSellerFragment();
+//        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//        fragmentTransaction.replace(binding.fragmentsFl.getId(), fragment, "ProfileSellerFragment");
+//        fragmentTransaction.commit();
+//
+//    }
     private void showProfileFragment() {
         binding.toolbarRl.setVisibility(View.GONE);
         Utils.toast(MainUserActivity.this,"Profile User");

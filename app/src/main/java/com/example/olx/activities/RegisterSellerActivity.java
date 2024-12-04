@@ -34,7 +34,7 @@ import java.util.Locale;
 public class RegisterSellerActivity extends AppCompatActivity implements LocationListener {
 
     private ActivityRegisterSellerBinding binding;
-    private static final String TAG = "RSSeller";
+    private static final String TAG = "RegisterSeller";
     private FirebaseAuth firebaseAuth;
     //permission constants
     private static final int LOCATION_REQUEST_CODE = 100;

@@ -123,8 +123,8 @@
                 android:id="@+id/chuyTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="Chứ ý: Mỗi số điện thoại chỉ đăng nhập dùng tối đa 3 lần, và nên chọn đầu số +84 ở phía trên kế bên ô trống nếu ở Việt Nam, và nhập vào phần ô trống số điện thoại của bạn, chú ý bỏ số 0 đầu ra dùm ạ, xin chân thành cảm ơn!!"
+                android:textAlignment="textStart"
+                android:text="phone"
                 android:textStyle="bold"
                 android:textSize="20sp"
                 android:textColor="@color/red"
@@ -196,19 +196,23 @@
                 android:layout_margin="10dp"
                 android:textSize="18sp"
                 android:textColor="@color/black"/>
+
             <TextView
                 android:id="@+id/chuy1Tv"
+                style="@style/TextAppearance.AppCompat.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="Chú ý: Nếu chưa nhận được mã OTP gửi về điện thoại, hãy bấm vào dòng OTP chưa được gửi? Gửi lại. Xin cảm ơn"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:textColor="@color/red"
-                android:layout_margin="10dp"
-                android:padding="10dp"
                 android:layout_below="@id/resentOTP"
-                style="@style/TextAppearance.AppCompat.Body1"/>
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:padding="10dp"
+                android:text="Chú ý: Nếu chưa nhận được mã OTP gửi về điện thoại, hãy bấm vào dòng OTP chưa được gửi? Gửi lại. Xin cảm ơn"
+                android:textColor="@color/red"
+                android:textSize="20sp"
+                android:textStyle="bold" />
         </RelativeLayout>
 
     </RelativeLayout>

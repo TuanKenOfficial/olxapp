@@ -103,7 +103,7 @@ public class MainSellerActivity extends AppCompatActivity {
                         return false;
                     }
                     else{
-                        showProfileFragment();
+                        showProfileSellerFragment();
                         return true;
                     }
 
@@ -227,7 +227,7 @@ public class MainSellerActivity extends AppCompatActivity {
                 });
     }
 
-    private void showProfileFragment() {
+    private void showProfileSellerFragment() {
         binding.toolbarRl.setVisibility(View.GONE);
         Utils.toast(MainSellerActivity.this,"Profile Seller");
         ProfileSellerFragment fragment = new ProfileSellerFragment();

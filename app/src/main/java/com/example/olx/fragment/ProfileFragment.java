@@ -78,7 +78,7 @@ public class ProfileFragment extends Fragment {
                 //còn ko muốn thì đóng dòng xoaGioHang lại thì nó sẽ vẫn load sản phẩm người này đặt
                 //khi đăng nhập tài khoản khác
                 firebaseAuth.signOut();
-                xoaGioHang();
+//                xoaGioHang(); //đăng xuất xóa giỏ hàng
                 startActivity(new Intent(mContext, LoginOptionActivity.class));
                 getActivity().finishAffinity();
 
@@ -187,16 +187,9 @@ public class ProfileFragment extends Fragment {
 
                             }
                         }
-                        else if (accountType.equals("Google")) {
+                        else {
                             binding.verifiedCv.setVisibility(View.GONE);
-                            binding.deleteAccountCv.setVisibility(View.GONE);
                             binding.verifiedTv.setText("Đã xác minh");
-                        }
-                        else if (accountType.equals("Phone")) {
-                            binding.verifiedCv.setVisibility(View.GONE);
-                            binding.deleteAccountCv.setVisibility(View.GONE);
-                            binding.verifiedTv.setText("Đã xác minh");
-
                         }
 
                         //hình ảnh profile

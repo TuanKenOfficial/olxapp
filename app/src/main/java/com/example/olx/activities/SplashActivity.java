@@ -100,21 +100,21 @@ public class SplashActivity extends AppCompatActivity {
                             String accountType = ""+snapshot.child("accountType").getValue();
                             //check người dùng
                             if (accountType.equals("Google")){
-                                //nếu người dùng là user thì vào trang người dùng
+                                //nếu người dùng là tài khoản google thì vào trang google
                                 Utils.toast(SplashActivity.this,"Google");
                                 Log.d(TAG, "onDataChange: Google");
-                                startActivity(new Intent(SplashActivity.this, MainSellerActivity.class));
+                                startActivity(new Intent(SplashActivity.this, MainUserActivity.class));
                                 finish();
                             }
                             else if (accountType.equals("Phone")){
-                                //nếu người dùng là admin thì vào trang số điện thoai
+                                //nếu người dùng là tài khoản phone thì vào trang số điện thoai
                                 Utils.toast(SplashActivity.this,"Phone");
                                 Log.d(TAG, "onDataChange: Phone");
-                                startActivity(new Intent(SplashActivity.this, MainSellerActivity.class));
+                                startActivity(new Intent(SplashActivity.this, MainUserActivity.class));
                                 finish();
                             }
                             else if (accountType.equals("User")){
-                                //nếu người dùng là admin thì vào trang admin
+                                //nếu người dùng là tài khoản thường  thì vào trang user
                                 Log.d(TAG, "onDataChange: User");
                                 startActivity(new Intent(SplashActivity.this, MainUserActivity.class));
                                 finish();
@@ -122,7 +122,7 @@ public class SplashActivity extends AppCompatActivity {
 
                             else if (accountType.equals("Seller")){
                                 Log.d(TAG, "onDataChange: Seller");
-                                //nếu người dùng là admin thì vào trang admin
+                                //nếu người dùng là tài khoản admin thì vào trang admin
                                 startActivity(new Intent(SplashActivity.this, MainSellerActivity.class));
                                 finish();
                             }

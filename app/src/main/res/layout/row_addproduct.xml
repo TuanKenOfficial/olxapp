@@ -14,6 +14,7 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:background="@color/colorgray"
+            android:layout_margin="5dp"
             app:contentPadding="10dp"
             android:src="@drawable/image"
             app:shapeAppearanceOverlay="@style/ImageStyle_Circle"/>
@@ -22,16 +23,11 @@
             android:id="@+id/raitoTv"
             android:layout_width="40dp"
             android:layout_height="25dp"
-            android:layout_marginStart="3dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="3dp"
-            android:layout_marginBottom="3dp"
-            android:layout_toEndOf="@id/imageIv"
-            android:layout_below="@id/descriptionTv"
-            android:background="@drawable/shape_rec01"
+            android:layout_margin="5dp"
+            android:background="@drawable/shape_rec05"
             android:padding="5dp"
             android:textStyle="bold"
-            android:textColor="@color/red"
+            android:textColor="@color/black"
             android:text="10%"
             android:textSize="12sp" />
 
@@ -40,19 +36,48 @@
             style="@style/TextAppearance.MaterialComponents.Body2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="3dp"
-            android:layout_marginBottom="3dp"
-            android:layout_toEndOf="@id/raitoTv"
             android:layout_below="@id/descriptionTv"
-            android:background="@drawable/shape_rec01"
+            android:layout_margin="5dp"
+            android:layout_toRightOf="@id/priceTv"
+            android:background="@drawable/shape_rec05"
             android:padding="5dp"
             android:text="10000đ"
-            android:textStyle="bold"
-            android:textColor="@color/red"
-            android:textSize="12sp" />
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/conditionTv"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/priceTv"
+            android:layout_marginTop="35dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:padding="5dp"
+            android:text="Mới"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
+
+        <TextView
+            android:id="@+id/priceTv"
+            style="@style/TextAppearance.MaterialComponents.Body2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/descriptionTv"
+            android:layout_margin="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_toRightOf="@id/imageIv"
+            android:background="@drawable/shape_rec01"
+            android:padding="5dp"
+            android:text="20000đ"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:textStyle="bold" />
         <TextView
             android:id="@+id/titleTv"
             style="@style/TextAppearance.MaterialComponents.Body1"
@@ -66,6 +91,7 @@
             android:layout_toEndOf="@id/imageIv"
             android:ellipsize="end"
             android:textStyle="bold"
+            android:textSize="14sp"
             android:maxLines="1"
             android:text="Tiêu đề quảng cáo" />
 
@@ -82,10 +108,22 @@
             android:layout_toStartOf="@id/favBtn"
             android:layout_toEndOf="@id/imageIv"
             android:ellipsize="end"
-            android:textStyle="bold"
+            android:textStyle="italic"
+            android:textSize="14sp"
             android:lines="3"
             android:text="Mô tả quảng cáo" />
 
+        <TextView
+            android:id="@+id/dateTv"
+            style="@style/TextAppearance.MaterialComponents.Body2"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_below="@id/imageIv"
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            android:text="Ngày"
+            android:textSize="12sp"
+            android:textStyle="italic" />
         <ImageButton
             android:id="@+id/favBtn"
             android:layout_width="wrap_content"
@@ -104,57 +142,13 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/imageIv"
             android:layout_marginStart="2dp"
+            android:layout_alignParentRight="true"
             android:text="Thêm"
-            android:layout_marginTop="2dp"
-            android:layout_marginEnd="2dp"
-            android:layout_marginBottom="2dp"
-            android:drawableLeft="@drawable/cart" />
-
-
-
-        <TextView
-            android:id="@+id/conditionTv"
-            style="@style/TextAppearance.MaterialComponents.Caption"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/priceTv"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:text="Mới"
-            android:textColor="@color/black"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-
-
-        <TextView
-            android:id="@+id/priceTv"
-            style="@style/TextAppearance.MaterialComponents.Body2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/pricesTv"
-            android:layout_marginTop="5dp"
-            android:layout_centerHorizontal="true"
-            android:padding="2dp"
-            android:text="20000đ"
-            android:background="@drawable/shape_rec01"
-            android:textColor="@color/red"
-            android:textStyle="bold"
-            android:textSize="12sp" />
-
-
-        <TextView
-            android:id="@+id/dateTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/TextAppearance.MaterialComponents.Body2"
-            android:layout_below="@id/priceTv"
-            android:layout_alignParentEnd="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="5dp"
             android:layout_marginEnd="5dp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:text="dd/MM/yyyy" />
+            android:drawableLeft="@drawable/cart" />
 
     </RelativeLayout>
 
