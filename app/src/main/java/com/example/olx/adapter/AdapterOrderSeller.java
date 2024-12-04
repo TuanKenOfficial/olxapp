@@ -137,7 +137,7 @@ public class AdapterOrderSeller extends RecyclerView.Adapter<AdapterOrderSeller.
     private void loadOrderUserInfo(ModelOrderSeller modelOrderSeller, AdapterOrderSeller.HolderOrderSeller holder) {
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.child(modelOrderSeller.getOrderBy()).addValueEventListener(new ValueEventListener() {
+        reference.child(modelOrderSeller.getOrderBy()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -158,7 +158,7 @@ public class AdapterOrderSeller extends RecyclerView.Adapter<AdapterOrderSeller.
         //to load email of the user/buyer: modelOrderShop.getOrderBy() contains uid of that user/buyer
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
         ref.child(modelOrderSeller.getOrderBy())
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 

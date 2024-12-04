@@ -9,11 +9,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.example.olx.CurrencyFormatter;
+import com.example.olx.R;
+import com.example.olx.Utils;
 import com.example.olx.databinding.RowOrderBinding;
 import com.example.olx.model.ModelCart;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 
 import java.util.ArrayList;
@@ -64,7 +74,10 @@ public class AdapterOrder extends RecyclerView.Adapter<AdapterOrder.HolderOrder>
         holder.priceTv.setText("Giá: "+CurrencyFormatter.getFormatter().format(Double.valueOf(String.valueOf(price))));
         holder.finalPriceTv.setText("Tổng tiền: "+CurrencyFormatter.getFormatter().format(Double.valueOf(tongtiensp)));
 
+       loadImage(modelCart, holder);
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -88,5 +101,31 @@ public class AdapterOrder extends RecyclerView.Adapter<AdapterOrder.HolderOrder>
             finalPriceTv = binding.finalPriceTv;
 
         }
+    }
+
+    private void loadImage(ModelCart modelCart, HolderOrder holder) {
+        // lấy hình ảnh đầu tiên của sản phẩm
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ProductAds");
+        ref.child(modelCart.getProductAdsId()).child("Images").limitToFirst(1)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot ds : snapshot.getChildren()) {
+                            String imageUrl = "" + ds.child("imageUrl").getValue();
+                            Log.d(TAG, "onDataChange: ");
+                            try {
+                                Picasso.get().load(imageUrl).placeholder(R.drawable.cart).into(binding.productIv);
+                            } catch (Exception e) {
+                                Log.d(TAG, "onDataChange: Lỗi: " + e);
+                            }
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
     }
 }

@@ -98,8 +98,15 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
         holder.titleTv.setText("Sản phẩm: " + title);
         holder.descriptionTv.setText("Mô tả: " + description);
         holder.conditionTv.setText("Tình trạng: " + condition);
-        holder.priceTv.setPaintFlags(holder.priceTv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        holder.priceTv.setText("Giá gốc: " + CurrencyFormatter.getFormatter().format(Double.valueOf(price)));
+        if (modelAddProduct.isDiscount()){
+            // trường hợp có giảm giá thì gạch giá gốc
+            holder.priceTv.setPaintFlags(holder.priceTv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            holder.priceTv.setText("Giá gốc: " + CurrencyFormatter.getFormatter().format(Double.valueOf(price)));
+        }else {
+            // trường hợp không có giảm giá thì gạch giá gốc
+            holder.priceTv.setText("Giá gốc: " + CurrencyFormatter.getFormatter().format(Double.valueOf(price)));
+        }
+//        holder.priceTv.setText("Giá gốc: " + CurrencyFormatter.getFormatter().format(Double.valueOf(price)));
         holder.raitoTv.setText("-" + raito + "%");
         holder.pricesTv.setText("Giảm giá: " + CurrencyFormatter.getFormatter().format(Double.valueOf(reducedprice)));
         holder.dateTv.setText("Ngày: "+formattedDate);
