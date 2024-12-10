@@ -27,17 +27,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="Chi tiết đơn hàng"
+            android:text="Chi tiết hóa đơn"
             android:textColor="@color/colorwhite"
             android:textSize="20sp"
             android:textStyle="bold"/>
+
         <ImageButton
             android:id="@+id/doanhthuBtn"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_toLeftOf="@id/mapBtn"
             android:background="@null"
-            android:src="@drawable/ic_doanhthu"/>
+            android:src="@drawable/ic_doanhthu" />
         <ImageButton
             android:id="@+id/editBtn"
             android:layout_width="30dp"

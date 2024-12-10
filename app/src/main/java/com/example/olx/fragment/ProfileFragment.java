@@ -32,6 +32,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
@@ -78,7 +79,7 @@ public class ProfileFragment extends Fragment {
                 //còn ko muốn thì đóng dòng xoaGioHang lại thì nó sẽ vẫn load sản phẩm người này đặt
                 //khi đăng nhập tài khoản khác
                 firebaseAuth.signOut();
-//                xoaGioHang(); //đăng xuất xóa giỏ hàng
+                xoaGioHang(); //đăng xuất xóa giỏ hàng do có nhiều tài khoản
                 startActivity(new Intent(mContext, LoginOptionActivity.class));
                 getActivity().finishAffinity();
 
@@ -194,10 +195,7 @@ public class ProfileFragment extends Fragment {
 
                         //hình ảnh profile
                         try {
-                            Glide.with(mContext)
-                                    .load(profileImage)
-                                    .placeholder(R.drawable.olx_trangbia)
-                                    .into(binding.profileIv);
+                            Picasso.get().load(profileImage).placeholder(R.drawable.shop).into(binding.profileIv);
                         } catch (Exception e) {
                             Log.d(TAG, "onDataChange: " + e);
                         }

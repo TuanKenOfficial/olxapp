@@ -16,8 +16,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 
+import com.example.olx.Utils;
 import com.example.olx.activities.MainSellerActivity;
 import com.example.olx.activities.MainUserActivity;
+import com.example.olx.activities.ShopAdCreateActivity;
 import com.example.olx.databinding.FragmentNotificationBinding;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -87,9 +89,33 @@ public class NotificationFragment extends Fragment {
                 });
             }
         });
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Sản phẩm"));
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Yêu thích"));
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference.child(firebaseAuth.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String accountType = ""+snapshot.child("accountType").getValue();
 
+                if (accountType.equals("Seller")){
+                    Utils.toast(mContext,"Thông báo người bán");
+                    binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Sản phẩm"));
+                    binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Yêu thích"));
+                }
+                else {
+                    Utils.toast(mContext,"Thông báo người mua");
+                    binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Sản phẩm trống"));
+                    binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Yêu thích"));
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+//        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Sản phẩm"));
+//        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Yêu thích"));
         FragmentManager fragmentManager = getChildFragmentManager();
         myTabsViewPagerAdapter = new MyTabsViewPagerAdapter(fragmentManager,getLifecycle());
         binding.viewPager.setAdapter(myTabsViewPagerAdapter);
@@ -130,6 +156,7 @@ public class NotificationFragment extends Fragment {
         @NonNull
         @Override
         public Fragment createFragment(int position) {
+
             if (position == 0){
                 return new MyAdsAdFragment();
             }

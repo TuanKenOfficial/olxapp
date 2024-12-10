@@ -41,6 +41,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -169,7 +170,7 @@ public class ProfileEditSellerActivity extends AppCompatActivity {
         //coi nghiên cứu sửa khúc này, có liên quan đến dòng 209
         if (imageUrl == null){
             Log.d(TAG, "validate: null");
-            uploadProfileDb("https://firebasestorage.googleapis.com/v0/b/olxs-36d58.appspot.com/o/olx_trangbia.png?alt=media&token=84013b87-58da-401a-aa0d-cfced0202739");
+            uploadProfileDb("https://firebasestorage.googleapis.com/v0/b/olxapp-2593f.appspot.com/o/shop.jpg?alt=media&token=3392ab8b-5b95-4c0b-8fa2-910035946200");
         }
         else {
             Log.d(TAG, "validate: ");
@@ -185,7 +186,7 @@ public class ProfileEditSellerActivity extends AppCompatActivity {
             progressDialog.show();
             Log.d(TAG, "updateAnh: Đã vô tới update ảnh");
             //name and path of image
-            String filePathAndName = "profile_images/" + "profile_" + firebaseAuth.getUid();
+            String filePathAndName = "profile_images/" + "profileSeller_" + firebaseAuth.getUid();
             Log.d(TAG, "updateAnh: " + filePathAndName);
             //upload image
             StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(filePathAndName);
@@ -247,7 +248,7 @@ public class ProfileEditSellerActivity extends AppCompatActivity {
         hashMap.put("phone", "" + phone);
         hashMap.put("profileImage", "" + uploadImageUrl);
         hashMap.put("accountType", "Seller");
-        Log.d(TAG, "uploadProfileDb: profileImage:" + imageUrl);
+
         Log.d(TAG, "uploadProfileDb: name:" + name);
         Log.d(TAG, "uploadProfileDb: dob:" + dob);
         Log.d(TAG, "uploadProfileDb: latitude:" + latitude);
@@ -303,7 +304,7 @@ public class ProfileEditSellerActivity extends AppCompatActivity {
                 } else if (itemId == 2) {
                     Log.d(TAG, "onMenuItemClick: Mở storage, check storage");
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        pickFromGallery1();
+                        pickFromGallery2();
                     } else {
                         requestStoragePemissions.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                     }
@@ -326,7 +327,7 @@ public class ProfileEditSellerActivity extends AppCompatActivity {
                     }
                     if (areAllGranted) {
                         Log.d(TAG, "onActivityResult: Tất cả quyền camera & storage");
-                        pickFromCamera1();
+                        pickFromCamera2();
                     } else {
                         Log.d(TAG, "onActivityResult: Tất cả hoặc chỉ có một quyền");
                         Toast.makeText(ProfileEditSellerActivity.this, "Quyền camera hoặc storage", Toast.LENGTH_SHORT).show();
@@ -341,47 +342,17 @@ public class ProfileEditSellerActivity extends AppCompatActivity {
                 @Override
                 public void onActivityResult(Boolean isGranted) {
                     if (isGranted) {
-                        pickFromGallery1();
+                        pickFromGallery2();
                     } else {
                         Toast.makeText(ProfileEditSellerActivity.this, "Quyền Storage chưa cấp quyền", Toast.LENGTH_SHORT).show();
                     }
                 }
+
             }
     );
 
-    private void pickFromGallery1() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        galleryActivityResultLaucher.launch(intent);
-    }
-
-    private ActivityResultLauncher<Intent> galleryActivityResultLaucher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        Log.d(TAG, "onActivityResult: Hình ảnh thư viện: " + image_uri);
-                        Intent data = result.getData();
-                        image_uri = data.getData();
-                        try {
-                            Glide.with(ProfileEditSellerActivity.this)
-                                    .load(image_uri)
-                                    .placeholder(R.drawable.ic_users)
-                                    .into(binding.profileIv);
-                        } catch (Exception e) {
-                            Log.d(TAG, "onActivityResult: " + e);
-                            Toast.makeText(ProfileEditSellerActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        Toast.makeText(ProfileEditSellerActivity.this, "Hủy", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-    );
-
-
-    private void pickFromCamera1() {
+    //camera
+    private void pickFromCamera2() {
         ContentValues contentValues = new ContentValues();
         contentValues.put(MediaStore.Images.Media.TITLE, "Temp_Image Title");
         contentValues.put(MediaStore.Images.Media.DESCRIPTION, "Temp_Image Description");
@@ -402,10 +373,8 @@ public class ProfileEditSellerActivity extends AppCompatActivity {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Log.d(TAG, "onActivityResult: Hình ảnh: " + image_uri);
                         try {
-                            Glide.with(ProfileEditSellerActivity.this)
-                                    .load(image_uri)
-                                    .placeholder(R.drawable.ic_users)
-                                    .into(binding.profileIv);
+                            Log.d(TAG, "onActivityResult: "+binding.profileIv);
+                            Picasso.get().load(image_uri).placeholder(R.drawable.shop).into(binding.profileIv);
                         } catch (Exception e) {
                             Log.d(TAG, "onActivityResult: " + e);
                             Toast.makeText(ProfileEditSellerActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -416,6 +385,39 @@ public class ProfileEditSellerActivity extends AppCompatActivity {
                 }
             }
     );
+
+    //gallery
+    private void pickFromGallery2() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        galleryActivityResultLaucher.launch(intent);
+    }
+
+    private ActivityResultLauncher<Intent> galleryActivityResultLaucher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+
+                        Intent data = result.getData();
+                        image_uri = data.getData();
+                        Log.d(TAG, "onActivityResult: Hình ảnh thư viện: " + image_uri);
+                        try {
+                            Picasso.get().load(image_uri).placeholder(R.drawable.shop).into(binding.profileIv);
+                        } catch (Exception e) {
+                            Log.d(TAG, "onActivityResult: " + e);
+                            Toast.makeText(ProfileEditSellerActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(ProfileEditSellerActivity.this, "Hủy", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+    );
+
+
+
 
     //load tất cả những thông tin cần có của phần profile
     private void loadUserInfo() {
@@ -468,10 +470,7 @@ public class ProfileEditSellerActivity extends AppCompatActivity {
                         binding.memberSingleEt.setText(formattedDate);
 
                         try {
-                            Glide.with(ProfileEditSellerActivity.this)
-                                    .load(profileImage)
-                                    .placeholder(R.drawable.shop)
-                                    .into(binding.profileIv);
+                            Picasso.get().load(profileImage).placeholder(R.drawable.shop).into(binding.profileIv);
                         } catch (Exception e) {
                             Log.d(TAG, "onDataChange: " + e);
                         }

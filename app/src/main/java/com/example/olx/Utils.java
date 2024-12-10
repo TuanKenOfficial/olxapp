@@ -50,7 +50,7 @@ public class Utils  {
     };
     //danh sách sản phẩm liên quan đến HomeUserFragment và HomeSellerFragment
     public static final String[] categoriess = {
-            "Tất cả sản phẩm",
+            "Hiển thị tất cả sản phẩm",
             "Quán cafe & Trà sửa",
             "Điện thoại",
             "Máy tính/Laptop",
@@ -64,8 +64,8 @@ public class Utils  {
             "Thể loại khác",
     };
 
-    public static final String[] options = {
-            "Tất cả hoá đơn",
+    public static final String[] orders = {
+            "Hiển thị tất cả hóa đơn",
             "Chưa duyệt",
             "Đã duyệt",
             "Đã hủy"

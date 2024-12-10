@@ -96,6 +96,57 @@ public class MainUserActivity extends AppCompatActivity {
                     }
 
                 }
+                else if (itemId == R.id.menu_sell){
+                    //Home item click, Fragment Navigition
+                    if (firebaseUser == null){
+                        Utils.toast(MainUserActivity.this,"Bạn cần đăng nhập tài khoản");
+                        startActivity(new Intent(MainUserActivity.this,LoginOptionActivity.class));
+                        return false;
+                    }
+                    else{
+                        binding.sellFab.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+                                reference.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        String accountType = ""+snapshot.child("accountType").getValue();
+
+                                        Log.d(TAG, "onDataChange: "+accountType);
+                                        if (accountType.equals("User")){
+                                            Log.d(TAG, "onDataChange: "+accountType);
+                                            Utils.toastyInfo(MainUserActivity.this, "Tài khoản không được phép");
+                                            Utils.toastyInfo(MainUserActivity.this, "Bạn phải đăng ký tài khoản người bán");
+                                        } else if (accountType.equals("Google")) {
+                                            Log.d(TAG, "onDataChange: "+accountType);
+                                            Utils.toastyInfo(MainUserActivity.this, "Tài khoản không được phép");
+                                            Utils.toastyInfo(MainUserActivity.this, "Bạn phải đăng ký tài khoản người bán");
+                                        }
+                                        else if (accountType.equals("Phone")) {
+                                            Log.d(TAG, "onDataChange: "+accountType);
+                                            Utils.toastyInfo(MainUserActivity.this, "Tài khoản không được phép");
+                                            Utils.toastyInfo(MainUserActivity.this, "Bạn phải đăng ký tài khoản người bán");
+                                        } else {
+                                            Log.d(TAG, "onDataChange: "+accountType);
+                                            Intent intent = new Intent(MainUserActivity.this, ShopAdCreateActivity.class);
+                                            intent.putExtra("isEditMode", false);
+                                            startActivity(intent);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+                            }
+                        });
+                        return true;
+                    }
+
+                }
                 else if (itemId == R.id.menu_person){
                     //Home item click, Fragment Profile
                     if (firebaseUser == null){
@@ -104,27 +155,7 @@ public class MainUserActivity extends AppCompatActivity {
                         return false;
                     }
                     else{
-                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-                        reference.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                String accountType = ""+snapshot.child("accountType").getValue();
-                                Log.d(TAG, "onDataChange: "+accountType);
-                                if (accountType.equals("User")){
-                                    showProfileFragment();
-                                } else if (accountType.equals("Google")) {
-                                    showProfileFragment();
-                                }
-                                else if (accountType.equals("Phone")) {
-                                    showProfileFragment();
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
+                        showProfileFragment();
                         return true;
                     }
 
@@ -136,34 +167,7 @@ public class MainUserActivity extends AppCompatActivity {
             }
         });
 
-        binding.sellFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-                reference.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String accountType = ""+snapshot.child("accountType").getValue();
-                        Log.d(TAG, "onDataChange: "+accountType);
-                        if (accountType.equals("User")){
-                            Utils.toastyInfo(MainUserActivity.this, "tài khoản của bạn không dùng được chức năng này");
-                            Utils.toastyInfo(MainUserActivity.this, "bạn phải đăng ký tài khoản người bán");
-                        }
-                        else {
-                            Intent intent = new Intent(MainUserActivity.this, ShopAdCreateActivity.class);
-                            intent.putExtra("isEditMode", false);
-                            startActivity(intent);
-                        }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-            }
-        });
     }
 
 
@@ -252,7 +256,7 @@ public class MainUserActivity extends AppCompatActivity {
                         try {
                             Glide.with(MainUserActivity.this)
                                     .load(profileImage)
-                                    .placeholder(R.drawable.olx_trangbia)
+                                    .placeholder(R.drawable.shop)
                                     .into(binding.profileIv);
                         }catch (Exception e){
                             Log.d(TAG, "onBindViewHolder: "+e);

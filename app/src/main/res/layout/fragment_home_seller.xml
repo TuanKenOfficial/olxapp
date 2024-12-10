@@ -124,58 +124,42 @@
         android:id="@+id/ordersRl"
         android:layout_below="@+id/lvProduct"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <!--SearchView-->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/searchOderCv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardUseCompatPadding="true"
-            android:layout_toLeftOf="@id/filterOrderBtn"
-            app:cardCornerRadius="5dp"
-            android:visibility="visible">
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/searchOderEt"
-                android:drawableStart="@drawable/search"
-                android:background="@android:color/transparent"
-                android:drawablePadding="10dp"
-                android:padding="10dp"
-                android:hint="Tìm kiếm"/>
-        </com.google.android.material.card.MaterialCardView>
-        <!--Filter orders-->
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
         <!--Filter orders-->
         <ImageButton
             android:id="@+id/filterOrderBtn"
             android:layout_width="45dp"
             android:layout_height="45dp"
+            android:layout_margin="5dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
+            android:padding="2dp"
             android:background="@null"
             android:scaleType="fitXY"
             android:src="@drawable/ic_apps" />
+
         <TextView
             android:id="@+id/filteredOrdersTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/searchOderCv"
-            android:textColor="@color/colorblack"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="5dp"
+            android:padding="2dp"
+            android:layout_toLeftOf="@+id/filterOrderBtn"
             android:text="Hiển thị tất cả hoá đơn"
-            android:layout_marginTop="10dp"
-            android:textSize="20sp"
-            android:layout_marginStart="5dp"
-            android:layout_marginBottom="5dp"/>
+            android:textColor="@color/colorblack"
+            android:textSize="16sp" />
         <!--show orders-->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/ordersRv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="5dp"
-            android:layout_below="@id/filteredOrdersTv"
+            android:layout_below="@id/filterOrderBtn"
             tools:listitem="@layout/row_oder_seller"
             app:reverseLayout="true"
+            android:layout_marginTop="5dp"
             app:stackFromEnd="true"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
     </RelativeLayout>

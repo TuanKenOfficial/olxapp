@@ -61,6 +61,8 @@ public class AdapterOrder extends RecyclerView.Adapter<AdapterOrder.HolderOrder>
         int tongtiensp = modelCart.getTongtien();
         String uidNguoiMua = modelCart.getUidNguoiMua();
 
+        //check tài khoản đăng nhập
+        firebaseAuth = FirebaseAuth.getInstance();
 
         Log.d(TAG, "onBindViewHolder: idGH: "+idGH);
         Log.d(TAG, "onBindViewHolder: title: "+title);
@@ -105,21 +107,38 @@ public class AdapterOrder extends RecyclerView.Adapter<AdapterOrder.HolderOrder>
 
     private void loadImage(ModelCart modelCart, HolderOrder holder) {
         // lấy hình ảnh đầu tiên của sản phẩm
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ProductAds");
-        ref.child(modelCart.getProductAdsId()).child("Images").limitToFirst(1)
-                .addValueEventListener(new ValueEventListener() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("GioHang");
+        reference.orderByChild("uidNguoiMua").equalTo(modelCart.getUidNguoiMua())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot ds : snapshot.getChildren()) {
-                            String imageUrl = "" + ds.child("imageUrl").getValue();
-                            Log.d(TAG, "onDataChange: ");
-                            try {
-                                Picasso.get().load(imageUrl).placeholder(R.drawable.cart).into(binding.productIv);
-                            } catch (Exception e) {
-                                Log.d(TAG, "onDataChange: Lỗi: " + e);
-                            }
+                        // lấy hình ảnh đầu tiên của sản phẩm
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ProductAds");
+                        ref.child(modelCart.getProductAdsId()).child("Images").limitToFirst(1)
+                                .addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for (DataSnapshot ds : snapshot.getChildren()) {
+                                            String imageUrl = "" + ds.child("imageUrl").getValue();
+                                            Log.d(TAG, "onDataChange: imageUrl:"+imageUrl);
+                                            try {
+                                                Glide.with(context)
+                                                        .load(imageUrl)
+                                                        .placeholder(R.drawable.image)
+                                                        .into(holder.productIv);
+                                            }catch (Exception e){
+                                                Log.e(TAG, "onBindViewHolder: ",e);
+                                            }
 
-                        }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
                     }
 
                     @Override
@@ -127,5 +146,6 @@ public class AdapterOrder extends RecyclerView.Adapter<AdapterOrder.HolderOrder>
 
                     }
                 });
+
     }
 }

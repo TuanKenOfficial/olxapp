@@ -93,7 +93,11 @@ public class DeleteAccountActivity extends AppCompatActivity {
                         } else if (accountType.equals("Seller")) {
                             Log.d(TAG, "onDataChange: Seller:" + accountType);
                             deleteAccount();
-                        } else {
+                        } else if (accountType.equals("Google")){
+                            Log.d(TAG, "onDataChange: Tài khoản còn lai" + accountType);
+                            deleteAccount();
+                        }
+                        else if (accountType.equals("Phone")){
                             Log.d(TAG, "onDataChange: Tài khoản còn lai" + accountType);
                             deleteAccount();
                         }
@@ -117,6 +121,7 @@ public class DeleteAccountActivity extends AppCompatActivity {
         progressDialog.show();
 
         String myUid = firebaseAuth.getUid();
+
         Log.d(TAG, "deleteAccount: " + myUid);
 
         firebaseUser.delete()
@@ -125,24 +130,17 @@ public class DeleteAccountActivity extends AppCompatActivity {
                     public void onSuccess(Void unused) {
                         Log.d(TAG, "onSuccess: ");
                         progressDialog.setMessage("Xóa tài khoản user Ads");
-                        deleteProductProfile();
-                        deleteProfile();
-                        //Xóa tài khoản user quảng cáo, hiện tại chưa làm việc tới nó nẽ lưu Db->Ads->AdsId
-
-                    }
-
-                    private void deleteProductProfile() {
-                        Log.d(TAG, "deleteProductProfile: ");
-                        DatabaseReference refAd = FirebaseDatabase.getInstance().getReference("ProductAds");
-                        refAd.orderByChild("uid").equalTo(myUid)
-                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        for (DataSnapshot ds : snapshot.getChildren()) {
-                                            ds.getRef().removeValue();
-                                            Log.d(TAG, "onDataChange: " + ds);
-                                            progressDialog.setMessage("Xóa tài khoản user data");
-                                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+                        DatabaseReference refAds = FirebaseDatabase.getInstance().getReference("ProductAds");
+                        refAds.orderByChild("uid").equalTo(myUid)
+                                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                for (DataSnapshot ds : snapshot.getChildren()) {
+                                                    Log.d(TAG, "onDataChange: ds");
+                                                    ds.getRef().removeValue();
+                                                }
+                                                progressDialog.setMessage("Xóa tài khoản user");
+                                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
                                             ref.child(myUid).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void unused) {
@@ -158,37 +156,13 @@ public class DeleteAccountActivity extends AppCompatActivity {
                                                     Utils.toastyError(DeleteAccountActivity.this, "Thất bại");
                                                 }
                                             });
-                                        }
+                                            }
 
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
 
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
-                                });
-                    }
-
-                    private void deleteProfile() {
-                        Log.d(TAG, "deleteProfile: ");
-                        progressDialog.setMessage("Xóa tài khoản user data");
-                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-                        ref.child(myUid).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Log.d(TAG, "onSuccess: Thành công");
-                                progressDialog.dismiss();
-                                Utils.toastySuccess(DeleteAccountActivity.this, "Xoá tài khoản thành công");
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d(TAG, "onFailure: Thất bại" + e);
-                                progressDialog.dismiss();
-                                Utils.toastyError(DeleteAccountActivity.this, "Thất bại");
-                            }
-                        });
+                                            }
+                                        });
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

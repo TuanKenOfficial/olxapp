@@ -69,7 +69,7 @@ public class HomeSellerFragment extends Fragment {
     private ArrayList<ModelOrderUser> ordersList;
     private AdapterOrderUser adapterOrderUser;
 
-    private static final int MAX_DISTANCE_TO_LOAD_ADS_KM=10;
+    private static final int MAX_DISTANCE_TO_LOAD_ADS_KM = 20;
     private double currentLatitude=0.0;
     private double currentLongitude=0.0;
     private String currentAddress ="";
@@ -115,10 +115,9 @@ public class HomeSellerFragment extends Fragment {
             binding.locationTv.setText(currentAddress);
         }
 
-        //Nếu muốn không cần chọn vị trí vẫn load được thì mở nó, ko thì đóng nó lại
-//        loadAllOrders();
-        showProductsUI(); // load tab product
-        loadAllAdProducts(); // load product
+
+        showProductsUI(); // load sản phẩm
+
         //popup menu
         final PopupMenu popupMenu = new PopupMenu(mContext, binding.tabOrdersTv);
         //add menu items to our menu
@@ -154,7 +153,6 @@ public class HomeSellerFragment extends Fragment {
         binding.tabOrdersTv.setOnClickListener(v -> {
             //load orders
             popupMenu.show();
-//            showOrdersUI();
         });
 
         binding.searchProductEt.addTextChangedListener(new TextWatcher() {
@@ -183,35 +181,38 @@ public class HomeSellerFragment extends Fragment {
         });
 
         binding.filterProductBtn.setOnClickListener(v -> {
-            Log.d(TAG, "onViewCreated: "+binding.filteredProductsTv);
+            Log.d(TAG, "onViewCreated: " + binding.filteredProductsTv);
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setTitle("Sản phẩm:")
                     .setItems(Utils.categoriess, (dialog, which) -> {
                         //get selected item
                         String selected = Utils.categoriess[which];
                         binding.filteredProductsTv.setText(selected);
-                        loadFilteredProducts(selected);
+                        if (selected.equals("Hiển thị tất cả sản phẩm")) {
+                            //load all
+                            loadAllAdProducts();
+                        } else {
+                            //load filtered
+                            loadFilteredProducts(selected);
+                        }
                     })
                     .show();
         });
         binding.filterOrderBtn.setOnClickListener(v -> {
             //options to display in dialog
-            Log.d(TAG, "onViewCreated: ");
-            final String[] options = {"Tất cả", "Chưa duyệt", "Đã duyệt", "Đã hủy"};
-            //dialog
+            Log.d(TAG, "onViewCreated: " + binding.filteredOrdersTv);
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-            builder.setTitle("Đơn hàng:")
-                    .setItems(options, (dialog, which) -> {
-                        //handle item clicks
-                        if (which==0){
-                            //All clicked
-                            binding.filteredOrdersTv.setText("Hiển thị tất cả các đơn đặt hàng");
-                            adapterOrderSeller.getFilter().filter(""); //show all orders
-                        }
-                        else {
-                            String optionClicked = options[which];
-                            binding.filteredOrdersTv.setText("Hiển thị đơn hàng: "+optionClicked); //e.g. Showing Completed Orders
-                            adapterOrderSeller.getFilter().filter(optionClicked);
+            builder.setTitle("Hóa đơn:")
+                    .setItems(Utils.orders, (dialog, which) -> {
+                        //get selected item
+                        String selected = Utils.orders[which];
+                        binding.filteredOrdersTv.setText(selected);
+                        if (selected.equals("Hiển thị tất cả hóa đơn")) {
+                            //load all
+                            loadOrders();
+                        } else {
+                            //load filtered
+                            loadFilteredOrders(selected);
                         }
                     })
                     .show();
@@ -229,6 +230,61 @@ public class HomeSellerFragment extends Fragment {
 
 
     }
+
+    private void loadFilteredOrders(String selected) {
+        Log.d(TAG, "loadFilteredOrders: ");
+        orderSellerArrayList = new ArrayList<>();
+
+        //get all products
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //before getting reset list
+                orderSellerArrayList.clear();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    String uid = "" + ds.getRef().getKey();
+                    Log.d(TAG, "onDataChange: uid: " + uid);
+
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("Order");
+                    ref.orderByChild("orderTo").equalTo(firebaseAuth.getUid())
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                        ModelOrderSeller modelOrderSeller = ds.getValue(ModelOrderSeller.class);
+                                        //add to list
+
+                                        if (selected.equals("Hiển thị tất cả hóa đơn")) {
+                                            loadAllAdProducts();
+                                        } else if (selected.equals(modelOrderSeller.getOrderStatus())) {
+                                            Log.d(TAG, "onDataChange: hóa đơn: " + modelOrderSeller.getOrderStatus());
+                                            orderSellerArrayList.add(modelOrderSeller);
+
+                                        }
+                                    }
+                                    //setup adapter
+                                    adapterOrderSeller = new AdapterOrderSeller(mContext, orderSellerArrayList);
+                                    //set to recyclerview
+                                    binding.ordersRv.setAdapter(adapterOrderSeller);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     // load tung hoá đơn
     private void loadOrders() {
         Log.d(TAG, "loadOrders: ");
@@ -311,7 +367,8 @@ public class HomeSellerFragment extends Fragment {
 
 
     private void showProductsUI() {
-//show products ui and hide orders ui
+        //show products ui and hide orders ui
+        loadAllAdProducts();
         binding.productsRl.setVisibility(View.VISIBLE);
         binding.ordersRl.setVisibility(View.GONE);
         binding.tabProductsTv.setTextColor(getResources().getColor(R.color.colorred));
@@ -321,15 +378,16 @@ public class HomeSellerFragment extends Fragment {
 
     }
     private void showOrdersUI() {
+
         binding.productsRl.setVisibility(View.GONE);
         binding.ordersRl.setVisibility(View.VISIBLE);
-        binding.searchOderCv.setVisibility(View.GONE);
         binding.tabProductsTv.setTextColor(getResources().getColor(R.color.colorblack));
         binding.tabProductsTv.setBackgroundColor(getResources().getColor(android.R.color.transparent));
         binding.tabOrdersTv.setTextColor(getResources().getColor(R.color.colorgold));
         binding.tabOrdersTv.setBackgroundResource(R.drawable.shape_rec04);
     }
 
+    //load từng sản phẩm
     private void loadFilteredProducts(String selected) {
         Log.d(TAG, "loadFilteredProducts: ");
         productList = new ArrayList<>();
@@ -346,9 +404,11 @@ public class HomeSellerFragment extends Fragment {
                             double distance = calculateDistanceKm(modelAddProduct.getLatitude(),modelAddProduct.getLongitude());
                             Log.d(TAG, "onDataChange: distance: "+distance);
                             //if selected category matches product category then add in list
-                            if (selected.equals(modelAddProduct.getCategory())){
-                                if (distance<=MAX_DISTANCE_TO_LOAD_ADS_KM){
-                                    Log.d(TAG, "onDataChange: category: "+modelAddProduct.getCategory());
+                            if (selected.equals("Hiển thị tất cả sản phẩm")) {
+                                loadAllAdProducts();
+                            } else if (selected.equals(modelAddProduct.getCategory())) {
+                                if (distance <= MAX_DISTANCE_TO_LOAD_ADS_KM) {
+                                    Log.d(TAG, "onDataChange: danh mục: " + modelAddProduct.getCategory());
                                     productList.add(modelAddProduct);
                                 }
                             }

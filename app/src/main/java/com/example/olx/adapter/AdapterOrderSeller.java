@@ -108,7 +108,7 @@ public class AdapterOrderSeller extends RecyclerView.Adapter<AdapterOrderSeller.
 
         holder.itemView.setOnClickListener(v -> {
             //open order details
-            Intent intent = new Intent(context, ShopOrderUserDetailActivity.class);
+            Intent intent = new Intent(context, ShopOrderSellerDetailActivity.class);
             intent.putExtra("orderId", orderId); //để tải thông tin id hóa đơn đơn hàng
             intent.putExtra("orderTo", orderTo); //để tải thông tin của người bán
             intent.putExtra("orderBy", orderBy); //để tải thông tin của người mua

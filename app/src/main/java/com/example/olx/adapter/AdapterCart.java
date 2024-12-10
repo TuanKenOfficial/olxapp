@@ -39,7 +39,7 @@ import p32929.androideasysql_library.EasyDB;
 public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
 
     private RowCartBinding binding;
-    private  static  final  String TAG ="AdapterCart";
+    private static final String TAG = "AdapterCart";
     private Context context;
     private ArrayList<ModelCart> cartArrayList;
 
@@ -54,9 +54,10 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
         binding = RowCartBinding.inflate(LayoutInflater.from(context), parent, false);
         return new AdapterCart.HolderCart(binding.getRoot());
     }
+
     @SuppressLint("RecyclerView")
     @Override
-    public void onBindViewHolder(@NonNull HolderCart holder,  int position) {
+    public void onBindViewHolder(@NonNull HolderCart holder, int position) {
         ModelCart modelCart = cartArrayList.get(position);
         int idGH = modelCart.getId();
         String pId = modelCart.getProductAdsId();
@@ -67,13 +68,13 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
         String uidNguoiMua = modelCart.getUidNguoiMua();
 
 
-        Log.d(TAG, "onBindViewHolder: idGH: "+idGH);
-        Log.d(TAG, "onBindViewHolder: title: "+title);
-        Log.d(TAG, "onBindViewHolder: Soluongdadat: "+Soluongdadat);
-        Log.d(TAG, "onBindViewHolder: giá: "+price);
-        Log.d(TAG, "onBindViewHolder: tongtiensp: "+tongtiensp);
-        Log.d(TAG, "onBindViewHolder: id ảnh: "+pId);
-        Log.d(TAG, "onBindViewHolder: uidNguoiMua: "+uidNguoiMua);
+        Log.d(TAG, "onBindViewHolder: idGH: " + idGH);
+        Log.d(TAG, "onBindViewHolder: title: " + title);
+        Log.d(TAG, "onBindViewHolder: Soluongdadat: " + Soluongdadat);
+        Log.d(TAG, "onBindViewHolder: giá: " + price);
+        Log.d(TAG, "onBindViewHolder: tongtiensp: " + tongtiensp);
+        Log.d(TAG, "onBindViewHolder: id ảnh: " + pId);
+        Log.d(TAG, "onBindViewHolder: uidNguoiMua: " + uidNguoiMua);
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("GioHang");
         reference.orderByChild("uidNguoiMua").equalTo(uidNguoiMua)
@@ -88,14 +89,14 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         for (DataSnapshot ds : snapshot.getChildren()) {
                                             String imageUrl = "" + ds.child("imageUrl").getValue();
-                                            Log.d(TAG, "onDataChange: imageUrl:"+imageUrl);
+                                            Log.d(TAG, "onDataChange: imageUrl:" + imageUrl);
                                             try {
                                                 Glide.with(context)
                                                         .load(imageUrl)
                                                         .placeholder(R.drawable.image)
                                                         .into(holder.productIv);
-                                            }catch (Exception e){
-                                                Log.e(TAG, "onBindViewHolder: ",e);
+                                            } catch (Exception e) {
+                                                Log.e(TAG, "onBindViewHolder: ", e);
                                             }
 
                                         }
@@ -109,9 +110,9 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
 
 
                         holder.titleTv.setText(title);
-                        holder.sQuantityTv.setText("Số lượng đã đặt: "+Soluongdadat);
-                        holder.priceTv.setText("Giá: "+CurrencyFormatter.getFormatter().format(Double.valueOf(price)));
-                        holder.finalPriceTv.setText("Tổng tiền: "+ CurrencyFormatter.getFormatter().format(Double.valueOf(tongtiensp)));
+                        holder.sQuantityTv.setText("Số lượng đã đặt: " + Soluongdadat);
+                        holder.priceTv.setText("Giá: " + CurrencyFormatter.getFormatter().format(Double.valueOf(price)));
+                        holder.finalPriceTv.setText("Tổng tiền: " + CurrencyFormatter.getFormatter().format(Double.valueOf(tongtiensp)));
 
                     }
 
@@ -126,6 +127,8 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
             @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
+
+                Log.d(TAG, "onClick: ");
                 //suy nghĩ code thêm
                 EasyDB easyDB = EasyDB.init(context, "GIOHANG_DB")
                         .setTableName("GIOHANG_TABLE")
@@ -140,26 +143,17 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
                         .doneTableColumn();
 
                 easyDB.deleteRow(1, idGH); //xoá từng dòng
+                Utils.toastySuccess(context, "Đã xóa khỏi giỏ hàng...");
 //                easyDB.deleteAllDataFromTable();//xoá tất cả sản phẩm
                 //refresh list
                 cartArrayList.remove(position);
                 notifyItemChanged(position);
                 notifyDataSetChanged();
-                //điều chỉnh số lựợng
-                int quantity = Soluongdadat - Soluongdadat;
-                ((ShopAdDetailsActivity)context).sluong = quantity;
-                double price = 0.0;
 
+                // Cập nhật tổng giá trong ShopAdDetailsActivity trực tiếp sau khi xóa từng sản phẩm
+                ((ShopAdDetailsActivity)context).updateTotalPrice(tongtiensp);
+                Log.d(TAG, "onClick: "+(tongtiensp));
 
-                //điều chỉnh tính tổng  sau khi loại bỏ sản phẩm
-//                double subTotalWithoutDiscount = Double.parseDouble(CurrencyFormatter.getFormatter().format(Double.parseDouble
-//                        (((ShopAdDetailsActivity)context).finalPriceTv.getText().toString().
-//                                replace("đ", ""))));
-                double totalPrice = Double.parseDouble(CurrencyFormatter.getFormatter().format(Double.valueOf(tongtiensp))) - Double.parseDouble(CurrencyFormatter.getFormatter().format(Double.valueOf(tongtiensp)));
-
-                ((ShopAdDetailsActivity)context).finalPriceTv.setText(CurrencyFormatter.getFormatter().format(totalPrice));
-
-                Utils.toastySuccess(context,"Đã xóa khỏi giỏ hàng...");
             }
 
         });
@@ -171,10 +165,10 @@ public class AdapterCart extends RecyclerView.Adapter<AdapterCart.HolderCart> {
         return cartArrayList.size();
     }
 
-    public class HolderCart  extends RecyclerView.ViewHolder{
+    public class HolderCart extends RecyclerView.ViewHolder {
         ShapeableImageView productIv;
 
-        TextView titleTv,sQuantityTv,priceTv,finalPriceTv;
+        TextView titleTv, sQuantityTv, priceTv, finalPriceTv;
         Button btnXoacart;
 
         public HolderCart(@NonNull View itemView) {

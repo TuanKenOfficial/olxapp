@@ -486,7 +486,6 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
 
     }
 
-
     private void editOptions() {
         Log.d(TAG, "editOptions: ");
 
@@ -718,10 +717,12 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                         binding.memberSingleTv.setText(formattedDate);
 
                         try {
-                            Glide.with(ShopAdDetailsActivity.this)
-                                    .load(profileImage)
-                                    .placeholder(R.drawable.ic_users)
-                                    .into(binding.sellerProfileIv);
+                            Picasso.get().load(profileImage).placeholder(R.drawable.ic_users).into(binding.sellerProfileIv);
+
+//                            Glide.with(getApplicationContext())
+//                                    .load(profileImage)
+//                                    .placeholder(R.drawable.ic_users)
+//                                    .into(binding.sellerProfileIv);
                             Log.d(TAG, "onDataChange: Load hình ảnh sản phẩm thành công");
                         } catch (Exception e) {
                             Log.e(TAG, "onDataChange: ", e);
@@ -766,7 +767,7 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
     public void xoaGioHang() {
         // Xóa hết sp khỏi giỏ
         //declare it to class level and init in onCreate
-        easyDB = EasyDB.init(ShopAdDetailsActivity.this, "GIOHANG_DB")
+        EasyDB easyDB = EasyDB.init(ShopAdDetailsActivity.this, "GIOHANG_DB")
                 .setTableName("GIOHANG_TABLE")
                 .addColumn(new Column("GH_Id", "text", "unique"))
                 .addColumn(new Column("GH_PID", "text", "not null"))
@@ -778,6 +779,12 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                 .addColumn(new Column("GH_UidNguoiMua", "text", "not null"))
                 .doneTableColumn();
         easyDB.deleteAllDataFromTable();
+    }
+    // liên quan đến dòng 154 AdapterCart tính tổng đơn hàng sau khi xóa từng sản phẩm
+    public void updateTotalPrice(int price) {
+        tongtien -= price;
+        Log.d(TAG, "updateTotalPrice: "+tongtien);
+        finalPriceTv.setText(CurrencyFormatter.getFormatter().format(Double.valueOf(tongtien)));
     }
 
 }

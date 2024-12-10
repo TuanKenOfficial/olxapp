@@ -33,7 +33,7 @@ public class FilterOrderUser extends Filter {
             ArrayList<ModelOrderUser> filteredModels = new ArrayList<>();
             for (int i=0; i<filterList.size(); i++){
                 //check, search by trạng thái hoá đơn
-                if (filterList.get(i).getOrderStatus().toUpperCase().contains(constraint)){
+                if (filterList.get(i).getOrderStatus().contains(constraint)){
                     //add filtered data to list
                     filteredModels.add(filterList.get(i));
                 }

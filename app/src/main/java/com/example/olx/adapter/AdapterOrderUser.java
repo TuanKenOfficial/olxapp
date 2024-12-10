@@ -79,7 +79,7 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hold
         String formatted = Utils.formatTimestampDateTime(timestamp); // load dd/MM/yyyy HH:mm
         holder.ngayDat.setText("Thời gian đặt hàng: "+formatted);
         holder.maHD.setText("Hoá đơn: #"+orderMaHD);
-        holder.soluongSP.setText("Số lượng: "+soluong);
+        holder.soluongSP.setText("Số lượng sản phẩm đã đặt: "+soluong);
         holder.titleSP.setText("Sản phẩm: "+sanpham);
         holder.diachi.setText("Địa chỉ: "+address);
         holder.tongHoaDon.setText("Tổng cộng: "+ CurrencyFormatter.getFormatter().format(Double.parseDouble(String.valueOf(orderTongTien))));

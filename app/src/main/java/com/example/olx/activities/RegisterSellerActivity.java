@@ -31,16 +31,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class RegisterSellerActivity extends AppCompatActivity implements LocationListener {
+public class RegisterSellerActivity extends AppCompatActivity {
 
     private ActivityRegisterSellerBinding binding;
     private static final String TAG = "RegisterSeller";
     private FirebaseAuth firebaseAuth;
     //permission constants
-    private static final int LOCATION_REQUEST_CODE = 100;
-    //permission arrays
-    private String[] locationPermissions;
-    private double latitude , longitude;
+
     private ProgressDialog progressDialog;
 
 
@@ -53,7 +50,6 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
         //Authencation
         firebaseAuth = FirebaseAuth.getInstance();
         //init permissions array
-        locationPermissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
         //dialog
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Vui lòng đợi");
@@ -66,20 +62,6 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
             }
         });
 
-        binding.gpsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (checkLocationPermission()) {
-                    //already allowed
-                    detectLocation();
-                    Log.d(TAG, "onClick: detectLocation");
-                } else {
-                    //not allowed, request
-                    requestLocationPermission();
-                    Log.d(TAG, "onClick: requestLocationPermission");
-                }
-            }
-        });
 
         binding.registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +102,7 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
             binding.emailEt.requestFocus();
         }
         if (password.length() < 6) {
-            binding.passwordEt.setError("Mật khẩu chưa nhập");
+            binding.passwordEt.setError("Mật khẩu chưa nhập, phải 6 số trờ lên");
             binding.passwordEt.requestFocus();
         } else if (!password.equals(confirmPassword)) {
             binding.confirmpasswordEt.setError("Mật khẩu không khớp");
@@ -144,9 +126,10 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
             binding.phone.setError("Số điện thoại phải 10 số");
             binding.phone.requestFocus();
         }
-        if (latitude == 0.0 || longitude == 0.0) {
-            binding.address.setError("Vui lòng nhấp vào nút GPS để phát hiện vị trí...");
+        if ( address.isEmpty()) {
+            binding.address.setError("Vui lòng nhập vị trí cửa hàng...");
             binding.address.requestFocus();
+            Utils.toast(RegisterSellerActivity.this,"Địa chỉ: xã-phường/huyện-thành phố/tỉnh");
         }
         else {
             Log.d(TAG, "inputData: ");
@@ -190,8 +173,8 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
         hashMap.put("shopName", "" + shopName);
         hashMap.put("phone", "" + phoneNumber);
         hashMap.put("address", "" + address);
-        hashMap.put("latitude", latitude);
-        hashMap.put("longitude", longitude);
+        hashMap.put("latitude", 0.0);
+        hashMap.put("longitude", 0.0);
         hashMap.put("timestamp", "" + timestamp);
         hashMap.put("accountType", "Seller");
         hashMap.put("online", "true");
@@ -217,100 +200,6 @@ public class RegisterSellerActivity extends AppCompatActivity implements Locatio
                 });
 
     }
-
-    private void detectLocation() {
-        Utils.toast(RegisterSellerActivity.this, "Vui lòng đợi trong giây lát...");
-
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-    }
-
-
-    //Lấy địa chỉ
-    private void findAddress() {
-        //find address, country, state, city
-        Geocoder geocoder;
-        List<Address> addresses;
-        geocoder = new Geocoder(this, Locale.getDefault());
-
-        try {
-            addresses = geocoder.getFromLocation(latitude, longitude, 1);
-
-            String address = addresses.get(0).getAddressLine(0); //complete address
-
-            //set addresses
-            binding.address.setText(address);
-
-        } catch (Exception e) {
-            Utils.toastyError(RegisterSellerActivity.this, "Lỗi: " + e.getMessage());
-        }
-    }
-
-    private boolean checkLocationPermission() {
-
-        return ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) ==
-                (PackageManager.PERMISSION_GRANTED);
-    }
-
-    private void requestLocationPermission() {
-        ActivityCompat.requestPermissions(this, locationPermissions, LOCATION_REQUEST_CODE);
-    }
-
-    //điểm đầu - cuối vị trí
-    @Override
-    public void onLocationChanged(@NonNull Location location) {
-        //location detected
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
-
-        findAddress();
-    }
-
-    @Override
-    public void onProviderEnabled(@NonNull String provider) {
-        LocationListener.super.onProviderEnabled(provider);
-    }
-
-    @Override
-    public void onProviderDisabled(@NonNull String provider) {
-        LocationListener.super.onProviderDisabled(provider);
-        Utils.toastyInfo(RegisterSellerActivity.this, "Vui lòng bật vị trí trên điện thoại...");
-    }
-
-    //xử lý quyền location
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case LOCATION_REQUEST_CODE: {
-                if (grantResults.length > 0) {
-                    boolean locationAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                    if (locationAccepted) {
-                        //permission allowed
-                        detectLocation();
-                    } else {
-                        //permission denied
-                        Utils.toastyInfo(RegisterSellerActivity.this, "Quyền vị trí là cần thiết...");
-                    }
-                }
-            }
-            break;
-        }
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-    }
-
 
 }
 

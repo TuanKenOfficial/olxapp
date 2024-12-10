@@ -111,8 +111,19 @@ public class DoanhThuSellerActivity extends AppCompatActivity {
                                     for (DataSnapshot ds: snapshot.getChildren()){
                                         ModelCart modelCart = ds.getValue(ModelCart.class);
                                         int Soluong = modelCart.getSoluongdadat();
-                                        count = Soluong;
-                                        Log.d(TAG, "onDataChange: "+count);
+                                        count = count + Soluong;
+                                        Log.d(TAG, "onDataChange: số lượng từng sản phẩm đã đặt: "+Soluong);
+                                        Log.d(TAG, "onDataChange: số lượng đã đặt: "+count);
+                                    }
+                                    if (thoiGian.equals(ngay_dat)) {
+                                        tongtiens = tongtien;
+                                        binding.doanhThu.setText("Sản phẩm: "+count);
+                                        binding.tongDonHang.setText(CurrencyFormatter.getFormatter().format(Double.parseDouble(String.valueOf(tongtiens))));
+                                    } else  {
+                                        tongtiens = 0;
+                                        int counts = 0;
+                                        binding.doanhThu.setText("Số lượng sản phẩm: "+counts);
+                                        binding.tongDonHang.setText(CurrencyFormatter.getFormatter().format(Double.parseDouble(String.valueOf(tongtiens))));
                                     }
                                 }
 
@@ -121,17 +132,7 @@ public class DoanhThuSellerActivity extends AppCompatActivity {
 
                                 }
                             });
-                            if (thoiGian.equals(ngay_dat)) {
-                                int counts = count;
-                                tongtiens = tongtien;
-                                binding.doanhThu.setText("Số lượng sản phẩm: "+counts);
-                                binding.tongDonHang.setText(CurrencyFormatter.getFormatter().format(Double.parseDouble(String.valueOf(tongtiens))));
-                            } else  {
-                                tongtiens = 0;
-                                int counts = 0;
-                                binding.doanhThu.setText(CurrencyFormatter.getFormatter().format(Double.parseDouble(String.valueOf(tongtiens))));
-                                binding.tongDonHang.setText("Số lượng sản phẩm: "+counts);
-                            }
+
                         }
 
 

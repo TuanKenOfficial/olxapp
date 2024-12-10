@@ -20,15 +20,15 @@
             android:background="@android:color/transparent"
             android:padding="10dp"/>
 
-        <ImageButton
-            android:id="@+id/gpsBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/gps"
-            android:layout_centerVertical="true"
-            android:background="@android:color/transparent"
-            android:padding="10dp"/>
+<!--        <ImageButton-->
+<!--            android:id="@+id/gpsBtn"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:src="@drawable/gps"-->
+<!--            android:layout_centerVertical="true"-->
+<!--            android:background="@android:color/transparent"-->
+<!--            android:padding="10dp"/>-->
         <TextView
             android:id="@+id/toolbarTitleTv"
             style="@style/TextAppearance.MaterialComponents.Body1"

@@ -151,6 +151,7 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
     public String giaReducedPrice = ""; //giá giảm
     public String giaPrice = ""; // giá gốc
 
+    //thêm sản phẩm vào giỏ hàng
     private void OderAd(ModelAddProduct modelAddProducts) {
         //inflate layout for dialog
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_order, null);
@@ -315,6 +316,7 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
 
     private int itemId = 1;
 
+    // đẩy lên sqlite
     private void addToCart(String addId, String titleOrder, int priceOrder, int quantitySL, int tongGiaTienSP, String uidNguoiBan, String uidNguoiMua) {
         Log.d(TAG, "addToCart: ");
         itemId++;
@@ -371,6 +373,7 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
                 });
     }
 
+    // load hình ảnh sản phẩm
     private void loadAdFirstImage(ModelAddProduct modelAd, HolderAddProduct holder) {
         Log.d(TAG, "loadAdFirstImage: ");
         String id = modelAd.getId();
