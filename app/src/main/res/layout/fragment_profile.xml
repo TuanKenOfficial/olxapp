@@ -231,7 +231,7 @@
                     android:drawableStart="@drawable/logout"
                     android:drawablePadding="10dp"
                     android:drawableEnd="@drawable/ic_chevron_right"
-                    android:text="Log out"
+                    android:text="Đăng xuất"
                     android:textColor="@color/red"
                     android:textSize="20sp"
                     android:textStyle="bold"

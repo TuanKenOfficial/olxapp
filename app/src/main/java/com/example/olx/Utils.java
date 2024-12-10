@@ -65,7 +65,7 @@ public class Utils  {
     };
 
     public static final String[] orders = {
-            "Hiển thị tất cả hóa đơn",
+            "Hiển thị tất cả đơn hàng",
             "Chưa duyệt",
             "Đã duyệt",
             "Đã hủy"

@@ -136,14 +136,15 @@ public class HomeSellerFragment extends Fragment {
                             .setItems(Utils.orders, (dialog, which) -> {
                                 //get selected item
                                 String selected = Utils.orders[which];
-                                binding.filteredOrdersTv.setText(selected);
-                                if (selected.equals("Hiển thị tất cả hóa đơn")) {
+                                binding.filteredOrdersTv.setText("Đơn hàng: "+selected);
+                                if (selected.equals("Hiển thị tất cả đơn hàng")) {
                                     //load all
-                                    showOrdersUI();
-                                    loadOrders();
+                                    showOrdersUI();// hiển thị hóa đơn lên tab
+                                    loadOrders();// hiển thị tất cả hóa đơn mua hàng
                                 } else {
                                     //load filtered
                                     // load từng hóa đơn : đã duyệt - chưa duyệt - đã hủy
+                                    showOrdersUI();
                                     loadFilteredOrders1(selected);
                                 }
                             })
@@ -160,14 +161,15 @@ public class HomeSellerFragment extends Fragment {
                             .setItems(Utils.orders, (dialog, which) -> {
                                 //get selected item
                                 String selected = Utils.orders[which];
-                                binding.filteredOrdersTv.setText(selected);
-                                if (selected.equals("Hiển thị tất cả hóa đơn")) {
+                                binding.filteredOrdersTv.setText("Đơn hàng: "+selected);
+                                if (selected.equals("Hiển thị tất cả đơn hàng")) {
                                     //load all
-                                    showOrdersUI();
-                                    loadAllOrders();
+                                    showOrdersUI(); // hiển thị hóa đơn lên tab
+                                    loadAllOrders(); // hiển thị tất cả hóa đơn bán hàng
                                 } else {
                                     //load filtered
                                     // load từng hóa đơn : đã duyệt - chưa duyệt - đã hủy
+                                    showOrdersUI();
                                     loadFilteredOrders(selected);
                                 }
                             })
@@ -300,7 +302,7 @@ public class HomeSellerFragment extends Fragment {
     //load từng hóa đơn mua hàng (tài khoản người bán)
     private void loadFilteredOrders1 (String selected) {
         Log.d(TAG, "loadFilteredOrders: ");
-        orderSellerArrayList = new ArrayList<>();
+        ordersList = new ArrayList<>();
 
         //get all products
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
@@ -308,7 +310,7 @@ public class HomeSellerFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //before getting reset list
-                orderSellerArrayList.clear();
+                ordersList.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     String uid = "" + ds.getRef().getKey();
                     Log.d(TAG, "onDataChange: uid: " + uid);
@@ -320,21 +322,21 @@ public class HomeSellerFragment extends Fragment {
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                        ModelOrderSeller modelOrderSeller = ds.getValue(ModelOrderSeller.class);
+                                        ModelOrderUser modelOrderUser = ds.getValue(ModelOrderUser.class);
                                         //add to list
 
                                         if (selected.equals("Hiển thị tất cả hóa đơn")) {
                                             loadAllOrders();
-                                        } else if (selected.equals(modelOrderSeller.getOrderStatus())) {
-                                            Log.d(TAG, "onDataChange: hóa đơn: " + modelOrderSeller.getOrderStatus());
-                                            orderSellerArrayList.add(modelOrderSeller);
+                                        } else if (selected.equals(modelOrderUser.getOrderStatus())) {
+                                            Log.d(TAG, "onDataChange: hóa đơn: " + modelOrderUser.getOrderStatus());
+                                            ordersList.add(modelOrderUser);
 
                                         }
                                     }
                                     //setup adapter
-                                    adapterOrderSeller = new AdapterOrderSeller(mContext, orderSellerArrayList);
+                                    adapterOrderUser = new AdapterOrderUser(mContext, ordersList);
                                     //set to recyclerview
-                                    binding.ordersRv.setAdapter(adapterOrderSeller);
+                                    binding.ordersRv.setAdapter(adapterOrderUser);
                                 }
 
                                 @Override

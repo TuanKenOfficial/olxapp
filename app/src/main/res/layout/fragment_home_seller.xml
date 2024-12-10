@@ -128,26 +128,15 @@
         android:visibility="visible">
 
         <!--Filter orders-->
-        <ImageButton
-            android:id="@+id/filterOrderBtn"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_margin="5dp"
-            android:layout_alignParentEnd="true"
-            android:padding="2dp"
-            android:background="@null"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_apps" />
 
         <TextView
             android:id="@+id/filteredOrdersTv"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_alignParentStart="true"
             android:layout_marginTop="15dp"
             android:layout_marginLeft="5dp"
             android:padding="2dp"
-            android:layout_toLeftOf="@+id/filterOrderBtn"
             android:text="Hiển thị tất cả hoá đơn"
             android:textColor="@color/colorblack"
             android:textSize="16sp" />
@@ -156,7 +145,7 @@
             android:id="@+id/ordersRv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/filterOrderBtn"
+            android:layout_below="@id/filteredOrdersTv"
             tools:listitem="@layout/row_oder_seller"
             app:reverseLayout="true"
             android:layout_marginTop="5dp"
