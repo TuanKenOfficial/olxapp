@@ -118,15 +118,7 @@
                 android:text="Chưa duyệt"
                 android:layout_marginLeft="20dp"
                 android:textColor="@color/colorred" />
-            <ImageButton
-                android:id="@+id/editBtn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_margin="2dp"
-                android:padding="5dp"
-                android:layout_alignParentEnd="true"
-                android:background="@null"
-                android:src="@drawable/edit"/>
+
         </LinearLayout>
         <View
             android:layout_width="match_parent"

@@ -249,7 +249,20 @@ public class ProfileEditActivity extends AppCompatActivity {
         hashMap.put("email", registerUserEmail);
         hashMap.put("phone", "" + phone);
         hashMap.put("profileImage", "" + uploadImageUrl);
-        hashMap.put("accountType", "User");
+        if (mUserType.equals("User")){
+            hashMap.put("accountType", "User");
+            hashMap.put("email", registerUserEmail);
+        } else if (mUserType.equals("Phone")) {
+            Log.d(TAG, "uploadProfileDb: accountType"+" Phone");
+            hashMap.put("accountType", "Phone");
+            hashMap.put("email", "olx@gmail.com");
+        }
+        else if (mUserType.equals("Google")) {
+            Log.d(TAG, "uploadProfileDb: accountType"+" Google");
+            hashMap.put("email", registerUserEmail);
+            hashMap.put("accountType", "Google");
+        }
+//        hashMap.put("accountType", "User");
 
         Log.d(TAG, "uploadProfileDb: name:" + name);
         Log.d(TAG, "uploadProfileDb: dob:" + dob);
@@ -439,6 +452,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                         String dob = "" + snapshot.child("dob").getValue();
                         mUserType = "" + snapshot.child("accountType").getValue();
                         String phone = "" + snapshot.child("phone").getValue();
+                        String accountType = "" + snapshot.child("accountType").getValue();
 
                         if (timestamp.equals("null")) {
                             timestamp = "0";
@@ -460,13 +474,16 @@ public class ProfileEditActivity extends AppCompatActivity {
                             binding.phoneNumber.setEnabled(true);
                             binding.phoneInputRl.setEnabled(true);
                             binding.memberSingleEt.setEnabled(false);
+                            binding.accountType.setEnabled(false);
+
 
                         } else if (mUserType.equalsIgnoreCase("Phone")){
-                            binding.emailEt.setEnabled(true);
+                            binding.emailEt.setEnabled(false);
                             binding.addressEt.setEnabled(true);
                             binding.phoneNumber.setEnabled(false);
                             binding.phoneInputRl.setEnabled(false);
                             binding.memberSingleEt.setEnabled(false);
+                            binding.accountType.setEnabled(false);
                         }
                         else if (mUserType.equalsIgnoreCase("Google")){
                             binding.phoneNumber.setEnabled(true);
@@ -474,6 +491,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                             binding.addressEt.setEnabled(true);
                             binding.emailEt.setEnabled(false);
                             binding.memberSingleEt.setEnabled(false);
+                            binding.accountType.setEnabled(false);
                         }
                         //set data to ui
                         binding.nameEt.setText(name);
@@ -482,6 +500,7 @@ public class ProfileEditActivity extends AppCompatActivity {
                         binding.phoneNumber.setText(phone);
                         binding.addressEt.setText(address);
                         binding.memberSingleEt.setText(formattedDate);
+                        binding.accountType.setText(accountType);
 
                         try {
                             Picasso.get().load(profileImage).placeholder(R.drawable.shop).into(binding.profileIv);

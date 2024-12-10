@@ -34,7 +34,7 @@ public class DoanhThuSellerActivity extends AppCompatActivity {
     private MonthYearPickerDialogFragment dialogFragment = null;
     private ArrayList<ModelOrderSeller> modelOrderSellers;
     private int thang, nam ;
-    private int tongtiens,count;
+    private int tongtiens,count, soluong;
     private static final String TAG = "DoanhThu";
     private String orderId, orderBy,orderTo;
 
@@ -108,12 +108,15 @@ public class DoanhThuSellerActivity extends AppCompatActivity {
                             reference.child(orderTo).child("Order").child(orderId).child("GioHang").addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    count = 0;
                                     for (DataSnapshot ds: snapshot.getChildren()){
                                         ModelCart modelCart = ds.getValue(ModelCart.class);
-                                        int Soluong = modelCart.getSoluongdadat();
-                                        count = count + Soluong;
-                                        Log.d(TAG, "onDataChange: số lượng từng sản phẩm đã đặt: "+Soluong);
+                                        soluong = modelCart.getSoluongdadat();
+                                        count = count + soluong;
+                                        Log.d(TAG, "onDataChange: số lượng từng sản phẩm đã đặt: "+soluong);
                                         Log.d(TAG, "onDataChange: số lượng đã đặt: "+count);
+                                        Log.d(TAG, "onDataChange: số lượng từng sản phẩm đã đặt: "+soluong);
+
                                     }
                                     if (thoiGian.equals(ngay_dat)) {
                                         tongtiens = tongtien;

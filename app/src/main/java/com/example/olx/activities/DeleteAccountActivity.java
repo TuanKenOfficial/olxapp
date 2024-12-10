@@ -129,7 +129,7 @@ public class DeleteAccountActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void unused) {
                         Log.d(TAG, "onSuccess: ");
-                        progressDialog.setMessage("Xóa tài khoản user Ads");
+                        progressDialog.setMessage("Xóa tài khoản ảnh của tài khoản");
                         DatabaseReference refAds = FirebaseDatabase.getInstance().getReference("ProductAds");
                         refAds.orderByChild("uid").equalTo(myUid)
                                         .addListenerForSingleValueEvent(new ValueEventListener() {

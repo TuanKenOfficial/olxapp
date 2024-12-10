@@ -197,7 +197,6 @@ public class AdapterOrderSeller extends RecyclerView.Adapter<AdapterOrderSeller.
         public  TextView maHD, tenNM, soluongSPDD, sdt, diachi,
                 titleSP,ngayDat,tongHoaDon,statusTv,email;
         public Button doanhthuBtn;
-        public ImageButton editBtn;
         public HolderOrderSeller(@NonNull View itemView) {
             super(itemView);
 
@@ -213,7 +212,7 @@ public class AdapterOrderSeller extends RecyclerView.Adapter<AdapterOrderSeller.
             tongHoaDon = binding.tongHoaDon;
             statusTv = binding.statusTv;
             doanhthuBtn = binding.doanhthuBtn;
-            editBtn = binding.editBtn;
+
         }
     }
 }

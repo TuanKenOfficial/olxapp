@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="Chi tiết hóa đơn"
+            android:text="Chi tiết đơn hàng"
             android:textColor="@color/colorwhite"
             android:textSize="20sp"
             android:textStyle="bold"/>

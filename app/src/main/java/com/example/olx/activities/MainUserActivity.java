@@ -107,39 +107,8 @@ public class MainUserActivity extends AppCompatActivity {
                         binding.sellFab.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-                                reference.child(firebaseUser.getUid()).addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        String accountType = ""+snapshot.child("accountType").getValue();
-
-                                        Log.d(TAG, "onDataChange: "+accountType);
-                                        if (accountType.equals("User")){
-                                            Log.d(TAG, "onDataChange: "+accountType);
-                                            Utils.toastyInfo(MainUserActivity.this, "Tài khoản không được phép");
-                                            Utils.toastyInfo(MainUserActivity.this, "Bạn phải đăng ký tài khoản người bán");
-                                        } else if (accountType.equals("Google")) {
-                                            Log.d(TAG, "onDataChange: "+accountType);
-                                            Utils.toastyInfo(MainUserActivity.this, "Tài khoản không được phép");
-                                            Utils.toastyInfo(MainUserActivity.this, "Bạn phải đăng ký tài khoản người bán");
-                                        }
-                                        else if (accountType.equals("Phone")) {
-                                            Log.d(TAG, "onDataChange: "+accountType);
-                                            Utils.toastyInfo(MainUserActivity.this, "Tài khoản không được phép");
-                                            Utils.toastyInfo(MainUserActivity.this, "Bạn phải đăng ký tài khoản người bán");
-                                        } else {
-                                            Log.d(TAG, "onDataChange: "+accountType);
-                                            Intent intent = new Intent(MainUserActivity.this, ShopAdCreateActivity.class);
-                                            intent.putExtra("isEditMode", false);
-                                            startActivity(intent);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
-                                });
+                                Utils.toastyInfo(MainUserActivity.this, "Tài khoản không được phép");
+                                Utils.toastyInfo(MainUserActivity.this, "Bạn phải đăng ký tài khoản người bán");
 
                             }
                         });
