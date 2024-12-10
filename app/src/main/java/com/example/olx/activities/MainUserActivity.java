@@ -59,6 +59,20 @@ public class MainUserActivity extends AppCompatActivity {
         showHomeFragment();
         checkUser();
 
+        binding.sellFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (firebaseUser == null){
+                    Utils.toast(MainUserActivity.this,"Bạn cần đăng nhập tài khoản");
+                    startActivity(new Intent(MainUserActivity.this,LoginOptionActivity.class));
+
+                }
+                else{
+                    Utils.toastyInfo(MainUserActivity.this, "Tài khoản không được phép");
+                    Utils.toastyInfo(MainUserActivity.this, "Bạn phải đăng ký tài khoản người bán");
+                }
+            }
+        });
         binding.bottomNv.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -92,26 +106,6 @@ public class MainUserActivity extends AppCompatActivity {
                     }
                     else{
                         showFavFragment();
-                        return true;
-                    }
-
-                }
-                else if (itemId == R.id.menu_sell){
-                    //Home item click, Fragment Navigition
-                    if (firebaseUser == null){
-                        Utils.toast(MainUserActivity.this,"Bạn cần đăng nhập tài khoản");
-                        startActivity(new Intent(MainUserActivity.this,LoginOptionActivity.class));
-                        return false;
-                    }
-                    else{
-                        binding.sellFab.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Utils.toastyInfo(MainUserActivity.this, "Tài khoản không được phép");
-                                Utils.toastyInfo(MainUserActivity.this, "Bạn phải đăng ký tài khoản người bán");
-
-                            }
-                        });
                         return true;
                     }
 
@@ -240,15 +234,7 @@ public class MainUserActivity extends AppCompatActivity {
                     }
                 });
     }
-//    private void showProfileSellerFragment() {
-//        binding.toolbarRl.setVisibility(View.GONE);
-//        Utils.toast(MainUserActivity.this,"Profile Seller");
-//        ProfileSellerFragment fragment = new ProfileSellerFragment();
-//        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//        fragmentTransaction.replace(binding.fragmentsFl.getId(), fragment, "ProfileSellerFragment");
-//        fragmentTransaction.commit();
-//
-//    }
+
     private void showProfileFragment() {
         binding.toolbarRl.setVisibility(View.GONE);
         Utils.toast(MainUserActivity.this,"Profile User");

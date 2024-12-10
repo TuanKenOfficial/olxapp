@@ -18,7 +18,7 @@
             android:layout_marginTop="10dp"
             android:background="@color/colorgray"
             android:scaleType="centerCrop"
-            android:src="@drawable/olx_trangbia"
+            android:src="@drawable/shop"
             app:shapeAppearanceOverlay="@style/ImageStyle_Circle"/>
 
         <TextView

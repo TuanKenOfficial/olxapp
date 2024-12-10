@@ -187,18 +187,33 @@ public class ProfileFragment extends Fragment {
                                 binding.verifiedTv.setText("Chưa xác minh");
 
                             }
+                            try {
+                                Picasso.get().load(profileImage).placeholder(R.drawable.shop).into(binding.profileIv);
+                            } catch (Exception e) {
+                                Log.d(TAG, "onDataChange: " + e);
+                            }
                         }
-                        else {
+                        else if (accountType.equals("Google")){
                             binding.verifiedCv.setVisibility(View.GONE);
                             binding.verifiedTv.setText("Đã xác minh");
+                            try {
+                                Picasso.get().load(profileImage).placeholder(R.drawable.shop).into(binding.profileIv);
+                            } catch (Exception e) {
+                                Log.d(TAG, "onDataChange: " + e);
+                            }
+                        }
+                        else if (accountType.equals("Phone")){
+                            binding.verifiedCv.setVisibility(View.GONE);
+                            binding.verifiedTv.setText("Đã xác minh");
+                            try {
+                                Picasso.get().load(profileImage).placeholder(R.drawable.shop).into(binding.profileIv);
+                            } catch (Exception e) {
+                                Log.d(TAG, "onDataChange: " + e);
+                            }
                         }
 
                         //hình ảnh profile
-                        try {
-                            Picasso.get().load(profileImage).placeholder(R.drawable.shop).into(binding.profileIv);
-                        } catch (Exception e) {
-                            Log.d(TAG, "onDataChange: " + e);
-                        }
+
 
                     }
 

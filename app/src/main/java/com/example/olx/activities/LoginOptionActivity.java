@@ -186,7 +186,7 @@ public class LoginOptionActivity extends AppCompatActivity {
         hashMap.put("online", "true");
         hashMap.put("shopOpen", "true");
         hashMap.put("name","Google");
-        hashMap.put("profileImageUrl","https://firebasestorage.googleapis.com/v0/b/olxapp-2593f.appspot.com/o/google.jpg?alt=media&token=504fe810-0e77-4f71-9b93-7b3f892da10c");
+        hashMap.put("profileImageUrl","");
         hashMap.put("dob","Google");
         hashMap.put("accountType","Google");
         hashMap.put("timestamp",timestamp);

@@ -167,7 +167,7 @@ public class LoginPhoneActivity extends AppCompatActivity {
         hashMap.put("phoneCode",phoneCode);
         hashMap.put("phoneNumber",phoneNumber);
         hashMap.put("phone",phoneNumberWithCode);
-        hashMap.put("profileImageUrl","gs://olxapp-2593f.appspot.com/phone.jpg");
+        hashMap.put("profileImageUrl","");
         hashMap.put("timestamp",timestamp);
         hashMap.put("email", "olx@gmail.com");
         hashMap.put("uid", registerUserUid);

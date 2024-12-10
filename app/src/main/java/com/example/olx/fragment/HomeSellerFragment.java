@@ -31,6 +31,7 @@ import com.example.olx.Utils;
 import com.example.olx.activities.ChatActivity;
 import com.example.olx.activities.DoanhThuSellerActivity;
 import com.example.olx.activities.LocationPickerActivity;
+import com.example.olx.activities.LoginOptionActivity;
 import com.example.olx.activities.ShopAdDetailsActivity;
 import com.example.olx.adapter.AdapterAddProduct;
 
@@ -41,6 +42,7 @@ import com.example.olx.model.ModelAddProduct;
 import com.example.olx.model.ModelOrderSeller;
 import com.example.olx.model.ModelOrderUser;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -53,7 +55,6 @@ import java.util.Objects;
 public class HomeSellerFragment extends Fragment {
 
     private FirebaseAuth firebaseAuth;
-    private ProgressDialog progressDialog;
     private FragmentHomeSellerBinding binding;
 
     private static  final  String TAG="HOME_TAG";
@@ -73,8 +74,6 @@ public class HomeSellerFragment extends Fragment {
     private double currentLatitude=0.0;
     private double currentLongitude=0.0;
     private String currentAddress ="";
-
-    private String category;
 
     private SharedPreferences locationSp;
     @Override
@@ -104,6 +103,7 @@ public class HomeSellerFragment extends Fragment {
 
         Log.d(TAG, "onViewCreated: ");
         firebaseAuth = FirebaseAuth.getInstance();
+
         //hiển thị vị trí & địa chỉ
         locationSp = mContext.getSharedPreferences("LOCATION_SP",Context.MODE_PRIVATE);
         currentLatitude = locationSp.getFloat("CURRENT_LATITUDE",0.0f);
@@ -131,16 +131,48 @@ public class HomeSellerFragment extends Fragment {
                 if (firebaseAuth.getCurrentUser() == null) {
                     Utils.toast(mContext, "Bạn cần đăng nhập tài khoản");
                 } else {
-                    showOrdersUI();
-                    loadOrders();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    builder.setTitle("Hóa đơn:")
+                            .setItems(Utils.orders, (dialog, which) -> {
+                                //get selected item
+                                String selected = Utils.orders[which];
+                                binding.filteredOrdersTv.setText(selected);
+                                if (selected.equals("Hiển thị tất cả hóa đơn")) {
+                                    //load all
+                                    showOrdersUI();
+                                    loadOrders();
+                                } else {
+                                    //load filtered
+                                    // load từng hóa đơn : đã duyệt - chưa duyệt - đã hủy
+                                    loadFilteredOrders1(selected);
+                                }
+                            })
+                            .show();
+
                 }
             } else if (menuItem.getTitle() == "Hoá đơn bán hàng") {
                 //open same reviews activity as used in user main page
                 if (firebaseAuth.getCurrentUser() == null) {
                     Utils.toast(mContext, "Bạn cần đăng nhập tài khoản");
                 } else {
-                    showOrdersUI();
-                    loadAllOrders();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    builder.setTitle("Hóa đơn:")
+                            .setItems(Utils.orders, (dialog, which) -> {
+                                //get selected item
+                                String selected = Utils.orders[which];
+                                binding.filteredOrdersTv.setText(selected);
+                                if (selected.equals("Hiển thị tất cả hóa đơn")) {
+                                    //load all
+                                    showOrdersUI();
+                                    loadAllOrders();
+                                } else {
+                                    //load filtered
+                                    // load từng hóa đơn : đã duyệt - chưa duyệt - đã hủy
+                                    loadFilteredOrders(selected);
+                                }
+                            })
+                            .show();
+
                 }
             }
 
@@ -198,26 +230,6 @@ public class HomeSellerFragment extends Fragment {
                     })
                     .show();
         });
-        binding.filterOrderBtn.setOnClickListener(v -> {
-            //options to display in dialog
-            Log.d(TAG, "onViewCreated: " + binding.filteredOrdersTv);
-            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-            builder.setTitle("Hóa đơn:")
-                    .setItems(Utils.orders, (dialog, which) -> {
-                        //get selected item
-                        String selected = Utils.orders[which];
-                        binding.filteredOrdersTv.setText(selected);
-                        if (selected.equals("Hiển thị tất cả hóa đơn")) {
-                            //load all
-                            loadOrders();
-                        } else {
-                            //load filtered
-                            loadFilteredOrders(selected);
-                        }
-                    })
-                    .show();
-        });
-
 
         binding.locationCv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -231,6 +243,7 @@ public class HomeSellerFragment extends Fragment {
 
     }
 
+    //load từng hóa đơn bán hàng (tài khoản người bán)
     private void loadFilteredOrders(String selected) {
         Log.d(TAG, "loadFilteredOrders: ");
         orderSellerArrayList = new ArrayList<>();
@@ -257,7 +270,61 @@ public class HomeSellerFragment extends Fragment {
                                         //add to list
 
                                         if (selected.equals("Hiển thị tất cả hóa đơn")) {
-                                            loadAllAdProducts();
+                                            loadAllOrders();
+                                        } else if (selected.equals(modelOrderSeller.getOrderStatus())) {
+                                            Log.d(TAG, "onDataChange: hóa đơn: " + modelOrderSeller.getOrderStatus());
+                                            orderSellerArrayList.add(modelOrderSeller);
+
+                                        }
+                                    }
+                                    //setup adapter
+                                    adapterOrderSeller = new AdapterOrderSeller(mContext, orderSellerArrayList);
+                                    //set to recyclerview
+                                    binding.ordersRv.setAdapter(adapterOrderSeller);
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    //load từng hóa đơn mua hàng (tài khoản người bán)
+    private void loadFilteredOrders1 (String selected) {
+        Log.d(TAG, "loadFilteredOrders: ");
+        orderSellerArrayList = new ArrayList<>();
+
+        //get all products
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //before getting reset list
+                orderSellerArrayList.clear();
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    String uid = "" + ds.getRef().getKey();
+                    Log.d(TAG, "onDataChange: uid: " + uid);
+
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("Order");
+                    ref.orderByChild("orderBy").equalTo(firebaseAuth.getUid())
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                        ModelOrderSeller modelOrderSeller = ds.getValue(ModelOrderSeller.class);
+                                        //add to list
+
+                                        if (selected.equals("Hiển thị tất cả hóa đơn")) {
+                                            loadAllOrders();
                                         } else if (selected.equals(modelOrderSeller.getOrderStatus())) {
                                             Log.d(TAG, "onDataChange: hóa đơn: " + modelOrderSeller.getOrderStatus());
                                             orderSellerArrayList.add(modelOrderSeller);
@@ -285,7 +352,7 @@ public class HomeSellerFragment extends Fragment {
         });
     }
 
-    // load tung hoá đơn
+    // load tất cả hoá đơn mua hàng (tài khoản người bán)
     private void loadOrders() {
         Log.d(TAG, "loadOrders: ");
         //init order list
@@ -333,7 +400,7 @@ public class HomeSellerFragment extends Fragment {
         });
     }
 
-    //load tat ca hoa don
+    // load tất cả hoá đơn bán hàng (tài khoản người bán)
     private void loadAllOrders() {
         Log.d(TAG, "loadAllOrders: ");
         //init array list

@@ -24,6 +24,8 @@ import com.example.olx.CurrencyFormatter;
 import com.example.olx.FilterAddProducts;
 import com.example.olx.R;
 import com.example.olx.Utils;
+import com.example.olx.activities.LoginOptionActivity;
+import com.example.olx.activities.MainUserActivity;
 import com.example.olx.activities.ShopAdDetailsActivity;
 import com.example.olx.databinding.RowAddproductBinding;
 import com.example.olx.model.ModelAddProduct;
@@ -115,9 +117,16 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentShopAd = new Intent(context, ShopAdDetailsActivity.class);
-                intentShopAd.putExtra("adId", modelAddProduct.getId());
-                context.startActivity(intentShopAd);
+                if (firebaseAuth.getCurrentUser() == null){
+                    Utils.toast(context,"Bạn cần đăng nhập tài khoản");
+                    context.startActivity(new Intent(context, LoginOptionActivity.class));
+                }
+                else {
+                    Intent intentShopAd = new Intent(context, ShopAdDetailsActivity.class);
+                    intentShopAd.putExtra("adId", modelAddProduct.getId());
+                    context.startActivity(intentShopAd);
+                }
+
             }
         });
 
@@ -137,7 +146,14 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
         holder.ortherBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OderAd(modelAddProduct);
+                if (firebaseAuth.getCurrentUser() == null){
+                    Utils.toast(context,"Bạn cần đăng nhập tài khoản");
+                    context.startActivity(new Intent(context, LoginOptionActivity.class));
+                }
+                else {
+                    OderAd(modelAddProduct);
+                }
+
 
             }
         });

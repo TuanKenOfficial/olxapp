@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import com.example.olx.R;
 import com.example.olx.Utils;
 import com.example.olx.activities.LocationPickerActivity;
+import com.example.olx.activities.LoginOptionActivity;
 import com.example.olx.activities.MainUserActivity;
 import com.example.olx.adapter.AdapterAddProduct;
 
@@ -39,6 +40,7 @@ import com.example.olx.model.ModelAddProduct;
 import com.example.olx.model.ModelOrderSeller;
 import com.example.olx.model.ModelOrderUser;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -50,7 +52,6 @@ import java.util.ArrayList;
 public class HomeUserFragment extends Fragment {
 
     private FirebaseAuth firebaseAuth;
-    private ProgressDialog progressDialog;
     private FragmentHomeUserBinding binding;
 
     private static final String TAG = "HOME_TAG";
@@ -63,16 +64,10 @@ public class HomeUserFragment extends Fragment {
     private ArrayList<ModelOrderUser> ordersList;
     private AdapterOrderUser adapterOrderUser;
 
-    private ArrayList<ModelOrderSeller> orderSellerArrayList;
-    private AdapterOrderSeller adapterOrderSeller;
-
-
     private static final int MAX_DISTANCE_TO_LOAD_ADS_KM = 20;
     private double currentLatitude = 0.0;
     private double currentLongitude = 0.0;
     private String currentAddress = "";
-
-    private String category;
 
     private SharedPreferences locationSp;
 
@@ -103,6 +98,7 @@ public class HomeUserFragment extends Fragment {
 
         Log.d(TAG, "onViewCreated: ");
         firebaseAuth = FirebaseAuth.getInstance();
+
         //hiển thị vị trí & địa chỉ
         locationSp = mContext.getSharedPreferences("LOCATION_SP", Context.MODE_PRIVATE);
         currentLatitude = locationSp.getFloat("CURRENT_LATITUDE", 0.0f);
@@ -114,90 +110,89 @@ public class HomeUserFragment extends Fragment {
             binding.locationTv.setText(currentAddress);
         }
 
-        showProductsUI(); // hiểm thị sản phẩm
+            showProductsUI(); // hiểm thị sản phẩm
 
-        binding.tabProductsTv.setOnClickListener(v -> {
-            //load products
-            showProductsUI();
-        });
-        binding.tabOrdersTv.setOnClickListener(v -> {
-            //load orders
-            showOrdersUI();
-        });
-        binding.searchProductEt.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            binding.tabProductsTv.setOnClickListener(v -> {
+                //load products
+                showProductsUI();
+            });
+            binding.tabOrdersTv.setOnClickListener(v -> {
+                //load orders
+                showOrdersUI();
+            });
+            binding.searchProductEt.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                try {
-                    Log.d(TAG, "onTextChanged: CharSequence: " + s);
-                    String query = s.toString();
-                    Log.d(TAG, "onTextChanged: query:" + query);
-                    adapterAddProduct.getFilter().filter(query);
-                } catch (Exception e) {
-                    Log.d(TAG, "onTextChanged: Lỗi: " + e);
                 }
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
-        });
+                    try {
+                        Log.d(TAG, "onTextChanged: CharSequence: " + s);
+                        String query = s.toString();
+                        Log.d(TAG, "onTextChanged: query:" + query);
+                        adapterAddProduct.getFilter().filter(query);
+                    } catch (Exception e) {
+                        Log.d(TAG, "onTextChanged: Lỗi: " + e);
+                    }
+                }
 
+                @Override
+                public void afterTextChanged(Editable s) {
 
-        binding.filterProductBtn.setOnClickListener(v -> {
-            Log.d(TAG, "onViewCreated: " + binding.filteredProductsTv);
-            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-            builder.setTitle("Sản phẩm:")
-                    .setItems(Utils.categoriess, (dialog, which) -> {
-                        //get selected item
-                        String selected = Utils.categoriess[which];
-                        binding.filteredProductsTv.setText(selected);
-                        if (selected.equals("Hiển thị tất cả sản phẩm")) {
-                            //load all
-                            loadAllAdProducts();
-                        } else {
-                            //load filtered
-                            loadFilteredProducts(selected);
-                        }
-                    })
-                    .show();
-        });
-        binding.filterOrderBtn.setOnClickListener(v -> {
-            Log.d(TAG, "onViewCreated: " + binding.filteredOrdersTv);
-            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-            builder.setTitle("Hóa đơn:")
-                    .setItems(Utils.orders, (dialog, which) -> {
-                        //get selected item
-                        String selected = Utils.orders[which];
-                        binding.filteredOrdersTv.setText(selected);
-                        if (selected.equals("Hiển thị tất cả hóa đơn")) {
-                            //load all
-                            loadOrders();
-                        } else {
-                            //load filtered
-                            loadFilteredOrders(selected);
-                        }
-                    })
-                    .show();
-        });
-
-        binding.locationCv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: LocationCv");
-                Intent intent = new Intent(mContext, LocationPickerActivity.class);
-                locationPickerActivityResult.launch(intent);
-            }
-        });
+                }
+            });
 
 
-    }
+            binding.filterProductBtn.setOnClickListener(v -> {
+                Log.d(TAG, "onViewCreated: " + binding.filteredProductsTv);
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle("Sản phẩm:")
+                        .setItems(Utils.categoriess, (dialog, which) -> {
+                            //get selected item
+                            String selected = Utils.categoriess[which];
+                            binding.filteredProductsTv.setText(selected);
+                            if (selected.equals("Hiển thị tất cả sản phẩm")) {
+                                //load all
+                                loadAllAdProducts();
+                            } else {
+                                //load filtered
+                                loadFilteredProducts(selected);
+                            }
+                        })
+                        .show();
+            });
+            binding.filterOrderBtn.setOnClickListener(v -> {
+                Log.d(TAG, "onViewCreated: " + binding.filteredOrdersTv);
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle("Hóa đơn:")
+                        .setItems(Utils.orders, (dialog, which) -> {
+                            //get selected item
+                            String selected = Utils.orders[which];
+                            binding.filteredOrdersTv.setText(selected);
+                            if (selected.equals("Hiển thị tất cả hóa đơn")) {
+                                //load all
+                                loadOrders();
+                            } else {
+                                //load filtered
+                                loadFilteredOrders(selected);
+                            }
+                        })
+                        .show();
+            });
+
+            binding.locationCv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "onClick: LocationCv");
+                    Intent intent = new Intent(mContext, LocationPickerActivity.class);
+                    locationPickerActivityResult.launch(intent);
+                }
+            });
+        }
+
 
 
     private void showProductsUI() {
