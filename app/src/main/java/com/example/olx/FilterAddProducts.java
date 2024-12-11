@@ -1,5 +1,6 @@
 package com.example.olx;
 
+import android.annotation.SuppressLint;
 import android.widget.Filter;
 
 import com.example.olx.adapter.AdapterAddProduct;
@@ -47,6 +48,7 @@ public class FilterAddProducts extends Filter {
         return results; //don't miss it
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void publishResults(CharSequence constraint, FilterResults results) {
         //apply filter changes

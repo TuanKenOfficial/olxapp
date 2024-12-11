@@ -7,15 +7,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.olx.CurrencyFormatter;
-import com.example.olx.FilterOrderUser;
 import com.example.olx.Utils;
 
 import com.example.olx.activities.ShopOrderUserDetailActivity;
@@ -31,12 +28,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.HolderOrderUser> implements Filterable {
-
+public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.HolderOrderUser> {
     private RowOrderUserBinding binding;
     private final Context context;
     public ArrayList<ModelOrderUser> orderUserArrayList, filterList;
-    private FilterOrderUser filter;
+
     private static final String TAG ="Order_User";
     private FirebaseAuth firebaseAuth;
 
@@ -44,7 +40,6 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hold
     public AdapterOrderUser(Context context, ArrayList<ModelOrderUser> orderUserArrayList) {
         this.context = context;
         this.orderUserArrayList = orderUserArrayList;
-        this.filterList = orderUserArrayList;
         firebaseAuth = FirebaseAuth.getInstance();
     }
 
@@ -165,16 +160,6 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hold
     public int getItemCount() {
         return orderUserArrayList.size(); //return size of list / number of records
     }
-
-    @Override
-    public Filter getFilter() {
-        if (filter == null){
-            //init filter
-            filter = new FilterOrderUser(this, filterList);
-        }
-        return filter;
-    }
-
     //view holder class for row_order_seller.xml
     public class HolderOrderUser extends RecyclerView.ViewHolder{
 

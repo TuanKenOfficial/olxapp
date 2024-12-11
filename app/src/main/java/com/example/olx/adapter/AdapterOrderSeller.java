@@ -9,22 +9,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.olx.CurrencyFormatter;
-import com.example.olx.FilterOrderSeller;
 import com.example.olx.Utils;
 import com.example.olx.activities.DoanhThuSellerActivity;
 import com.example.olx.activities.ShopOrderSellerDetailActivity;
 import com.example.olx.databinding.RowOderSellerBinding;
 import com.example.olx.model.ModelOrderSeller;
 import com.example.olx.model.ModelUsers;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,14 +29,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class AdapterOrderSeller extends RecyclerView.Adapter<AdapterOrderSeller.HolderOrderSeller> implements Filterable {
+public class AdapterOrderSeller extends RecyclerView.Adapter<AdapterOrderSeller.HolderOrderSeller>{
 
     private RowOderSellerBinding binding;
     private final Context context;
     public ArrayList<ModelOrderSeller> orderSellerArrayList, filterList;
-    private FilterOrderSeller filter;
-
-    private FirebaseAuth firebaseAuth;
 
 
     private static final String TAG ="AOS";
@@ -48,7 +41,6 @@ public class AdapterOrderSeller extends RecyclerView.Adapter<AdapterOrderSeller.
     public AdapterOrderSeller(Context context, ArrayList<ModelOrderSeller> orderSellerArrayList) {
         this.context = context;
         this.orderSellerArrayList = orderSellerArrayList;
-        this.filterList = orderSellerArrayList;
 
     }
 
@@ -78,7 +70,7 @@ public class AdapterOrderSeller extends RecyclerView.Adapter<AdapterOrderSeller.
         String orderTo = modelOrderSeller.getOrderTo();
         Log.d(TAG, "onBindViewHolder: orderBy: "+modelOrderSeller.getOrderBy());
 
-        firebaseAuth = FirebaseAuth.getInstance();
+
         //load
         loadUserInfo(modelOrderSeller, holder);
 
@@ -157,14 +149,6 @@ public class AdapterOrderSeller extends RecyclerView.Adapter<AdapterOrderSeller.
         return orderSellerArrayList.size(); //return size of list / number of records
     }
 
-    @Override
-    public Filter getFilter() {
-        if (filter == null){
-            //init filter
-            filter = new FilterOrderSeller(this, filterList);
-        }
-        return filter;
-    }
 
     //view holder class for row_order_seller.xml
     public  class   HolderOrderSeller extends RecyclerView.ViewHolder{

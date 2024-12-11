@@ -90,12 +90,13 @@ public class DoanhThuSellerActivity extends AppCompatActivity {
 
     private void truyVanThangNam(String thoiGian) {
         Calendar calendar = Calendar.getInstance();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.child(orderTo).child("Order").child(orderId)
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Orders");
+        reference.child(orderId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                             // lấy dl từ csdl
+
                             int tongtien = Integer.parseInt(""+snapshot.child("orderTongTien").getValue());
                             long ngayDat = Long.parseLong(""+snapshot.child("timestamp").getValue());
                             Log.d(TAG, "onDataChange: tongtien"+tongtien);
@@ -104,8 +105,8 @@ public class DoanhThuSellerActivity extends AppCompatActivity {
                             calendar.setTimeInMillis(ngayDat);
                             // rồi chuyển đổi nó sang chuỗi
                             String ngay_dat = DateFormat.format("MM/yyyy", calendar).toString();
-                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-                            reference.child(orderTo).child("Order").child(orderId).child("GioHang").addValueEventListener(new ValueEventListener() {
+                            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Orders");
+                            reference.child(orderId).child("GioHang").addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     count = 0;
