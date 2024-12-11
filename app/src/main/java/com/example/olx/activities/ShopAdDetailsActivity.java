@@ -125,25 +125,30 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         binding.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(ShopAdDetailsActivity.this);
-                materialAlertDialogBuilder.setTitle("Xóa quảng cáo sản phẩm")
-                        .setMessage("Bạn có chắc chắn muốn xóa không?")
-                        .setPositiveButton("Xóa", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                if (firebaseAuth.getCurrentUser() == null) {
+                    Utils.toast(ShopAdDetailsActivity.this, "Bạn cần đăng nhập tài khoản");
+                }else {
+                    MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(ShopAdDetailsActivity.this);
+                    materialAlertDialogBuilder.setTitle("Xóa quảng cáo sản phẩm")
+                            .setMessage("Bạn có chắc chắn muốn xóa không?")
+                            .setPositiveButton("Xóa", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 //                                deleteAd();
-                                Log.d(TAG, "onClick: Xóa");
-                                Utils.toastySuccess(ShopAdDetailsActivity.this, "Xóa thành công");
-                            }
-                        })
-                        .setNegativeButton("Thoát", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Utils.toastyInfo(ShopAdDetailsActivity.this, "Thoát");
-                                Log.d(TAG, "onClick: Xóa thất bại");
-                                dialog.dismiss();
-                            }
-                        }).show();
+                                    Log.d(TAG, "onClick: Xóa");
+                                    Utils.toastySuccess(ShopAdDetailsActivity.this, "Xóa thành công");
+                                }
+                            })
+                            .setNegativeButton("Thoát", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Utils.toastyInfo(ShopAdDetailsActivity.this, "Thoát");
+                                    Log.d(TAG, "onClick: Xóa thất bại");
+                                    dialog.dismiss();
+                                }
+                            }).show();
+                }
+
             }
         });
 
@@ -152,7 +157,12 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //edit
-                editOptions();
+                if (firebaseAuth.getCurrentUser() == null) {
+                    Utils.toast(ShopAdDetailsActivity.this, "Bạn cần đăng nhập tài khoản");
+                }else {
+                    editOptions();
+                }
+
 
             }
         });
@@ -174,7 +184,6 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //seller profile
-
                 if (firebaseAuth.getCurrentUser() == null) {
                     Utils.toast(ShopAdDetailsActivity.this, "Bạn cần đăng nhập tài khoản");
                 } else {
@@ -290,8 +299,13 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         binding.cartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: cart");
-                showCartDialog();
+                if (firebaseAuth.getCurrentUser() == null){
+                    Utils.toast(ShopAdDetailsActivity.this, "Bạn cần đăng nhập tài khoản");
+                }else {
+                    Log.d(TAG, "onClick: cart");
+                    showCartDialog();
+                }
+
             }
         });
 
@@ -299,15 +313,15 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
 
 
     public int tongtien = 0; // tạo một biến tạm để tính tổng các mặt hàng
-    public int sluong = 0;//tạo một biến tạm để tính số lượng đã đặt tổng các mặt hàng
-    public String tenSP = ""; //tạo một biến tạm để lấy tên các mặt hàng
-    public String uidNguoiBan;
-    public String uidNguoiMua;
+    private int sluong = 0;//tạo một biến tạm để tính số lượng đã đặt tổng các mặt hàng
+    private String tenSP = ""; //tạo một biến tạm để lấy tên các mặt hàng
+    private String uidNguoiBan;
+    private String uidNguoiMua;
     public TextView finalPriceTv;
-    public String shopNames;
-    public String phone;
-    public String productId;
-    public int giohangId;
+    private String shopNames;
+    private String phone;
+    private String productId;
+    private int giohangId;
 
 //    public List<String> tenSPList = new ArrayList<>();
     @SuppressLint("MissingInflatedId")
@@ -319,7 +333,7 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         TextView shopNameTv = view.findViewById(R.id.shopNameTv);
         TextView sdtTv = view.findViewById(R.id.sdtTv);
         RecyclerView cartItemsRv = view.findViewById(R.id.cartItemsRv);
-        Log.d(TAG, "showCartDialog: "+cartItemsRv);
+
         finalPriceTv = view.findViewById(R.id.finalPriceTv);// tổng giá
         Button checkoutBtn = view.findViewById(R.id.checkoutBtn);
         //bất cứ khi nào hộp thoại giỏ hàng hiển thị, hãy kiểm tra xem mã khuyến mãi có được áp dụng hay không
@@ -362,7 +376,10 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
             giohangId = id;
 //            tenSPList.add(tenSP);
 
-            tongtien = tongtien + tongtienSP;
+            tongtien += tongtienSP;
+
+
+            Log.d(TAG, "showCartDialog: tong tien: "+tongtien);
             sluong = sluong + quantity;
             finalPriceTv.setText(""+CurrencyFormatter.getFormatter().format(Double.valueOf(tongtien)));
             ModelCart modelCart = new ModelCart(
@@ -385,7 +402,10 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                finalPriceTv.setText("0đ");
+                Log.d(TAG, "onCancel: dialog");
+                tongtien = 0;
+                finalPriceTv.setText(""+CurrencyFormatter.getFormatter().format(Double.valueOf(tongtien)));
+                
             }
         });
 

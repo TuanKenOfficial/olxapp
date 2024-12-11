@@ -117,19 +117,14 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (firebaseAuth.getCurrentUser() == null){
-                    Utils.toast(context,"Bạn cần đăng nhập tài khoản");
-                    context.startActivity(new Intent(context, LoginOptionActivity.class));
-                }
-                else {
-                    Intent intentShopAd = new Intent(context, ShopAdDetailsActivity.class);
-                    intentShopAd.putExtra("adId", modelAddProduct.getId());
-                    context.startActivity(intentShopAd);
-                }
+                Intent intentShopAd = new Intent(context, ShopAdDetailsActivity.class);
+                intentShopAd.putExtra("adId", modelAddProduct.getId());
+                context.startActivity(intentShopAd);
 
             }
         });
 
+        //thêm mục yêu thích
         holder.favBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,17 +138,16 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
             }
         });
 
+        //button thêm sản phẩm
         holder.ortherBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (firebaseAuth.getCurrentUser() == null){
                     Utils.toast(context,"Bạn cần đăng nhập tài khoản");
                     context.startActivity(new Intent(context, LoginOptionActivity.class));
-                }
-                else {
+                }else {
                     OderAd(modelAddProduct);
                 }
-
 
             }
         });
