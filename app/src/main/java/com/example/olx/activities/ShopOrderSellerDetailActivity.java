@@ -218,8 +218,8 @@ public class ShopOrderSellerDetailActivity extends AppCompatActivity {
                         String orderBy = ""+dataSnapshot.child("orderBy").getValue();
                         String orderTo = ""+dataSnapshot.child("orderTo").getValue();
                         String address = ""+dataSnapshot.child("address").getValue();
-                        double latitude = Double.parseDouble(""+dataSnapshot.child("latitude").getValue());
-                        double longitude = Double.parseDouble(""+dataSnapshot.child("longitude").getValue());
+                        latitude = Double.parseDouble(""+dataSnapshot.child("latitude").getValue());
+                        longitude = Double.parseDouble(""+dataSnapshot.child("longitude").getValue());
                         long timestamp = modelOrderUser.getTimestamp();
 
 

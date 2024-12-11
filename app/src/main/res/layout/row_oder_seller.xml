@@ -108,7 +108,6 @@
                 android:textColor="#4CAF50"
                 android:text="Tổng hóa đơn: 100000đ"
                 android:paddingHorizontal="10dp"
-                android:textSize="15sp"
                 android:layout_marginBottom="10dp"/>
             <TextView
                 android:id="@+id/statusTv"
