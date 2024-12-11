@@ -309,7 +309,7 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
     public String productId;
     public int giohangId;
 
-    public List<String> tenSPList = new ArrayList<>();
+//    public List<String> tenSPList = new ArrayList<>();
     @SuppressLint("MissingInflatedId")
     private void showCartDialog() {
         cartItemList = new ArrayList<>();
@@ -360,7 +360,7 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
 
             productId = pId;
             giohangId = id;
-            tenSPList.add(tenSP);
+//            tenSPList.add(tenSP);
 
             tongtien = tongtien + tongtienSP;
             sluong = sluong + quantity;
@@ -413,13 +413,10 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
 
         //setup oder data
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Orders");
 
         idHD = reference.push().getKey();
 
-        for (String tenSP : tenSPList) {
-            reference.child("Order").child(idHD).child("TenSanPham").push().setValue(tenSP);
-        }
         //setup oder data
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("orderId", ""+idHD);
@@ -434,10 +431,10 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
         hashMap.put("longitude",longitude);
         hashMap.put("orderBy", ""+uidNguoiMua);
         hashMap.put("orderTo", ""+uidNguoiBan);
-        hashMap.put("orderStatus", "Chưa duyệt");
+        hashMap.put("orderStatus", "Chưa thanh toán");
 
         //add to db
-        reference.child(uidNguoiBan).child("Order").child(idHD).setValue(hashMap)
+        reference.child(idHD).setValue(hashMap)
                 .addOnSuccessListener(aVoid -> {
                     //order info added now add order items
                     for ( int i=0; i<cartItemList.size(); i++){
@@ -466,15 +463,13 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                         hashMap1.put("soluongdadat", soluongdadat);
                         hashMap1.put("uidNguoiMua", ""+uidNguoiMua1);
                         hashMap1.put("uidNguoiBan", ""+uidNguoiBan1);
-                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-                        ref.child(uidNguoiBan).child("Order").child(idHD).child("GioHang").child(pId).setValue(hashMap1);
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Orders");
+                        ref.child(idHD).child("GioHang").child(pId).setValue(hashMap1);
                     }
                     progressDialog.dismiss();
                     Utils.toastySuccess(ShopAdDetailsActivity.this,"Đặt hàng thành công...");
                     xoaGioHang();// xóa sạch giỏ hàng sau khi xác nhận đơn hàng
-//                    Intent intent = new Intent(ShopAdDetailsActivity.this, ShopOrderSellerDetailActivity.class);
-//                    intent.putExtra("productId", productId);
-//                    startActivity(intent);
+
                 })
                 .addOnFailureListener(e -> {
                     //failed placing order
@@ -486,13 +481,14 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
 
     }
 
+    //chỉnh sửa sản phẩm - đánh dấu sản phẩm còn hàng hay hết hàng
     private void editOptions() {
         Log.d(TAG, "editOptions: ");
 
         PopupMenu popupMenu = new PopupMenu(this, binding.editBtn);
 
         popupMenu.getMenu().add(Menu.NONE, 0, 0, "Chỉnh sửa");
-        popupMenu.getMenu().add(Menu.NONE, 1, 1, "Đánh dấu là đã bán");
+        popupMenu.getMenu().add(Menu.NONE, 1, 1, "Đánh dấu sản phẩm");
 
         popupMenu.show();
 
@@ -517,9 +513,9 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
     //Đánh dấu là đã bán hay chưa bán
     private void showMarkAsSoldDialog() {
         MaterialAlertDialogBuilder alertDialogBuilder = new MaterialAlertDialogBuilder(this);
-        alertDialogBuilder.setTitle("Đánh dấu là đã bán sản phẩm")
-                .setMessage("Bán có chắc chắn là đánh dấu quảng cáo sản phẩm này đã bán không?")
-                .setPositiveButton("Đã bán", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setTitle("Đánh dấu sản phẩm đã bán hết hay còn hàng!!")
+                .setMessage("Bán có chắc chắn là đánh dấu sản phẩm này đã bán hay chưa?")
+                .setPositiveButton("Đã hết hàng", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Log.d(TAG, "onClick: Đã bán thành công...");
@@ -535,19 +531,19 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
                                     public void onSuccess(Void unused) {
 
                                         Log.d(TAG, "onSuccess: Đánh dấu là đã bán");
-                                        Utils.toastySuccess(ShopAdDetailsActivity.this, "Đánh dấu là đã bán sản phẩm thành công");
+                                        Utils.toastySuccess(ShopAdDetailsActivity.this, "Thành công");
 
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
                                         Log.d(TAG, "onFailure: Lỗi: " + e);
-                                        Utils.toastyError(ShopAdDetailsActivity.this, "Lỗi không đánh dấu là đã bán được" + e.getMessage());
+                                        Utils.toastyError(ShopAdDetailsActivity.this, "Lỗi " + e.getMessage());
                                     }
                                 });
 
 
-                        Utils.toastySuccess(getApplicationContext(), "Đã bán thành công");
+                        Utils.toast(getApplicationContext(), "Đã hết hàng");
 
                     }
                 })
@@ -590,9 +586,11 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
     //đánh giá sản phẩm
     private float ratingSum = 0;
 
+    //load sao đánh giá
     private void loadReviews() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.child(firebaseAuth.getUid()).child("Ratings").addValueEventListener(new ValueEventListener() {
+        Log.d(TAG, "loadReviews: ");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Ratings");
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ratingSum = 0;

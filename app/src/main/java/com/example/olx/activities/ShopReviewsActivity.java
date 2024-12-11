@@ -56,8 +56,8 @@ public class ShopReviewsActivity extends AppCompatActivity {
         //init list
         reviewArrayList = new ArrayList<>();
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.child(shopUid).child("Ratings")
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Ratings");
+        ref.orderByChild(shopUid)
                 .addValueEventListener(new ValueEventListener() {
                     @SuppressLint({"SetTextI18n", "DefaultLocale"})
                     @Override

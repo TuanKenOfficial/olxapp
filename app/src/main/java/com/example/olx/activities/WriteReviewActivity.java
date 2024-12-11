@@ -1,6 +1,7 @@
 package com.example.olx.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,6 +28,8 @@ public class WriteReviewActivity extends AppCompatActivity {
     private String shopUid;
 
     private FirebaseAuth firebaseAuth;
+    private String idReview;
+    private static final String TAG ="Review";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +44,7 @@ public class WriteReviewActivity extends AppCompatActivity {
         //load shopf info: shop name, shop image
         loadShopInfo();
         //if user has written review to this shop, load it
-        loadMyReview();
+//        loadMyReview();
 
         //go back to previous activity
         binding.backBtn.setOnClickListener(v -> onBackPressed());
@@ -51,6 +54,7 @@ public class WriteReviewActivity extends AppCompatActivity {
     }
 
     private void loadShopInfo() {
+        Log.d(TAG, "loadShopInfo: ");
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
         ref.child(shopUid).addValueEventListener(new ValueEventListener() {
             @Override
@@ -77,9 +81,9 @@ public class WriteReviewActivity extends AppCompatActivity {
     }
 
     private void loadMyReview() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.child(shopUid).child("Ratings").child(Objects.requireNonNull(firebaseAuth.getUid()))
-                .addValueEventListener(new ValueEventListener() {
+        Log.d(TAG, "loadMyReview: ");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Ratings");
+        ref.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()){
@@ -106,12 +110,14 @@ public class WriteReviewActivity extends AppCompatActivity {
     }
 
     private void inputData() {
+
         String ratings = ""+binding.ratingBar.getRating();
         String review = binding.reviewEt.getText().toString().trim();
 
         //for time of review
         String timestamp = ""+System.currentTimeMillis();
-
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Ratings");
+        idReview = ref.push().getKey();
         //setup data in hashmap
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("uid", ""+ firebaseAuth.getUid());
@@ -120,8 +126,8 @@ public class WriteReviewActivity extends AppCompatActivity {
         hashMap.put("timestamp", ""+ timestamp);
 
         //put to db: DB > Users > ShopUid > Ratings
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.child(shopUid).child("Ratings").child(Objects.requireNonNull(firebaseAuth.getUid())).updateChildren(hashMap)
+
+        ref.child(idReview).updateChildren(hashMap)
                 .addOnSuccessListener(aVoid -> {
                     //review added to db
                     Utils.toastySuccess(WriteReviewActivity.this,"Bài đánh giá đã xuất bản thành công...");

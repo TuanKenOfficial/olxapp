@@ -110,89 +110,88 @@ public class HomeUserFragment extends Fragment {
             binding.locationTv.setText(currentAddress);
         }
 
-            showProductsUI(); // hiểm thị sản phẩm
+        showProductsUI(); // hiểm thị sản phẩm
 
-            binding.tabProductsTv.setOnClickListener(v -> {
-                //load products
-                showProductsUI();
-            });
-            binding.tabOrdersTv.setOnClickListener(v -> {
-                //load orders
-                showOrdersUI();
-            });
-            binding.searchProductEt.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        binding.tabProductsTv.setOnClickListener(v -> {
+            //load products
+            showProductsUI();
+        });
+        binding.tabOrdersTv.setOnClickListener(v -> {
+            //load orders
+            showOrdersUI();
+        });
+        binding.searchProductEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                try {
+                    Log.d(TAG, "onTextChanged: CharSequence: " + s);
+                    String query = s.toString();
+                    Log.d(TAG, "onTextChanged: query:" + query);
+                    adapterAddProduct.getFilter().filter(query);
+                } catch (Exception e) {
+                    Log.d(TAG, "onTextChanged: Lỗi: " + e);
                 }
+            }
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
+            @Override
+            public void afterTextChanged(Editable s) {
 
-                    try {
-                        Log.d(TAG, "onTextChanged: CharSequence: " + s);
-                        String query = s.toString();
-                        Log.d(TAG, "onTextChanged: query:" + query);
-                        adapterAddProduct.getFilter().filter(query);
-                    } catch (Exception e) {
-                        Log.d(TAG, "onTextChanged: Lỗi: " + e);
-                    }
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                }
-            });
+            }
+        });
 
 
-            binding.filterProductBtn.setOnClickListener(v -> {
-                Log.d(TAG, "onViewCreated: " + binding.filteredProductsTv);
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setTitle("Sản phẩm:")
-                        .setItems(Utils.categoriess, (dialog, which) -> {
-                            //get selected item
-                            String selected = Utils.categoriess[which];
-                            binding.filteredProductsTv.setText(selected);
-                            if (selected.equals("Hiển thị tất cả sản phẩm")) {
-                                //load all
-                                loadAllAdProducts();
-                            } else {
-                                //load filtered
-                                loadFilteredProducts(selected);
-                            }
-                        })
-                        .show();
-            });
-            binding.filterOrderBtn.setOnClickListener(v -> {
-                Log.d(TAG, "onViewCreated: " + binding.filteredOrdersTv);
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setTitle("Hóa đơn:")
-                        .setItems(Utils.orders, (dialog, which) -> {
-                            //get selected item
-                            String selected = Utils.orders[which];
-                            binding.filteredOrdersTv.setText(selected);
-                            if (selected.equals("Hiển thị tất cả hóa đơn")) {
-                                //load all
-                                loadOrders();
-                            } else {
-                                //load filtered
-                                loadFilteredOrders(selected);
-                            }
-                        })
-                        .show();
-            });
+        binding.filterProductBtn.setOnClickListener(v -> {
+            Log.d(TAG, "onViewCreated: " + binding.filteredProductsTv);
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setTitle("Sản phẩm:")
+                    .setItems(Utils.categoriess, (dialog, which) -> {
+                        //get selected item
+                        String selected = Utils.categoriess[which];
+                        binding.filteredProductsTv.setText(selected);
+                        if (selected.equals("Hiển thị tất cả sản phẩm")) {
+                            //load all
+                            loadAllAdProducts();
+                        } else {
+                            //load filtered
+                            loadFilteredProducts(selected);
+                        }
+                    })
+                    .show();
+        });
+        binding.filterOrderBtn.setOnClickListener(v -> {
+            Log.d(TAG, "onViewCreated: " + binding.filteredOrdersTv);
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setTitle("Hóa đơn:")
+                    .setItems(Utils.orders, (dialog, which) -> {
+                        //get selected item
+                        String selected = Utils.orders[which];
+                        binding.filteredOrdersTv.setText("Đơn hàng: " + selected);
+                        if (selected.equals("Hiển thị tất cả đơn hàng")) {
+                            //load all
+                            loadOrders();
+                        } else {
+                            //load filtered
+                            loadFilteredOrders(selected);
+                        }
+                    })
+                    .show();
+        });
 
-            binding.locationCv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "onClick: LocationCv");
-                    Intent intent = new Intent(mContext, LocationPickerActivity.class);
-                    locationPickerActivityResult.launch(intent);
-                }
-            });
-        }
-
+        binding.locationCv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: LocationCv");
+                Intent intent = new Intent(mContext, LocationPickerActivity.class);
+                locationPickerActivityResult.launch(intent);
+            }
+        });
+    }
 
 
     private void showProductsUI() {
@@ -225,39 +224,85 @@ public class HomeUserFragment extends Fragment {
         ordersList = new ArrayList<>();
 
         //get orders
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Orders");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ordersList.clear();
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    String uid = "" + ds.getRef().getKey();
-                    Log.d(TAG, "onDataChange: uid: " + uid);
 
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("Order");
-                    ref.orderByChild("orderBy").equalTo(firebaseAuth.getUid())
-                            .addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                        ModelOrderUser modelOrderUser = ds.getValue(ModelOrderUser.class);
-                                        //add to list
-                                        ordersList.add(modelOrderUser);
-                                    }
-                                    //setup adapter
-                                    adapterOrderUser = new AdapterOrderUser(mContext, ordersList);
-                                    //set to recyclerview
-                                    binding.ordersRv.setAdapter(adapterOrderUser);
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Orders");
+                ref.orderByChild("orderBy").equalTo(firebaseAuth.getUid())
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                ordersList.clear();
+                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                    ModelOrderUser modelOrderUser = ds.getValue(ModelOrderUser.class);
+                                    //add to list
+                                    ordersList.add(modelOrderUser);
                                 }
+                                //setup adapter
+                                adapterOrderUser = new AdapterOrderUser(mContext, ordersList);
+                                //set to recyclerview
+                                binding.ordersRv.setAdapter(adapterOrderUser);
+                            }
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                                }
-                            });
-                }
+                            }
+                        });
             }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    //load từng danh mục hóa đơn
+    private void loadFilteredOrders(String selected) {
+        Log.d(TAG, "loadFilteredProducts: ");
+        ordersList = new ArrayList<>();
+
+        //get all products
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Orders");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //before getting reset list
+
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Orders");
+                ref.orderByChild("orderBy").equalTo(firebaseAuth.getUid())
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                ordersList.clear();
+                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                    ModelOrderUser modelOrderUser = ds.getValue(ModelOrderUser.class);
+                                    //add to list
+                                    if (selected.equals("Hiển thị tất cả hóa đơn")) {
+                                        loadAllAdProducts();
+                                    } else if (selected.equals(modelOrderUser.getOrderStatus())) {
+                                        Log.d(TAG, "onDataChange: hóa đơn: " + modelOrderUser.getOrderStatus());
+                                        ordersList.add(modelOrderUser);
+
+                                    }
+                                }
+                                //setup adapter
+                                adapterOrderUser = new AdapterOrderUser(mContext, ordersList);
+                                //set to recyclerview
+                                binding.ordersRv.setAdapter(adapterOrderUser);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+            }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -338,59 +383,7 @@ public class HomeUserFragment extends Fragment {
         });
     }
 
-    //load từng danh mục hóa đơn
-    private void loadFilteredOrders(String selected) {
-        Log.d(TAG, "loadFilteredProducts: ");
-        ordersList = new ArrayList<>();
 
-        //get all products
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //before getting reset list
-                ordersList.clear();
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    String uid = "" + ds.getRef().getKey();
-                    Log.d(TAG, "onDataChange: uid: " + uid);
-
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("Order");
-                    ref.orderByChild("orderBy").equalTo(firebaseAuth.getUid())
-                            .addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                        ModelOrderUser modelOrderUser = ds.getValue(ModelOrderUser.class);
-                                        //add to list
-                                        if (selected.equals("Hiển thị tất cả hóa đơn")) {
-                                            loadAllAdProducts();
-                                        } else if (selected.equals(modelOrderUser.getOrderStatus())) {
-                                                Log.d(TAG, "onDataChange: hóa đơn: " + modelOrderUser.getOrderStatus());
-                                                ordersList.add(modelOrderUser);
-
-                                        }
-                                    }
-                                    //setup adapter
-                                    adapterOrderUser = new AdapterOrderUser(mContext, ordersList);
-                                    //set to recyclerview
-                                    binding.ordersRv.setAdapter(adapterOrderUser);
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
     //vị trí bản đồ
     private ActivityResultLauncher<Intent> locationPickerActivityResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),

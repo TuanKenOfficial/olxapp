@@ -439,7 +439,8 @@ public class ProfileEditSellerActivity extends AppCompatActivity {
                         String dob = "" + snapshot.child("dob").getValue();
                         mUserType = "" + snapshot.child("accountType").getValue();
                         String phone = "" + snapshot.child("phone").getValue();
-
+                        latitude = Double.parseDouble(""+snapshot.child("latitude").getValue());
+                        longitude = Double.parseDouble(""+snapshot.child("longitude").getValue());
                         if (timestamp.equals("null")) {
                             timestamp = "0";
                         }

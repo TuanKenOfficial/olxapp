@@ -4,8 +4,6 @@ package com.example.olx.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,26 +11,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.olx.CurrencyFormatter;
 import com.example.olx.FilterOrderSeller;
-import com.example.olx.R;
 import com.example.olx.Utils;
 import com.example.olx.activities.DoanhThuSellerActivity;
 import com.example.olx.activities.ShopOrderSellerDetailActivity;
-import com.example.olx.activities.ShopOrderUserDetailActivity;
 import com.example.olx.databinding.RowOderSellerBinding;
-import com.example.olx.model.ModelCart;
-import com.example.olx.model.ModelOrder;
 import com.example.olx.model.ModelOrderSeller;
-import com.example.olx.model.ModelOrderUser;
+import com.example.olx.model.ModelUsers;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -41,9 +32,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 
 public class AdapterOrderSeller extends RecyclerView.Adapter<AdapterOrderSeller.HolderOrderSeller> implements Filterable {
 
@@ -93,7 +81,6 @@ public class AdapterOrderSeller extends RecyclerView.Adapter<AdapterOrderSeller.
         firebaseAuth = FirebaseAuth.getInstance();
         //load
         loadUserInfo(modelOrderSeller, holder);
-        loadOrderUserInfo(modelOrderSeller, holder);
 
         //set data
         String formatted = Utils.formatTimestampDateTime(timestamp); // load dd/MM/yyyy HH:mm
@@ -132,46 +119,35 @@ public class AdapterOrderSeller extends RecyclerView.Adapter<AdapterOrderSeller.
 
     }
 
-
-    //load tên nguời mua
-    private void loadOrderUserInfo(ModelOrderSeller modelOrderSeller, AdapterOrderSeller.HolderOrderSeller holder) {
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.child(modelOrderSeller.getOrderBy()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                String name = ""+snapshot.child("name").getValue();
-                Log.d(TAG, "onDataChange: tên người mua: "+name);
-                holder.tenNM.setText("Người mua: "+name);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-
     private void loadUserInfo(ModelOrderSeller modelOrderSeller, HolderOrderSeller holder) {
+        Log.d(TAG, "loadUserInfo: ");
         //to load email of the user/buyer: modelOrderShop.getOrderBy() contains uid of that user/buyer
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.child(modelOrderSeller.getOrderBy())
+        ref.orderByChild("uid").equalTo(modelOrderSeller.getOrderBy())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                            ModelUsers modelUsers = userSnapshot.getValue(ModelUsers.class);
 
-                        String sdt = ""+dataSnapshot.child("phone").getValue();
-                        Log.d(TAG, "onDataChange: sdt"+sdt);
-                        holder.sdt.setText("Số điện thoại: "+sdt);
-                        String email = ""+dataSnapshot.child("email").getValue();
-                        holder.email.setText("Email: "+email);
+                            String name = modelUsers.getName();
+                            Log.d(TAG, "Tên người mua: " + name);
+                            holder.tenNM.setText("Người mua: "+name);
+
+                            String email = modelUsers.getEmail();
+                            Log.d(TAG, "Email: " + email);
+                            holder.email.setText("Email: "+email);
+
+                            String sdt = modelUsers.getPhone();
+                            Log.d(TAG, "SĐT: " + sdt);
+                            holder.sdt.setText("SĐT: "+sdt);
+
+                        }
                     }
 
                     @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e(TAG, "Lỗi khi truy xuất dữ liệu người bán", error.toException());
                     }
                 });
     }

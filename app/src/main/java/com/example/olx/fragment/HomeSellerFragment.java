@@ -251,46 +251,29 @@ public class HomeSellerFragment extends Fragment {
         orderSellerArrayList = new ArrayList<>();
 
         //get all products
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Orders");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //before getting reset list
                 orderSellerArrayList.clear();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    String uid = "" + ds.getRef().getKey();
-                    Log.d(TAG, "onDataChange: uid: " + uid);
+                    ModelOrderSeller modelOrderSeller = ds.getValue(ModelOrderSeller.class);
+                    //add to list
 
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("Order");
-                    ref.orderByChild("orderTo").equalTo(firebaseAuth.getUid())
-                            .addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (selected.equals("Hiển thị tất cả hóa đơn")) {
+                        loadAllOrders();
+                    } else if (selected.equals(modelOrderSeller.getOrderStatus())) {
+                        Log.d(TAG, "onDataChange: hóa đơn: " + modelOrderSeller.getOrderStatus());
+                        orderSellerArrayList.add(modelOrderSeller);
 
-                                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                        ModelOrderSeller modelOrderSeller = ds.getValue(ModelOrderSeller.class);
-                                        //add to list
-
-                                        if (selected.equals("Hiển thị tất cả hóa đơn")) {
-                                            loadAllOrders();
-                                        } else if (selected.equals(modelOrderSeller.getOrderStatus())) {
-                                            Log.d(TAG, "onDataChange: hóa đơn: " + modelOrderSeller.getOrderStatus());
-                                            orderSellerArrayList.add(modelOrderSeller);
-
-                                        }
-                                    }
-                                    //setup adapter
-                                    adapterOrderSeller = new AdapterOrderSeller(mContext, orderSellerArrayList);
-                                    //set to recyclerview
-                                    binding.ordersRv.setAdapter(adapterOrderSeller);
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                }
-                            });
+                    }
                 }
+                //setup adapter
+                adapterOrderSeller = new AdapterOrderSeller(mContext, orderSellerArrayList);
+                //set to recyclerview
+                binding.ordersRv.setAdapter(adapterOrderSeller);
+
             }
 
             @Override
@@ -305,22 +288,17 @@ public class HomeSellerFragment extends Fragment {
         ordersList = new ArrayList<>();
 
         //get all products
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Orders");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //before getting reset list
-                ordersList.clear();
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    String uid = "" + ds.getRef().getKey();
-                    Log.d(TAG, "onDataChange: uid: " + uid);
-
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("Order");
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Orders");
                     ref.orderByChild("orderBy").equalTo(firebaseAuth.getUid())
                             .addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                                    ordersList.clear();
                                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                         ModelOrderUser modelOrderUser = ds.getValue(ModelOrderUser.class);
                                         //add to list
@@ -344,7 +322,6 @@ public class HomeSellerFragment extends Fragment {
 
                                 }
                             });
-                }
             }
 
             @Override
@@ -361,39 +338,35 @@ public class HomeSellerFragment extends Fragment {
         ordersList = new ArrayList<>();
 
         //get orders
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Orders");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ordersList.clear();
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    String uid = "" + ds.getRef().getKey();
-                    Log.d(TAG, "onDataChange: uid: " + uid);
 
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("Order");
-                    ref.orderByChild("orderBy").equalTo(firebaseAuth.getUid())
-                            .addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                    for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                                        ModelOrderUser modelOrderUser = ds.getValue(ModelOrderUser.class);
-                                        //add to list
-                                        ordersList.add(modelOrderUser);
-                                    }
-                                    //setup adapter
-                                    adapterOrderUser = new AdapterOrderUser(mContext, ordersList);
-                                    //set to recyclerview
-                                    binding.ordersRv.setAdapter(adapterOrderUser);
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Orders");
+                ref.orderByChild("orderBy").equalTo(firebaseAuth.getUid())
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                ordersList.clear();
+                                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                    ModelOrderUser modelOrderUser = ds.getValue(ModelOrderUser.class);
+                                    //add to list
+                                    ordersList.add(modelOrderUser);
                                 }
+                                //setup adapter
+                                adapterOrderUser = new AdapterOrderUser(mContext, ordersList);
+                                //set to recyclerview
+                                binding.ordersRv.setAdapter(adapterOrderUser);
+                            }
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                                }
-                            });
-                }
+                            }
+                        });
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -409,9 +382,8 @@ public class HomeSellerFragment extends Fragment {
         orderSellerArrayList = new ArrayList<>();
 
         //load orders of shop
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.child((firebaseAuth.getUid())).child("Order")
-                .addValueEventListener(new ValueEventListener() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Orders");
+        ref.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         //clear list before adding new data in it
@@ -456,45 +428,7 @@ public class HomeSellerFragment extends Fragment {
         binding.tabOrdersTv.setBackgroundResource(R.drawable.shape_rec04);
     }
 
-    //load từng sản phẩm
-    private void loadFilteredProducts(String selected) {
-        Log.d(TAG, "loadFilteredProducts: ");
-        productList = new ArrayList<>();
 
-        //get all products
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProductAds");
-        reference.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        //before getting reset list
-                        productList.clear();
-                        for (DataSnapshot ds: dataSnapshot.getChildren()){
-                            ModelAddProduct modelAddProduct = ds.getValue(ModelAddProduct.class);
-                            double distance = calculateDistanceKm(modelAddProduct.getLatitude(),modelAddProduct.getLongitude());
-                            Log.d(TAG, "onDataChange: distance: "+distance);
-                            //if selected category matches product category then add in list
-                            if (selected.equals("Hiển thị tất cả sản phẩm")) {
-                                loadAllAdProducts();
-                            } else if (selected.equals(modelAddProduct.getCategory())) {
-                                if (distance <= MAX_DISTANCE_TO_LOAD_ADS_KM) {
-                                    Log.d(TAG, "onDataChange: danh mục: " + modelAddProduct.getCategory());
-                                    productList.add(modelAddProduct);
-                                }
-                            }
-
-                        }
-                        //setup adapter
-                        adapterAddProduct = new AdapterAddProduct(mContext, productList);
-                        //set adapter
-                        binding.productsRv.setAdapter(adapterAddProduct);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-    }
 
     private ActivityResultLauncher<Intent> locationPickerActivityResult =registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -555,7 +489,45 @@ public class HomeSellerFragment extends Fragment {
                 });
 
     }
+    //load từng sản phẩm
+    private void loadFilteredProducts(String selected) {
+        Log.d(TAG, "loadFilteredProducts: ");
+        productList = new ArrayList<>();
 
+        //get all products
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("ProductAds");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //before getting reset list
+                productList.clear();
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+                    ModelAddProduct modelAddProduct = ds.getValue(ModelAddProduct.class);
+                    double distance = calculateDistanceKm(modelAddProduct.getLatitude(),modelAddProduct.getLongitude());
+                    Log.d(TAG, "onDataChange: distance: "+distance);
+                    //if selected category matches product category then add in list
+                    if (selected.equals("Hiển thị tất cả sản phẩm")) {
+                        loadAllAdProducts();
+                    } else if (selected.equals(modelAddProduct.getCategory())) {
+                        if (distance <= MAX_DISTANCE_TO_LOAD_ADS_KM) {
+                            Log.d(TAG, "onDataChange: danh mục: " + modelAddProduct.getCategory());
+                            productList.add(modelAddProduct);
+                        }
+                    }
+
+                }
+                //setup adapter
+                adapterAddProduct = new AdapterAddProduct(mContext, productList);
+                //set adapter
+                binding.productsRv.setAdapter(adapterAddProduct);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
     private double calculateDistanceKm(double adlatitude, double adlongitude) {
         Log.d(TAG, "calculateDistanceKm: currentLatitude: "+currentLatitude);
         Log.d(TAG, "calculateDistanceKm: currentLongitude: "+currentLongitude);

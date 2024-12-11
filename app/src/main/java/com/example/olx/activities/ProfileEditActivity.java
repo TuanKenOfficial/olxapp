@@ -13,6 +13,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,6 +47,8 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class ProfileEditActivity extends AppCompatActivity {
@@ -204,11 +208,12 @@ public class ProfileEditActivity extends AppCompatActivity {
                     })
                     .addOnSuccessListener(taskSnapshot -> {
                         //get url of uploaded image
-                        Log.d(TAG, "uploadProfileImageStorageDb: Upload thành công...");
+
                         Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                         while (!uriTask.isSuccessful()) ;
                         String uploadImageUrl = uriTask.getResult().toString();
                         Log.d(TAG, "uploadProfileImageStorageDb: uploadImageUrl"+uploadImageUrl);
+                        Log.d(TAG, "uploadProfileImageStorageDb: Upload thành công...");
                         if (uriTask.isSuccessful()) {
                             uploadProfileDb(uploadImageUrl);
                             Utils.toastySuccess(ProfileEditActivity.this, "Đang load ảnh");
@@ -249,6 +254,7 @@ public class ProfileEditActivity extends AppCompatActivity {
         hashMap.put("email", registerUserEmail);
         hashMap.put("phone", "" + phone);
         hashMap.put("profileImage", "" + uploadImageUrl);
+
         if (mUserType.equals("User")){
             hashMap.put("accountType", "User");
             hashMap.put("email", registerUserEmail);
@@ -453,6 +459,8 @@ public class ProfileEditActivity extends AppCompatActivity {
                         mUserType = "" + snapshot.child("accountType").getValue();
                         String phone = "" + snapshot.child("phone").getValue();
                         String accountType = "" + snapshot.child("accountType").getValue();
+                        latitude = Double.parseDouble(""+snapshot.child("latitude").getValue());
+                        longitude = Double.parseDouble(""+snapshot.child("longitude").getValue());
 
                         if (timestamp.equals("null")) {
                             timestamp = "0";
@@ -498,9 +506,9 @@ public class ProfileEditActivity extends AppCompatActivity {
                         binding.emailEt.setText(email);
                         binding.dobEt.setText(dob);
                         binding.phoneNumber.setText(phone);
-                        binding.addressEt.setText(address);
                         binding.memberSingleEt.setText(formattedDate);
                         binding.accountType.setText(accountType);
+                        binding.addressEt.setText(address);
 
                         try {
                             Picasso.get().load(profileImage).placeholder(R.drawable.shop).into(binding.profileIv);
@@ -518,6 +526,26 @@ public class ProfileEditActivity extends AppCompatActivity {
                 });
 
 
+    }
+
+    private void findAddress(String latitude, String longitude) {
+        double lat = Double.parseDouble(latitude);
+        double lon = Double.parseDouble(longitude);
+
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        try {
+            addresses = geocoder.getFromLocation(lat, lon, 1);
+
+            //complete address
+            String address = addresses.get(0).getAddressLine(0);
+            binding.addressEt.setText(address);
+        }
+        catch (Exception e){
+            Toast.makeText(this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

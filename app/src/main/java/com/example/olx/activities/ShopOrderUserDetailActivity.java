@@ -22,6 +22,7 @@ import com.example.olx.model.ModelCart;
 import com.example.olx.model.ModelOrder;
 import com.example.olx.model.ModelOrderSeller;
 import com.example.olx.model.ModelOrderUser;
+import com.example.olx.model.ModelUsers;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -72,9 +73,10 @@ public class ShopOrderUserDetailActivity extends AppCompatActivity {
 
 
     private void loadOrderDetails() {
+        Log.d(TAG, "loadOrderDetails: ");
         //load order details
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.child(orderTo).child("Order").child(orderId)
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Orders");
+        ref.child(orderId)
                 .addValueEventListener(new ValueEventListener() {
                     @SuppressLint("SetTextI18n")
                     @Override
@@ -88,18 +90,18 @@ public class ShopOrderUserDetailActivity extends AppCompatActivity {
                         String orderBy = ""+dataSnapshot.child("orderBy").getValue();
                         String orderTo = ""+dataSnapshot.child("orderTo").getValue();
                         String address = ""+dataSnapshot.child("address").getValue();
-                        String latitude = ""+dataSnapshot.child("latitude").getValue();
-                        String longitude = ""+dataSnapshot.child("longitude").getValue();
+                        double latitude = Double.parseDouble(""+dataSnapshot.child("latitude").getValue());
+                        double longitude = Double.parseDouble(""+dataSnapshot.child("longitude").getValue());
                         long timestamp = modelOrderUser.getTimestamp();
 
 
                         String dateFormated = Utils.formatTimestampDateTime(timestamp);
 
                         //order status
-                        if (orderStatus.equals("Chưa duyệt")){
+                        if (orderStatus.equals("Chưa thanh toán")){
                             binding.orderStatusTv.setTextColor(getResources().getColor(R.color.colorblack));
                         }
-                        else if (orderStatus.equals("Đã duyệt")){
+                        else if (orderStatus.equals("Đã thanh toán")){
                             binding.orderStatusTv.setTextColor(getResources().getColor(R.color.colorgold));
                         }
                         else if (orderStatus.equals("Đã hủy")){
@@ -112,7 +114,11 @@ public class ShopOrderUserDetailActivity extends AppCompatActivity {
                         binding.amountTv.setText(""+ CurrencyFormatter.getFormatter().format(Double.parseDouble(orderTongTien)));
                         binding.dateTv.setText(dateFormated);
 
-                        findAddress(latitude, longitude); //to find delivery address
+                        Log.d(TAG, "onDataChange: mã hóa đơn: "+orderMaHD);
+                        Log.d(TAG, "onDataChange: trạng thái đơn hàng: "+orderStatus);
+                        Log.d(TAG, "onDataChange: ngày tháng năm: "+dateFormated);
+                        findAddress(String.valueOf(latitude), String.valueOf(longitude));
+//                        findAddress(latitude, longitude); //to find delivery address
                     }
 
                     @Override
@@ -123,14 +129,20 @@ public class ShopOrderUserDetailActivity extends AppCompatActivity {
     }
 
     private void loadShopInfo() {
+        Log.d(TAG, "loadShopInfo: ");
         //get shop info
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.child(orderTo)
+        ref.orderByChild("uid").equalTo(orderTo)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        String shopName = ""+dataSnapshot.child("shopName").getValue();
-                        binding.shopNameTv.setText(shopName);
+                        for (DataSnapshot snapshot: dataSnapshot.getChildren()){
+                            ModelUsers modelUsers = snapshot.getValue(ModelUsers.class);
+                            String shopName = modelUsers.getShopName();
+                            binding.shopNameTv.setText(shopName);
+                            Log.d(TAG, "onDataChange: shopname: "+shopName);
+                        }
+
                     }
 
                     @Override
@@ -144,8 +156,8 @@ public class ShopOrderUserDetailActivity extends AppCompatActivity {
         //init list
         cartArrayList = new ArrayList<>();
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.child(orderTo).child("Order").child(orderId).child("GioHang")
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Orders");
+        ref.child(orderId).child("GioHang")
                 .addValueEventListener(new ValueEventListener() {
                     @SuppressLint("SetTextI18n")
                     @Override

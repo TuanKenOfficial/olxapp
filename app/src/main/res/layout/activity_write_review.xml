@@ -64,7 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:textColor="@color/colorblack"
-        android:text="Trải nghiệm của bạn với người bán này như thế nào? \ n Phản hồi của bạn rất quan trọng để cải thiện chất lượng dịch vụ của chúng tôi"/>
+        android:text="Trải nghiệm của bạn với những sản phẩm như thế nào? \n Phản hồi của bạn rất quan trọng để cải thiện chất lượng dịch vụ của chúng tôi"/>
 
 
     <RatingBar
