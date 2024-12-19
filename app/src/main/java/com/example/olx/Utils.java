@@ -143,6 +143,7 @@ public class Utils  {
     }
 
     //add Favorites
+    public static String idFav;
     public static void addToFavorite(Context context, String adId){
 
 
@@ -152,13 +153,16 @@ public class Utils  {
         }
         else {
             long timestamp = Utils.getTimestamp();
-
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Favorites");
+//            idFav = ref.push().getKey();
             HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("id", adId); // id của ModelAd
+//            hashMap.put("idFav", idFav); // id của ModelAd
+            hashMap.put("idAds", adId);
+            hashMap.put("userId",firebaseAuth.getUid());// id của ModelAd
             hashMap.put("timestamp", timestamp);
 
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-            ref.child(firebaseAuth.getUid()).child("Favorites").child(adId)
+
+            ref.child(adId)
                     .setValue(hashMap)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -185,8 +189,8 @@ public class Utils  {
         }
         else {
 
-            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-            ref.child(firebaseAuth.getUid()).child("Favorites").child(adId)
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Favorites");
+            ref.child(adId)
                     .removeValue()
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override

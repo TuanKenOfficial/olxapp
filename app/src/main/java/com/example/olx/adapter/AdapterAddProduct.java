@@ -56,6 +56,7 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
 
     private static final String TAG = "AdapterProduct";
 
+
     public AdapterAddProduct(Context context, ArrayList<ModelAddProduct> adArrayList) {
         this.context = context;
         this.adArrayList = adArrayList;
@@ -77,7 +78,7 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
         ModelAddProduct modelAddProduct = adArrayList.get(position);
 
         String id = modelAddProduct.getId();
-
+        Log.d(TAG, "onBindViewHolder: id: "+id);
         String title = modelAddProduct.getTitle();
         String description = modelAddProduct.getDescription();
         String address = modelAddProduct.getAddress();
@@ -130,9 +131,11 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
             public void onClick(View v) {
                 boolean favorite = modelAddProduct.isFavorite();
                 if (favorite) {
+                    Log.d(TAG, "onClick: 12");
                     Utils.toast(context, "Xóa khỏi mục yêu thích");
                     Utils.removeFavorite(context, id);
                 } else {
+                    Log.d(TAG, "onClick: 11");
                     Utils.toast(context, "Thêm vao mục yêu thích");
                     Utils.addToFavorite(context, id);
 
@@ -359,10 +362,11 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
     }
 
 
+
     //check yêu thích
     private void checkIsFavorites(ModelAddProduct modelAd, HolderAddProduct holder) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.child(firebaseAuth.getUid()).child("Favorites").child(modelAd.getId())
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Favorites");
+        ref.child(modelAd.getId())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -383,6 +387,7 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
 
                     }
                 });
+
     }
 
     // load hình ảnh sản phẩm

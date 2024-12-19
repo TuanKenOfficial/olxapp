@@ -581,8 +581,8 @@ public class ShopAdDetailsActivity extends AppCompatActivity {
     private void checkIsFavorite() {
         Log.d(TAG, "checkIsFavorite: ");
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.child(firebaseAuth.getUid()).child("Favorites").child(id)
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Favorites");
+        reference.child(id)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {

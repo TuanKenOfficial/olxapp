@@ -42,24 +42,23 @@ public class MyAdsFavFragment extends Fragment {
 
     private static final String TAG = "MYFAV";
 
-    private  String id;
+    private String id;
 
     public MyAdsFavFragment() {
         // Required empty public constructor
     }
+
     @Override
     public void onAttach(@NonNull Context context) {
-        mContext =context;
+        mContext = context;
         super.onAttach(context);
     }
 
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentMyAdsFavBinding.inflate(inflater,container,false);
+        binding = FragmentMyAdsFavBinding.inflate(inflater, container, false);
 
         return binding.getRoot();
     }
@@ -84,9 +83,8 @@ public class MyAdsFavFragment extends Fragment {
                 try {
                     String query = s.toString();
                     adapterAddProduct.getFilter().filter(query);
-                }
-                catch (Exception e){
-                    Log.d(TAG, "onTextChanged: Lỗi: "+e);
+                } catch (Exception e) {
+                    Log.d(TAG, "onTextChanged: Lỗi: " + e);
                 }
             }
 
@@ -97,35 +95,36 @@ public class MyAdsFavFragment extends Fragment {
         });
     }
 
-    //bị lỗi ở đây
+    //load mục yêu thích
     private void loadAdsFav() {
         Log.d(TAG, "loadAds: ");
 
         adArrayList = new ArrayList<>();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
-        ref.child(Objects.requireNonNull(firebaseAuth.getUid())).child("Favorites")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        adArrayList.clear();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Favorites");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                adArrayList.clear();
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    String idAds = ""+ds.child("idAds").getValue();
+                    Log.d(TAG, "onDataChange: idAds: "+idAds);
 
-                        for (DataSnapshot ds : snapshot.getChildren()){
-                            String id = ""+ds.child("id").getValue();
-                            Log.d(TAG, "onDataChange: adId: "+id);
-                            DatabaseReference adRef = FirebaseDatabase.getInstance().getReference("ProductAds");
-                            adRef.child(id).addValueEventListener(new ValueEventListener() {
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("ProductAds");
+                    ref.orderByChild("id").equalTo(idAds)
+                            .addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    try {
-                                        Log.d(TAG, "onDataChange: Load");
-                                        Log.d(TAG, "onDataChange: load sản phẩm yêu thích thành công");
-                                            ModelAddProduct modelAddProduct = snapshot.getValue(ModelAddProduct.class); //lộn cái ds truyền vào lấy danh sách của user không phải favorite
+
+                                    for (DataSnapshot ds : snapshot.getChildren()){
+                                        try {
+                                            Log.d(TAG, "onDataChange: Load sản pẩm thành công");
+                                            ModelAddProduct modelAddProduct = ds.getValue(ModelAddProduct.class);
+                                            modelAddProduct.setId(idAds);
                                             adArrayList.add(modelAddProduct);
-
-                                    }catch (Exception e){
-                                        Utils.toastyError(mContext,"Lỗi: "+e);
+                                        }catch (Exception e){
+                                            Utils.toastyError(mContext,"Lỗi: "+e);
+                                        }
                                     }
-
                                 }
 
                                 @Override
@@ -135,22 +134,22 @@ public class MyAdsFavFragment extends Fragment {
                             });
 
 
-                        }
+                }
 
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                adapterAddProduct = new AdapterAddProduct(mContext,adArrayList);
-                                binding.favRv.setAdapter(adapterAddProduct);
-                            }
-                        },500);
-                    }
-
+                new Handler().postDelayed(new Runnable() {
                     @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
+                    public void run() {
+                        adapterAddProduct = new AdapterAddProduct(mContext, adArrayList);
+                        binding.favRv.setAdapter(adapterAddProduct);
                     }
-                });
+                }, 500);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 }
