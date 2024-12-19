@@ -89,33 +89,10 @@ public class NotificationFragment extends Fragment {
                 });
             }
         });
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.child(firebaseAuth.getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String accountType = ""+snapshot.child("accountType").getValue();
 
-                if (accountType.equals("Seller")){
-                    Utils.toast(mContext,"Thông báo người bán");
-                    binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Sản phẩm"));
-                    binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Yêu thích"));
-                }
-                else {
-                    Utils.toast(mContext,"Thông báo người mua");
-                    binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Sản phẩm trống"));
-                    binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Yêu thích"));
 
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-//        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Sản phẩm"));
-//        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Yêu thích"));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Sản phẩm"));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Yêu thích"));
         FragmentManager fragmentManager = getChildFragmentManager();
         myTabsViewPagerAdapter = new MyTabsViewPagerAdapter(fragmentManager,getLifecycle());
         binding.viewPager.setAdapter(myTabsViewPagerAdapter);

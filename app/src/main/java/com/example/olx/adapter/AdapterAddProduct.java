@@ -130,8 +130,10 @@ public class AdapterAddProduct extends RecyclerView.Adapter<AdapterAddProduct.Ho
             public void onClick(View v) {
                 boolean favorite = modelAddProduct.isFavorite();
                 if (favorite) {
+                    Utils.toast(context, "Xóa khỏi mục yêu thích");
                     Utils.removeFavorite(context, id);
                 } else {
+                    Utils.toast(context, "Thêm vao mục yêu thích");
                     Utils.addToFavorite(context, id);
 
                 }
